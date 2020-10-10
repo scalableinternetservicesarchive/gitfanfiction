@@ -1,6 +1,10 @@
-# bespin
+# gitfanfiction
 
-Welcome to Cloud City!
+Note: a clone of https://github.com/rothfels/bespin for the UCLA CS 188 class. The below information on how to setup is sourced from that site.
+
+# Members
+
+To be filled out at a later date.
 
 ## Dependencies
 
