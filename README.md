@@ -1,5 +1,5 @@
 # gitfanfiction
-The app is amazing!!
+The app is amazing!! Indeed we are starting from week 3 with acknowledgement from professor John on week 2.
 
 Note: a clone of https://github.com/rothfels/bespin for the UCLA CS 188 class. The below information on how to setup is sourced from that site.
 
