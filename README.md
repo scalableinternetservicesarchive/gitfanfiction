@@ -2,9 +2,23 @@
 
 Note: a clone of https://github.com/rothfels/bespin for the UCLA CS 188 class. The below information on how to setup is sourced from that site.
 
-# Members
+## Members
 
-To be filled out at a later date.
+Alvin Duong
+
+![Alt text](photos/alvin.jpg)
+
+Khang Vinh
+
+![Alt text](photos/khang.jpg)
+
+Sangjoon Lee
+
+![Alt text](photos/sangjoon.jpg)
+
+Wenjie Liu
+
+![Alt text](photos/wenjie.jpg)
 
 ## Dependencies
 
