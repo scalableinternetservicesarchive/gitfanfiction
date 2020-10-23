@@ -23,6 +23,7 @@ type Query {
 }
 
 type Mutation {
+
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
 
@@ -38,7 +39,25 @@ type User {
   id: Int!
   userType: UserType!
   email: String!
+  password: String! #Store the hash equivalent of the password.
   name: String!
+}
+
+type Story {
+  id: Int!
+  author: User!
+  startingPoint: String!
+  endingPoint: String
+  length: Int!
+  title: String!
+  body: String!
+}
+
+type Comment {
+  id: Int!
+  body: String!
+  timestamp: DateTime!
+  user: User!
 }
 
 enum UserType { ADMIN, USER }
