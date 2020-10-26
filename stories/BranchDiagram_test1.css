@@ -1,0 +1,10 @@
+
+.highlighted {
+  fill: red;
+}
+
+path {
+  fill: none;
+  stroke: black;
+  stroke-width: 5;
+}
