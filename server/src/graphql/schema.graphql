@@ -56,7 +56,7 @@ type Story {
 type Comment {
   id: Int!
   body: String!
-  timestamp: DateTime!
+  timestamp: String! #DateTime not supported. proabably require some special library install
   user: User!
 }
 
