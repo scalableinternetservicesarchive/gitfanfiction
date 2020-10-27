@@ -41,11 +41,18 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
 
     const data = exampleData;
 
+
+    // assign svg + define few css style beforehand
+    const svgElement = d3.select(ref.current)
+    svgElement.append("defs").append("style")
+      .text(`circle.highlighted { stroke: orangered; fill: orangered; }
+      .s1 {stroke:'black'//#79bd79;}
+      .s2 {fill:#806202;}
+      .s3 {fill:#157415;}`);
+
     // create main line
     const line = d3.line();
-    const svgElement = d3.select(ref.current)
     const g_lines = svgElement.append("g")
-
 
     // main line length = 10 x ch x b OR 1 x min x episode
     let main_total_length = data.main[2].reduce((a, b) => a + b, 0);
@@ -65,7 +72,7 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
       .attr("r", 5)
     data.main[2].reduce((a, b) => { // all other point
       g_time_marker.append("circle")
-        .attr("cx", (a) * main_length_unit)
+        .attr("cx", (a + b) * main_length_unit)
         .attr("cy", 0)
         .attr("r", 5)
       return a + b
