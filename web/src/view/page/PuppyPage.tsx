@@ -4,6 +4,8 @@ import { Colors } from '../../../../common/src/colors'
 import { H1, H3 } from '../../style/header'
 import { style } from '../../style/styled'
 import BranchDiagram from '../component/BranchDiagram'
+import SearchBar from '../component/SearchBar'
+import ViewStoryBox from '../component/ViewStoryBox'
 import { AppRouteParams } from '../nav/route'
 import { Page } from './Page'
 
@@ -15,14 +17,16 @@ export function PuppyPage(props: HomePageProps) {
 
   return (
     <Page>
+      <SearchBar />
       <Hero>
         <H1>BOWWOW 188</H1>
         <H3>PUPPY PUPPY</H3>
         <H3>UCLA, Fall 2020</H3>
       </Hero>
-      <Content>
+      <div>
         <BranchDiagram />
-      </Content>
+        <ViewStoryBox />
+      </div>
     </Page>
   )
 }
@@ -33,6 +37,4 @@ const Hero = style('div', 'mb4 w-100 ba b--mid-gray br2 pa3 tc', {
   borderLeftWidth: '4px',
   borderRightWidth: '4px',
 })
-
-const Content = style('div', 'flex-l')
 

@@ -245,7 +245,13 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
 
     // keyboard space handler
     d3.select("body").on("keydown", function (event: any) {
-      if (event.keyCode == 32) setContent(saved_id);
+      console.log(event);
+      if (event.keyCode == 32) {
+        if (event.srcElement.tagName != "INPUT") {
+          setContent(saved_id);
+          event.preventDefault();
+        }
+      }
     });
     //notable problem with this approach
     //no invalid data check. like suppose origin's chapter disappears. array overflow
@@ -259,9 +265,8 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
 
       <svg className="container" ref={ref} width={width} height={height}
         style={{ outline: "thin solid black" }}></svg>
-      <div>{"" + point}</div>
-      <div>{content}</div>
-      <div>{width + " " + height}</div>
+      <div>{"hover   :" + point}</div>
+      <div>{"selected:" + content}</div>
     </div>
   )
 }
