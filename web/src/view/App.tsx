@@ -11,6 +11,7 @@ import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { HomePage } from './page/HomePage'
+import { LandingPage } from './page/LandingPage'
 import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { ProjectsPage } from './page/ProjectsPage'
@@ -59,6 +60,7 @@ export function AppBody() {
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <PuppyPage path={Route.PUPPY} />
+        <LandingPage path={Route.LANDING} />
       </Router>
       <Footer>
         <FooterText>© 2020 John Rothfels</FooterText>

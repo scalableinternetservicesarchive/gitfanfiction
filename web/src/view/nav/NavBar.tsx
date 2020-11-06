@@ -34,6 +34,10 @@ const otherTabs = [
     name: 'branch',
     path: getPath(Route.PUPPY),
   },
+  {
+    name: 'landing',
+    path: getPath(Route.LANDING),
+  },
 ]
 
 export function NavBar() {
