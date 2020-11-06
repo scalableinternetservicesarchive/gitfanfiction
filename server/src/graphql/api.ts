@@ -2,6 +2,8 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { Fandom } from '../entities/Fandom'
+// import { Story } from '../entities/Story'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
@@ -17,6 +19,7 @@ export function getSchema() {
 
 interface Context {
   user: User | null
+  fandom: Fandom | null
   request: Request
   response: Response
   pubsub: PubSub
@@ -25,10 +28,22 @@ interface Context {
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => ctx.user,
+    fandoms: () => Fandom.find(),
+    fandom: async (_, { fandomId }) => (await Fandom.findOne({where: { id : fandomId } }))!,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
   },
   Mutation: {
+    addFandom: async (_, { input }, ctx) => {
+      const { fandomType, name, author, length} = input
+      const fandom = new Fandom()
+      fandom.fandomType = fandomType
+      fandom.name = name
+      fandom.author = author
+      fandom.length = length
+      await fandom.save()
+      return fandom
+    },
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))
