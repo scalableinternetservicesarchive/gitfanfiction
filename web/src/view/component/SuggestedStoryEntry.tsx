@@ -18,7 +18,7 @@ const styles = {
   story_entry_style: {
     padding: '6px',
     display: 'block',
-    borderBottom: "1px solid black"
+    borderBottom: "1px solid black",
   },
   columns: {
     display: 'flex',
