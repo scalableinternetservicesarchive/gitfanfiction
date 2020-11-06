@@ -19,6 +19,8 @@ type Query {
   self: User
   fandoms: [Fandom!]!
   fandom (fandomId: Int!): Fandom
+  posts:[Post!]!
+  post (postID: Int!): Post
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
 }
@@ -26,6 +28,7 @@ type Query {
 type Mutation {
   addFandom (input: FandomInput!): Fandom
 
+  makePost (input: PostInput!): Post
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
 
@@ -60,12 +63,29 @@ input FandomInput {
   length: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
 
-type Story {
+type Originstory{
   id: Int!
-  author: User!
-  startingPoint: String!
-  endingPoint: String
-  length: Int!
+  length:[Int!]!
+  type: String!
+}
+
+input PostInput {
+
+  origin: Int!
+  start: String!
+  length: String!
+  title: String!
+  body: String!
+}
+
+
+type Post {
+
+  id: Int!
+  origin: Int!
+  start: String!
+  length: String!
+  upvote: Int!
   title: String!
   body: String!
 }

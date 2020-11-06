@@ -3,7 +3,8 @@ import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
 import { Fandom } from '../entities/Fandom'
-// import { Story } from '../entities/Story'
+import { Post } from '../entities/Post'
+//import { Story } from '../entities/Story'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
@@ -20,6 +21,7 @@ export function getSchema() {
 interface Context {
   user: User | null
   fandom: Fandom | null
+  post: Post | null
   request: Request
   response: Response
   pubsub: PubSub
@@ -30,6 +32,8 @@ export const graphqlRoot: Resolvers<Context> = {
     self: (_, args, ctx) => ctx.user,
     fandoms: () => Fandom.find(),
     fandom: async (_, { fandomId }) => (await Fandom.findOne({where: { id : fandomId } }))!,
+    posts: () => Post.find(),
+    post: async (_, { postID }) => (await Post.findOne({where: { id : postID } }))!,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
   },
@@ -44,6 +48,22 @@ export const graphqlRoot: Resolvers<Context> = {
       await fandom.save()
       return fandom
     },
+
+    makePost: async (_, { input }, ctx) => {
+      const { origin, start,length, title, body} = input
+      const post = new Post()
+      post.origin=origin
+      post.start=start
+      post.length=length
+
+      post.title=title
+      post.body=body
+      post.upvote=0
+      await post.save()
+      return post
+    },
+
+
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))
