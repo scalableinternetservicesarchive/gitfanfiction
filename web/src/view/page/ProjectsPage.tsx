@@ -9,7 +9,7 @@ import { Link } from '../nav/Link'
 import { AppRouteParams, getPlaygroundPath } from '../nav/route'
 import { Page } from './Page'
 
-interface ProjectsPageProps extends RouteComponentProps, AppRouteParams {}
+interface ProjectsPageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function ProjectsPage(props: ProjectsPageProps) {
