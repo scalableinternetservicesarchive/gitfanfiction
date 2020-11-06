@@ -25,4 +25,8 @@ export class Post extends BaseEntity {
   body: string
 
 
+  get upvotes() {
+    return this.upvote
+  }
+
 }

@@ -20,7 +20,11 @@ type Query {
   fandoms: [Fandom!]!
   fandom (fandomId: Int!): Fandom
   posts:[Post!]!
-  post (postID: Int!): Post
+  post (postId: Int!): Post
+
+  comments:[Comment!]!
+  comment (commentId: Int!): Comment
+
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
 }
@@ -29,6 +33,7 @@ type Mutation {
   addFandom (input: FandomInput!): Fandom
 
   makePost (input: PostInput!): Post
+  makeComment (input: CommentInput!): Comment
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
 
@@ -93,8 +98,13 @@ type Post {
 type Comment {
   id: Int!
   body: String!
-  timestamp: String! #DateTime not supported. proabably require some special library install
-  user: User!
+  vote: Int!
+  time: String! #DateTime not supported. proabably require some special library install
+}
+
+input CommentInput {
+  body: String!
+  time: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
 
 enum UserType { ADMIN, USER }

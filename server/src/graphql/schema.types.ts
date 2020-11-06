@@ -19,6 +19,8 @@ export interface Query {
   fandom?: Maybe<Fandom>
   posts: Array<Post>
   post?: Maybe<Post>
+  comments: Array<Comment>
+  comment?: Maybe<Comment>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
 }
@@ -28,7 +30,11 @@ export interface QueryFandomArgs {
 }
 
 export interface QueryPostArgs {
-  postID: Scalars['Int']
+  postId: Scalars['Int']
+}
+
+export interface QueryCommentArgs {
+  commentId: Scalars['Int']
 }
 
 export interface QuerySurveyArgs {
@@ -39,6 +45,7 @@ export interface Mutation {
   __typename?: 'Mutation'
   addFandom?: Maybe<Fandom>
   makePost?: Maybe<Post>
+  makeComment?: Maybe<Comment>
   answerSurvey: Scalars['Boolean']
   nextSurveyQuestion?: Maybe<Survey>
 }
@@ -49,6 +56,10 @@ export interface MutationAddFandomArgs {
 
 export interface MutationMakePostArgs {
   input: PostInput
+}
+
+export interface MutationMakeCommentArgs {
+  input: CommentInput
 }
 
 export interface MutationAnswerSurveyArgs {
@@ -123,8 +134,13 @@ export interface Comment {
   __typename?: 'Comment'
   id: Scalars['Int']
   body: Scalars['String']
-  timestamp: Scalars['String']
-  user: User
+  vote: Scalars['Int']
+  time: Scalars['String']
+}
+
+export interface CommentInput {
+  body: Scalars['String']
+  time: Scalars['String']
 }
 
 export enum UserType {
@@ -253,6 +269,7 @@ export type ResolversTypes = {
   PostInput: PostInput
   Post: ResolverTypeWrapper<Post>
   Comment: ResolverTypeWrapper<Comment>
+  CommentInput: CommentInput
   UserType: UserType
   Survey: ResolverTypeWrapper<Survey>
   SurveyQuestion: ResolverTypeWrapper<SurveyQuestion>
@@ -275,6 +292,7 @@ export type ResolversParentTypes = {
   PostInput: PostInput
   Post: Post
   Comment: Comment
+  CommentInput: CommentInput
   Survey: Survey
   SurveyQuestion: SurveyQuestion
   SurveyAnswer: SurveyAnswer
@@ -294,7 +312,14 @@ export type QueryResolvers<
     RequireFields<QueryFandomArgs, 'fandomId'>
   >
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
-  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'postID'>>
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'postId'>>
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>
+  comment?: Resolver<
+    Maybe<ResolversTypes['Comment']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryCommentArgs, 'commentId'>
+  >
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
     Maybe<ResolversTypes['Survey']>,
@@ -319,6 +344,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationMakePostArgs, 'input'>
+  >
+  makeComment?: Resolver<
+    Maybe<ResolversTypes['Comment']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationMakeCommentArgs, 'input'>
   >
   answerSurvey?: Resolver<
     ResolversTypes['Boolean'],
@@ -401,8 +432,8 @@ export type CommentResolvers<
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>
+  vote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  time?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 

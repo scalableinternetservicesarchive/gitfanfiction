@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { Comment } from '../entities/Comment'
 import { Fandom } from '../entities/Fandom'
 import { Post } from '../entities/Post'
 //import { Story } from '../entities/Story'
@@ -22,6 +23,7 @@ interface Context {
   user: User | null
   fandom: Fandom | null
   post: Post | null
+  comment: Comment | null
   request: Request
   response: Response
   pubsub: PubSub
@@ -33,7 +35,9 @@ export const graphqlRoot: Resolvers<Context> = {
     fandoms: () => Fandom.find(),
     fandom: async (_, { fandomId }) => (await Fandom.findOne({where: { id : fandomId } }))!,
     posts: () => Post.find(),
-    post: async (_, { postID }) => (await Post.findOne({where: { id : postID } }))!,
+    post: async (_, { postId }) => (await Post.findOne({where: { id : postId } }))!,
+    comments: () => Comment.find(),
+    comment: async (_, { commentId }) => (await Comment.findOne({where: { id : commentId } }))!,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
   },
@@ -63,7 +67,15 @@ export const graphqlRoot: Resolvers<Context> = {
       return post
     },
 
-
+    makeComment: async (_, { input }, ctx) => {
+      const { body, time} = input
+      const comment = new Comment()
+      comment.body=body
+      comment.time=time
+      comment.vote=0
+      await comment.save()
+      return comment
+    },
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))
