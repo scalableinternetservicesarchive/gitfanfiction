@@ -1,0 +1,50 @@
+some easy example of query and mutation is given here
+
+# Write your query or mutation here
+query getfan {
+	fandoms {
+    name
+    id
+  }
+  comments {
+    id
+    body
+  }
+}
+
+mutation addfan {
+  addFandom(input:{
+    fandomType:"book",
+    name:"ss",
+    author:"dd",
+    length:"cc"
+  }) {
+    name
+    id
+  }
+}
+
+mutation addcomment {
+  makeComment(input:{
+    body:"you are greate",
+    time:"2020.02.01"
+  }){
+    id,
+    body,
+    time
+  }
+}
+
+mutation single_post {
+  makePost(input:{
+    origin:123,
+    start:"heyya",
+    length:"3,4",
+    title:"soberpost",
+    body:"lollol IT FELLS GOOD"
+  }){
+    title,
+    id,
+    upvote
+  }
+}
