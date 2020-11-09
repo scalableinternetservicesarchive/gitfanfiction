@@ -9,11 +9,10 @@ import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
-import { HomePage } from './page/HomePage'
+import { HomePage } from './our_work/page/HomePage'
+import { LoginPage } from './our_work/page/LoginPage'
 import { LandingPage } from './page/LandingPage'
-import { LecturesPage } from './page/LecturesPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
-import { ProjectsPage } from './page/ProjectsPage'
 import { PuppyPage } from './page/PuppyPage'
 
 const Styletron = require('styletron-engine-monolithic')
@@ -54,12 +53,11 @@ export function AppBody() {
         <Redirect noThrow from="app" to="index" />
         <Redirect noThrow from="app/playground" to="surveys" />
         <HomePage path={Route.HOME} />
-        <LecturesPage path={Route.LECTURES} />
-        <ProjectsPage path={Route.PROJECTS} />
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <PuppyPage path={Route.PUPPY} />
         <LandingPage path={Route.LANDING} />
+        <LoginPage path={Route.LOGIN} />
       </Router>
       <Footer>
         <FooterText>© 2020 John Rothfels</FooterText>
@@ -72,7 +70,7 @@ export function AppBody() {
 // const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
 
 //new bodyclass
-const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
+const bodyClass = ''
 
 const Footer = style('footer', 'fixed flex items-center bottom-0 w-100')
 

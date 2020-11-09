@@ -50,7 +50,7 @@ export function HomePage(props: HomePageProps) {
                   configure your dev environment.
                 </li>
                 <li>
-                  Find a project team. See <Link to={getPath(Route.PROJECTS)}>Projects</Link> for details.
+                  Find a project team. See <Link to={getPath(Route.PROJECT)}>Projects</Link> for details.
                 </li>
                 <li>
                   Join the <Link href="https://piazza.com/ucla/fall2020/cs188">CS188 Piazza</Link>.
