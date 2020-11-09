@@ -33,17 +33,17 @@ export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => ctx.user,
     fandoms: () => Fandom.find(),
-    fandom: async (_, { fandomId }) => (await Fandom.findOne({where: { id : fandomId } }))!,
+    fandom: async (_, { fandomId }) => (await Fandom.findOne({ where: { id: fandomId } }))!,
     posts: () => Post.find(),
-    post: async (_, { postId }) => (await Post.findOne({where: { id : postId } }))!,
+    post: async (_, { postId }) => (await Post.findOne({ where: { id: postId } }))!,
     comments: () => Comment.find(),
-    comment: async (_, { commentId }) => (await Comment.findOne({where: { id : commentId } }))!,
+    comment: async (_, { commentId }) => (await Comment.findOne({ where: { id: commentId } }))!,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
   },
   Mutation: {
     addFandom: async (_, { input }, ctx) => {
-      const { fandomType, name, author, length} = input
+      const { fandomType, name, author, length } = input
       const fandom = new Fandom()
       fandom.fandomType = fandomType
       fandom.name = name
@@ -54,25 +54,25 @@ export const graphqlRoot: Resolvers<Context> = {
     },
 
     makePost: async (_, { input }, ctx) => {
-      const { origin, start,length, title, body} = input
+      const { origin, start, length, title, body } = input
       const post = new Post()
-      post.origin=origin
-      post.start=start
-      post.length=length
+      post.origin = origin
+      post.start = start
+      post.length = length
 
-      post.title=title
-      post.body=body
-      post.upvote=0
+      post.title = title
+      post.body = body
+      post.upvote = 0
       await post.save()
       return post
     },
 
     makeComment: async (_, { input }, ctx) => {
-      const { body, time} = input
+      const { body, time } = input
       const comment = new Comment()
-      comment.body=body
-      comment.time=time
-      comment.vote=0
+      comment.body = body
+      comment.time = time
+      comment.vote = 0
       await comment.save()
       return comment
     },

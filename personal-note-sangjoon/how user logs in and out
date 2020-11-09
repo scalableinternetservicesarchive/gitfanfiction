@@ -1,0 +1,30 @@
+
+
+log in
+
+client user sends email and password
+
+server receives it
+
+if it matches, saves authtoken and userid in session
+
+sends cookie with authtoken : authtoken.string
+
+when client talks to server, always has cookie
+
+when graphql receives post, it first goes through middleware
+
+if authtoken exists, search for user with authtoken
+
+
+
+
+log off
+
+server receives request with authtoken from cookie
+
+removes authtoken from session
+
+sends updated cookie with authtoken : ""
+
+

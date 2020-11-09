@@ -1,0 +1,13 @@
+
+
+
+//refer to server.ts
+//where session is from entities/Session.ts
+//where Session is a class extended from base entity of ORM
+
+
+    const session = new Session()
+    session.authToken = authToken
+    session.user = user //same as storing user foreign key
+    await Session.save(session).then(s => console.log('saved session ' + s.id))
+

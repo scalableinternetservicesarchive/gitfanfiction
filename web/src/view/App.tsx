@@ -5,7 +5,6 @@ import { hydrate, render } from 'react-dom'
 import { Provider as StyletronProvider } from 'styletron-react'
 import { appContext } from '../../../common/src/context'
 import { getApolloClient } from '../graphql/apolloClient'
-import { FetchUserContext } from '../graphql/query.gen'
 import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
@@ -36,7 +35,7 @@ export function init() {
 }
 
 export function App() {
-  const { loading, data } = useQuery<FetchUserContext>(fetchUser)
+  const { loading, data } = useQuery(fetchUser)
   if (loading || data == null) {
     return null
   }
@@ -69,6 +68,10 @@ export function AppBody() {
   )
 }
 
+//old one
+// const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
+
+//new bodyclass
 const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
 
 const Footer = style('footer', 'fixed flex items-center bottom-0 w-100')

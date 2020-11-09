@@ -12,6 +12,7 @@ import cors from 'cors'
 import { json, raw, RequestHandler, static as expressStatic } from 'express'
 import { getOperationAST, parse as parseGraphql, specifiedRules, subscribe as gqlSubscribe, validate } from 'graphql'
 import { GraphQLServer } from 'graphql-yoga'
+import { ContextParameters } from 'graphql-yoga/dist/types'
 import { forAwaitEach, isAsyncIterable } from 'iterall'
 import path from 'path'
 import 'reflect-metadata'
@@ -27,10 +28,20 @@ import { ConnectionManager } from './graphql/ConnectionManager'
 import { expressLambdaProxy } from './lambda/handler'
 import { renderApp } from './render'
 
+
+const getuser = (a: ContextParameters): User => {
+  // console.log("I am:")
+  // console.log(a.request.body)
+  // console.log((a.request as any)?.user || null)
+  return (a.request as any)?.user || null
+}
+
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null }),
+  context: ctx => ({
+    ...ctx, pubsub, user: getuser(ctx)
+  }),
 })
 
 server.express.use(cookieParser())
@@ -59,7 +70,7 @@ server.express.post(
     const password = req.body.password
 
     const user = await User.findOne({ where: { email } })
-    if (!user || password !== Config.adminPassword) {
+    if (!user || password !== user.password) {
       res.status(403).send('Forbidden')
       return
     }
@@ -212,6 +223,7 @@ server.express.post(
   '/graphql',
   asyncRoute(async (req, res, next) => {
     const authToken = req.cookies.authToken || req.header('x-authtoken')
+
     if (authToken) {
       const session = await Session.findOne({ where: { authToken }, relations: ['user'] })
       if (session) {
