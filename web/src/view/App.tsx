@@ -9,8 +9,9 @@ import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
-import { HomePage } from './our_work/page/HomePage'
 import { LoginPage } from './our_work/page/LoginPage'
+import { BrowseAll } from './page/BrowseAll'
+import { HomePage } from './page/HomePage'
 import { LandingPage } from './page/LandingPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PuppyPage } from './page/PuppyPage'
@@ -56,6 +57,7 @@ export function AppBody() {
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <PuppyPage path={Route.PUPPY} />
+        <BrowseAll path={Route.BROWSE_ALL} />
         <LandingPage path={Route.LANDING} />
         <LoginPage path={Route.LOGIN} />
       </Router>

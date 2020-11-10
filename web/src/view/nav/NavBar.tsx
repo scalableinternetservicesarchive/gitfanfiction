@@ -35,6 +35,10 @@ const otherTabs = [
     path: getPath(Route.PUPPY),
   },
   {
+    name: 'browse-all',
+    path: getPath(Route.BROWSE_ALL),
+  },
+  {
     name: 'landing',
     path: getPath(Route.LANDING),
   },

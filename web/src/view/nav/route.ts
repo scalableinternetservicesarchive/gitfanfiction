@@ -12,6 +12,7 @@ export enum Route {
   PLAYGROUND_APP = 'app/playground/:app',
   PUPPY = 'app/puppy',
   LOGIN = 'app/login',
+  BROWSE_ALL = 'app/browse-all',
   LANDING = 'app/landing',
 }
 
