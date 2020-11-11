@@ -11,6 +11,7 @@ import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { HomePage } from './our_work/page/HomePage'
 import { LoginPage } from './our_work/page/LoginPage'
+import { PostPage } from './our_work/page/PostPage'
 import { SignupPage } from './our_work/page/SignupPage'
 import { BrowseAll } from './page/BrowseAll'
 import { LandingPage } from './page/LandingPage'
@@ -62,6 +63,7 @@ export function AppBody() {
         <LandingPage path={Route.LANDING} />
         <LoginPage path={Route.LOGIN} />
         <SignupPage path={Route.SIGNUP} />
+        <PostPage path={Route.POST} />
       </Router>
       <Footer>
         <FooterText>© 2020 John Rothfels</FooterText>
