@@ -35,9 +35,17 @@ export function PostPage(props: PostPageProps) {
       </Header>
       <Body>
         <TopLine />
+        <TitleBox>
+          place to submit title
+        </TitleBox>
       </Body>
       <SidePanel>
+        <BranchPanel>
 
+        </BranchPanel>
+        <NavigationPanel>
+          hello
+        </NavigationPanel>
       </SidePanel>
     </>
   )
@@ -99,14 +107,39 @@ const Body = style('div', ' w-100', {
 const TopLine = style('div', 'ba', {
   borderWidth: "0 0 1.5 0",
   borderColor: color.line,
-  margin: "0 20",
+  margin: "0 30",
   width: 'auto',
   height: 90
 })
 
-const SidePanel = style('div', 'fixed ba', {
+const TitleBox = style('div', 'ba', {
+  borderWidth: "0 0 1.5 0",
+  borderColor: color.line,
+  margin: '0 30 0 40vh',
+  width: 'auto',
+  height: 100
+})
+
+const SidePanel = style('div', 'fixed flex ba', {
   top: 100,
   left: 20,
-  height: 500,
-  width: 250
+  height: "75vh",
+  width: "35vh",
+  flexDirection: 'column',
+  alignItems: 'center',
 })
+
+const BranchPanel = style('div', ' ba', {
+  borderWidth: "0 0 1.5 0",
+  borderColor: color.line,
+  height: "18vh",
+  width: "32vh",
+})
+
+const NavigationPanel = style('div', ' ba', {
+  marginTop: 20,
+  borderColor: color.line,
+  height: "50vh",
+  width: "32vh",
+})
+
