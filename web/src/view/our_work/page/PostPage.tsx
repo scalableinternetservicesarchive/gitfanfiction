@@ -8,14 +8,39 @@ const logo = 'assets/image/webpage-general/logo.png';
 const gear = 'assets/image/webpage-general/gear.png';
 
 const color = {
-  line: "629089"
+  line: "#629089",
+  panel: "#70AD47"
 }
+
+// const init_content = `- background
+
+// it was a bright morning day when all of the sudden it hit like a mad man.`
 
 interface PostPageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PostPage(props: PostPageProps) {
+  const [content, setContent] = React.useState("");
 
+  const contentRef = React.useRef(null);
+  React.useEffect(() => {
+    (contentRef as any).current.style.height = "0px";
+    const scrollHeight = (contentRef as any).current.scrollHeight;
+    (contentRef as any).current.style.height = scrollHeight + "px";
+  }, [content]);
+
+  //allows tabs
+  React.useEffect(() => {
+    const CR = (contentRef as any).current;
+    CR.onkeydown = function (e: any) {
+      if (e.key == 'Tab') {
+        e.preventDefault();
+        var s = CR.selectionStart;
+        CR.value = CR.value.substring(0, CR.selectionStart) + "\t" + CR.value.substring(CR.selectionEnd);
+        CR.selectionEnd = s + 1;
+      }
+    }
+  }, [])
 
   return (
     <>
@@ -35,9 +60,29 @@ export function PostPage(props: PostPageProps) {
       </Header>
       <Body>
         <TopLine />
-        <TitleBox>
-          place to submit title
-        </TitleBox>
+        <ContextBox>
+          <LeftContextBox>
+            <DeviationBox>
+              place for deviation
+            </DeviationBox>
+            <TitleBox>
+              place to submit title
+
+            </TitleBox>
+          </LeftContextBox>
+          <RightContextBox>
+
+          </RightContextBox>
+        </ContextBox>
+        <ContentBox>
+          <textarea
+            ref={contentRef}
+            style={styles.contentTextArea}
+            value={content}
+            placeholder="Type your story here..."
+            onChange={(event) => setContent(event.target.value)}
+          />
+        </ContentBox>
       </Body>
       <SidePanel>
         <BranchPanel>
@@ -49,6 +94,13 @@ export function PostPage(props: PostPageProps) {
       </SidePanel>
     </>
   )
+}
+
+const styles = {
+  contentTextArea: {
+    padding: 10,
+    width: "100%"
+  }
 }
 
 const Header = style('header', 'flex w-100', {
@@ -101,6 +153,7 @@ const MenuItem = style('div', 'ba flex', {
 })
 
 const Body = style('div', ' w-100', {
+  marginBottom: 20
 })
 
 
@@ -112,12 +165,42 @@ const TopLine = style('div', 'ba', {
   height: 90
 })
 
-const TitleBox = style('div', 'ba', {
+const ContextBox = style('div', 'ba flex', {
   borderWidth: "0 0 1.5 0",
   borderColor: color.line,
   margin: '0 30 0 40vh',
+  padding: 10,
   width: 'auto',
   height: 100
+})
+
+const LeftContextBox = style('div', 'flex h-100', {
+  flex: 1,
+  flexDirection: "column",
+  justifyContent: "flex-end",
+})
+
+const DeviationBox = style('div', 'flex', {
+  marginBottom: 5,
+  fontSize: 30
+})
+
+const TitleBox = style('div', 'flex', {
+  fontSize: 20
+})
+
+const RightContextBox = style('div', 'ba flex h-100', {
+  width: 200
+})
+
+
+
+const ContentBox = style('div', 'ba', {
+  border: "0 " + color.panel + " solid",
+  borderWidth: "0 0 0 3",
+  margin: '30 30 0 42vh',
+  minHeight: "100px",
+  width: "auto"
 })
 
 const SidePanel = style('div', 'fixed flex ba', {
