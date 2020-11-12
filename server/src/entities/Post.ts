@@ -14,7 +14,9 @@ export class Post extends BaseEntity {
   @Column()
   length: string
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   upvote: number
 
   @Column()
