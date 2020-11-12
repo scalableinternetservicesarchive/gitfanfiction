@@ -17,6 +17,7 @@ import { BrowseAll } from './page/BrowseAll'
 import { LandingPage } from './page/LandingPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PuppyPage } from './page/PuppyPage'
+import { ViewStoryPage } from './page/ViewStoryPage'
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -64,6 +65,7 @@ export function AppBody() {
         <LoginPage path={Route.LOGIN} />
         <SignupPage path={Route.SIGNUP} />
         <PostPage path={Route.POST} />
+        <ViewStoryPage path={Route.VIEW_STORY} />
       </Router>
       <Footer>
         <FooterText>© 2020 John Rothfels</FooterText>

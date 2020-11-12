@@ -4,8 +4,8 @@ import SortIcon from '@material-ui/icons/Sort'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import BranchDiagram from '../component/BranchDiagram'
-import SearchBar from '../component/SearchBar'
 import { AppRouteParams } from '../nav/route'
+import SearchBar from '../our_work/component/SearchBar'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
