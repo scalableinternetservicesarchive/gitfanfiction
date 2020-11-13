@@ -66,6 +66,7 @@ export interface QueryGetPostChaptersArgs {
 export interface Mutation {
   __typename?: 'Mutation'
   addFandom?: Maybe<Fandom>
+  addUser?: Maybe<User>
   addChapter?: Maybe<Chapter>
   makePost?: Maybe<Post>
   makeComment?: Maybe<Comment>
@@ -77,6 +78,10 @@ export interface Mutation {
 
 export interface MutationAddFandomArgs {
   input: FandomInput
+}
+
+export interface MutationAddUserArgs {
+  input: UserInput
 }
 
 export interface MutationAddChapterArgs {
@@ -186,6 +191,7 @@ export interface Chapter {
   id: Scalars['Int']
   order: Scalars['Int']
   originDirectFromFandom: Scalars['Boolean']
+  length: Scalars['Int']
   rating: Scalars['Float']
   num_rating: Scalars['Int']
   title: Scalars['String']
@@ -197,6 +203,7 @@ export interface Chapter {
 
 export interface ChapterInput {
   title: Scalars['String']
+  length: Scalars['Int']
   originDirectFromFandom: Scalars['Boolean']
   postOrFandomId: Scalars['Int']
   body: Scalars['String']
@@ -461,6 +468,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationAddFandomArgs, 'input'>
   >
+  addUser?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddUserArgs, 'input'>
+  >
   addChapter?: Resolver<
     Maybe<ResolversTypes['Chapter']>,
     ParentType,
@@ -574,6 +587,7 @@ export type ChapterResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   originDirectFromFandom?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  length?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
   num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>

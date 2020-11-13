@@ -12,7 +12,7 @@ import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
 import { User } from '../entities/User'
-import { Resolvers } from './schema.types'
+import { Resolvers, UserType } from './schema.types'
 
 export const pubsub = new PubSub()
 
@@ -69,8 +69,19 @@ export const graphqlRoot: Resolvers<Context> = {
       return fandom
     },
 
+    addUser: async (_, { input }, ctx) => {
+      const { email, password } = input
+      const user = new User()
+      user.password = password
+      user.email = email
+      user.name = "A User"
+      user.userType = UserType.User
+      await user.save()
+      return user
+    },
+
     addChapter: async (_, { input }, ctx) => {
-      const { title, originDirectFromFandom, postOrFandomId, body } = input
+      const { title, length, originDirectFromFandom, postOrFandomId, body } = input
       const chapter = new Chapter()
       chapter.originDirectFromFandom = originDirectFromFandom
       if(originDirectFromFandom){
@@ -80,8 +91,10 @@ export const graphqlRoot: Resolvers<Context> = {
         chapter.post = (await Post.findOne({ where: { id: postOrFandomId } }))!
         chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       }
+      chapter.length = length
       chapter.title = title
       chapter.body = body
+      await chapter.save()
       return chapter
     },
 
