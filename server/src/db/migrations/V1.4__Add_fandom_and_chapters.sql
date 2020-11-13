@@ -1,6 +1,6 @@
 
 
-insert into `fandom` (`fandomType`, `name`, `author`) values ('book', 'harrypotter', 'jk');
+insert into `fandom` (`fandomType`, `name`, `author`,`length`) values ('book', 'harrypotter', 'jk','7');
 insert into `chapter` (`order`, `title`, `length`, `originDirectFromFandom`, `fandomId`, `body`) values (1, "Philosopher's Stone", 17, 1, 1, "");
 insert into `chapter` (`order`, `title`, `length`, `originDirectFromFandom`, `fandomId`, `body`) values (2, "Chamber of Secrets", 18, 1, 1, "");
 insert into `chapter` (`order`, `title`, `length`, `originDirectFromFandom`, `fandomId`, `body`) values (3, "Prisoner of Azkaban", 22, 1, 1, "");

@@ -79,6 +79,7 @@ type Fandom {
   name: String!
   chapters: [Chapter!]! # List of values denoting chapters in the book or films in the film series
   author: String!
+  length: String
 }
 
 input FandomInput {
@@ -102,6 +103,7 @@ type Post {
   upvote: Int!
   title: String!
   description: String!
+  length: String
 }
 
 input RatingInput{

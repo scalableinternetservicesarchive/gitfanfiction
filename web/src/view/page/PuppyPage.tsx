@@ -3,10 +3,10 @@ import * as React from 'react'
 import { Colors } from '../../../../common/src/colors'
 import { H1, H3 } from '../../style/header'
 import { style } from '../../style/styled'
-import BranchDiagram from '../component/BranchDiagram'
 import SearchBar from '../component/SearchBar'
 import ViewStoryBox from '../component/ViewStoryBox'
 import { AppRouteParams } from '../nav/route'
+import BranchDiagram from '../our_work/component/BranchDiagram'
 import { Page } from './Page'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }

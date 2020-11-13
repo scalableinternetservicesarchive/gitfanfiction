@@ -1,12 +1,10 @@
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
+import Background_SideBranch from '../component/Background_SideBranch';
+import Header_Thick from '../component/Header_Thick';
 import { AppRouteParams } from '../nav/route';
 
-//img src
-const gear = 'assets/image/webpage-general/gear.png';
-const logo = 'assets/image/webpage-general/logo.png';
-const backgroundBranch = 'assets/image/webpage-specific/login-page/background-branch.png';
 interface LoginPageProps extends RouteComponentProps, AppRouteParams { }
 
 const textColor = "#9fc89d"
@@ -17,20 +15,14 @@ export function SignupPage(props: LoginPageProps) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [birthday, setBirthday] = React.useState('');
+  const [err, setError] = React.useState("")
 
 
   return (<>
-    <Header>
-      <LeftHeaderBox>
-        <a href="/app/index"><img height={40} src={logo} alt="logo" /></a>
-      </LeftHeaderBox>
-      <RightHeaderBox>
-        <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
-        <a href="/app/setting">
-          <img style={{ margin: '0 25' }} height={50} src={gear} alt="gear" />
-        </a>
-      </RightHeaderBox>
-    </Header>
+    <Header_Thick />
+    <Background_SideBranch />
     <Body>
       <AbsFlex>
         <ContentBox>
@@ -47,19 +39,72 @@ export function SignupPage(props: LoginPageProps) {
               <input style={{ ...styles.input }} type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
             </div>
           </InputBox>
+          <InputBox>
+            <div style={{ ...styles.inputField }}>
+              <div style={{ ...styles.field }}><pre>{"name : "}</pre></div>
+              <input style={{ ...styles.input }} type="text" value={name} onChange={(event) => setName(event.target.value)} />
+            </div>
+          </InputBox>
+          <InputBox>
+            <div style={{ ...styles.inputField }}>
+              <div style={{ ...styles.field }}><pre>{"birthday : "}</pre></div>
+              <input style={{ ...styles.input }} type="text" value={birthday} onChange={(event) => setBirthday(event.target.value)} placeholder="YYYY-MM-DD" />
+            </div>
+          </InputBox>
           <PromptBox>
             <a style={{ color: textColor }} href="/app/login">
               <AltPrompt>Have an account?</AltPrompt>
             </a>
           </PromptBox>
+          <a href="#" onClick={() => signup({ email, password, name, birthday, setError })}> Sign Up </a>
+          <div>{err}</div>
         </ContentBox>
       </AbsFlex>
-      <SideImageBox>
-        <img style={{ width: "200", height: "520", marginTop: "50" }} src={backgroundBranch} alt="backgroundBranch" />
-      </SideImageBox>
     </Body>
   </>
   )
+}
+
+function signup({ email, password, name, birthday, setError }: any) {
+  console.log("sign up attempted")
+  if (email == "" || password == "" || name == "" || birthday == "") {
+    setError('missing field')
+    return;
+  }
+  if (!validate(email, password, setError)) {
+    setError('invalid email')
+    return
+  }
+
+  fetch('/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, name }),
+  })
+    .then(async res => {
+      if (res.status == 200) return res.text();
+      const err = await res.text()
+      throw err;
+    })
+    .then(() => window.location.href = 'login')
+    .catch(err => {
+      setError(err.toString())
+    })
+}
+
+function validateEmail(email: string) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
+function validate(
+  email: string,
+  password: string,
+  setError: any
+) {
+  const validEmail = validateEmail(email)
+  const validPassword = Boolean(password)
+  return validEmail && validPassword
 }
 
 const styles = {
@@ -88,51 +133,7 @@ const Body = style('div', 'flex w-100 h-100', {
   // borderWidth: 2,
   // borderColor: 'red',
 })
-const Header = style('header', 'fixed flex w-100', {
-  zIndex: 2,
-  justifyContent: 'space-between',
-  backgroundColor: '#94dacd',
-  // borderWidth: 2,
-  // borderColor: 'red',
-  height: 75
-})
 
-const LeftHeaderBox = style('div', 'flex ml4 mb3', {
-  // borderWidth: 2,
-  // borderColor: 'green',
-  alignItems: 'flex-end'
-
-})
-
-const RightHeaderBox = style('div', 'flex', {
-  // borderWidth: 2,
-  // borderColor: 'green',
-  alignItems: 'center'
-
-})
-
-const MenuItem = style('div', 'ba flex', {
-  borderWidth: 1.5,
-  borderColor: 'white',
-  width: 95,
-  height: 35,
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'white',
-  textDecorationLine: 'none',
-  fontSize: 20,
-  fontWeight: 300,
-  fontFamily: 'sans-serif',
-  margin: "0 5"
-})
-
-const SideImageBox = style('div', 'flex', {
-  // borderWidth: 1.5,
-  // borderColor: 'green',
-  width: 300,
-  justifyContent: 'center'
-
-})
 
 const AbsFlex = style('div', 'flex h-100 w-100', {
   position: "fixed",
@@ -141,28 +142,27 @@ const AbsFlex = style('div', 'flex h-100 w-100', {
   justifyContent: 'center',
 })
 
-const ContentBox = style('div', 'flex', {
+const ContentBox = style('div', {
   // borderWidth: 1.5,
   // borderColor: 'blue',
   width: 350,
-  height: 250,
   marginTop: 200,
-  flexDirection: "column",
 })
 
 const PromptBox = style('div', 'flex', {
   // borderWidth: 1.5,
   // borderColor: 'green',
-  flex: 1,
+  height: 65,
 })
 
 const InputBox = style('div', 'flex', {
   // borderWidth: 1.5,
   // borderColor: 'yellow',
-  flex: 1,
+  height: 65,
   alignItems: 'center',
   justifyContent: 'center',
 })
+
 
 const LoginPrompt = style('div', 'flex', {
   font: "35px sans-serif",
