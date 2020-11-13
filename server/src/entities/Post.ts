@@ -14,11 +14,18 @@ export class Post extends BaseEntity {
   @Column()
   length: string
 
+<<<<<<< HEAD
   @Column()
   rating: number
 
   @Column()
   num_rating: number
+=======
+  @Column({
+    default: 0,
+  })
+  upvote: number
+>>>>>>> ae2adc3e69973132eeccf1bd0ae3122edef977e8
 
   @Column()
   title: string

@@ -42,6 +42,10 @@ const otherTabs = [
     name: 'landing',
     path: getPath(Route.LANDING),
   },
+  {
+    name: 'view-story',
+    path: getPath(Route.VIEW_STORY),
+  }
 ]
 
 export function NavBar() {

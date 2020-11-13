@@ -13,7 +13,7 @@ const textColor = "#9fc89d"
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function LoginPage(props: LoginPageProps) {
+export function SignupPage(props: LoginPageProps) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -34,7 +34,7 @@ export function LoginPage(props: LoginPageProps) {
     <Body>
       <AbsFlex>
         <ContentBox>
-          <PromptBox><LoginPrompt>Log In</LoginPrompt></PromptBox>
+          <PromptBox><LoginPrompt>Sign Up</LoginPrompt></PromptBox>
           <InputBox>
             <div style={{ ...styles.inputField }}>
               <div style={{ ...styles.field }}><pre>{"email : "}</pre></div>
@@ -48,8 +48,8 @@ export function LoginPage(props: LoginPageProps) {
             </div>
           </InputBox>
           <PromptBox>
-            <a style={{ color: textColor }} href="/app/signup">
-              <AltPrompt>Need an account?</AltPrompt>
+            <a style={{ color: textColor }} href="/app/login">
+              <AltPrompt>Have an account?</AltPrompt>
             </a>
           </PromptBox>
         </ContentBox>

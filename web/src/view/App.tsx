@@ -9,12 +9,15 @@ import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
+import { HomePage } from './our_work/page/HomePage'
 import { LoginPage } from './our_work/page/LoginPage'
+import { PostPage } from './our_work/page/PostPage'
+import { SignupPage } from './our_work/page/SignupPage'
 import { BrowseAll } from './page/BrowseAll'
-import { HomePage } from './page/HomePage'
 import { LandingPage } from './page/LandingPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PuppyPage } from './page/PuppyPage'
+import { ViewStoryPage } from './page/ViewStoryPage'
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -60,6 +63,9 @@ export function AppBody() {
         <BrowseAll path={Route.BROWSE_ALL} />
         <LandingPage path={Route.LANDING} />
         <LoginPage path={Route.LOGIN} />
+        <SignupPage path={Route.SIGNUP} />
+        <PostPage path={Route.POST} />
+        <ViewStoryPage path={Route.VIEW_STORY} />
       </Router>
       <Footer>
         <FooterText>© 2020 John Rothfels</FooterText>
