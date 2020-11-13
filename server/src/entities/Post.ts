@@ -15,18 +15,14 @@ export class Post extends BaseEntity {
   length: string
 
   @Column()
-  upvote: number
+  rating: number
+
+  @Column()
+  num_rating: number
 
   @Column()
   title: string
 
-  @Column({
-  })
+  @Column()
   body: string
-
-
-  get upvotes() {
-    return this.upvote
-  }
-
 }

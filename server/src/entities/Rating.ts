@@ -1,7 +1,8 @@
+/* eslint-disable prettier/prettier */
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
-export class Comment extends BaseEntity {
+export class Rating extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -9,15 +10,10 @@ export class Comment extends BaseEntity {
   story: number
 
   @Column()
-  body: string
+  rating: number
 
   @Column()
-  time: string
+  user: number
 
-  @Column()
-  vote: number
 
-  get votes() {
-    return this.vote
-  }
 }

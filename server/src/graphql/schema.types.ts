@@ -19,6 +19,8 @@ export interface Query {
   fandom?: Maybe<Fandom>
   posts: Array<Post>
   post?: Maybe<Post>
+  ratings: Array<Rating>
+  rating?: Maybe<Rating>
   comments: Array<Comment>
   comment?: Maybe<Comment>
   surveys: Array<Survey>
@@ -31,6 +33,10 @@ export interface QueryFandomArgs {
 
 export interface QueryPostArgs {
   postId: Scalars['Int']
+}
+
+export interface QueryRatingArgs {
+  ratingId: Scalars['Int']
 }
 
 export interface QueryCommentArgs {
@@ -47,6 +53,8 @@ export interface Mutation {
   makePost?: Maybe<Post>
   makeComment?: Maybe<Comment>
   answerSurvey: Scalars['Boolean']
+  rateStory?: Maybe<Rating>
+  voteComment: Scalars['Boolean']
   nextSurveyQuestion?: Maybe<Survey>
 }
 
@@ -64,6 +72,14 @@ export interface MutationMakeCommentArgs {
 
 export interface MutationAnswerSurveyArgs {
   input: SurveyInput
+}
+
+export interface MutationRateStoryArgs {
+  input: RatingInput
+}
+
+export interface MutationVoteCommentArgs {
+  input: VoteInput
 }
 
 export interface MutationNextSurveyQuestionArgs {
@@ -111,6 +127,17 @@ export interface Originstory {
   type: Scalars['String']
 }
 
+export interface RatingInput {
+  some_story: Scalars['Int']
+  rating: Scalars['Int']
+  user: Scalars['Int']
+}
+
+export interface VoteInput {
+  some_comment: Scalars['Int']
+  user: Scalars['Int']
+}
+
 export interface PostInput {
   origin: Scalars['Int']
   start: Scalars['String']
@@ -125,20 +152,31 @@ export interface Post {
   origin: Scalars['Int']
   start: Scalars['String']
   length: Scalars['String']
-  upvote: Scalars['Int']
+  rating: Scalars['Float']
+  num_rating: Scalars['Int']
   title: Scalars['String']
   body: Scalars['String']
+}
+
+export interface Rating {
+  __typename?: 'Rating'
+  id: Scalars['Int']
+  story: Scalars['Int']
+  rating: Scalars['Int']
+  user: Scalars['Int']
 }
 
 export interface Comment {
   __typename?: 'Comment'
   id: Scalars['Int']
+  story: Scalars['Int']
   body: Scalars['String']
   vote: Scalars['Int']
   time: Scalars['String']
 }
 
 export interface CommentInput {
+  story: Scalars['Int']
   body: Scalars['String']
   time: Scalars['String']
 }
@@ -266,8 +304,12 @@ export type ResolversTypes = {
   Fandom: ResolverTypeWrapper<Fandom>
   FandomInput: FandomInput
   Originstory: ResolverTypeWrapper<Originstory>
+  RatingInput: RatingInput
+  VoteInput: VoteInput
   PostInput: PostInput
   Post: ResolverTypeWrapper<Post>
+  Float: ResolverTypeWrapper<Scalars['Float']>
+  Rating: ResolverTypeWrapper<Rating>
   Comment: ResolverTypeWrapper<Comment>
   CommentInput: CommentInput
   UserType: UserType
@@ -289,8 +331,12 @@ export type ResolversParentTypes = {
   Fandom: Fandom
   FandomInput: FandomInput
   Originstory: Originstory
+  RatingInput: RatingInput
+  VoteInput: VoteInput
   PostInput: PostInput
   Post: Post
+  Float: Scalars['Float']
+  Rating: Rating
   Comment: Comment
   CommentInput: CommentInput
   Survey: Survey
@@ -313,6 +359,13 @@ export type QueryResolvers<
   >
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'postId'>>
+  ratings?: Resolver<Array<ResolversTypes['Rating']>, ParentType, ContextType>
+  rating?: Resolver<
+    Maybe<ResolversTypes['Rating']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryRatingArgs, 'ratingId'>
+  >
   comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>
   comment?: Resolver<
     Maybe<ResolversTypes['Comment']>,
@@ -356,6 +409,18 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationAnswerSurveyArgs, 'input'>
+  >
+  rateStory?: Resolver<
+    Maybe<ResolversTypes['Rating']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationRateStoryArgs, 'input'>
+  >
+  voteComment?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationVoteCommentArgs, 'input'>
   >
   nextSurveyQuestion?: Resolver<
     Maybe<ResolversTypes['Survey']>,
@@ -420,9 +485,21 @@ export type PostResolvers<
   origin?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   start?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   length?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  upvote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
+  num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
+
+export type RatingResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Rating'] = ResolversParentTypes['Rating']
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  story?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  user?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
@@ -431,6 +508,7 @@ export type CommentResolvers<
   ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  story?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   vote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   time?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -480,6 +558,7 @@ export type Resolvers<ContextType = any> = {
   Fandom?: FandomResolvers<ContextType>
   Originstory?: OriginstoryResolvers<ContextType>
   Post?: PostResolvers<ContextType>
+  Rating?: RatingResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
   Survey?: SurveyResolvers<ContextType>
   SurveyQuestion?: SurveyQuestionResolvers<ContextType>

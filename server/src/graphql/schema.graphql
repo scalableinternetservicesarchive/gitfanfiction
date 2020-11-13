@@ -22,6 +22,9 @@ type Query {
   posts:[Post!]!
   post (postId: Int!): Post
 
+  ratings: [Rating!]!
+  rating (ratingId: Int!): Rating
+
   comments:[Comment!]!
   comment (commentId: Int!): Comment
 
@@ -36,7 +39,8 @@ type Mutation {
   makeComment (input: CommentInput!): Comment
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
-
+  rateStory(input: RatingInput!): Rating
+  voteComment(input: VoteInput!): Boolean!
   # Moves the survey to the next question (or starts it if it hasn't started). ADMIN only.
   nextSurveyQuestion (surveyId: Int!): Survey
 }
@@ -74,6 +78,17 @@ type Originstory{
   type: String!
 }
 
+input RatingInput{
+  some_story: Int!
+  rating: Int!
+  user: Int!
+}
+
+input VoteInput{
+  some_comment: Int!
+  user: Int!
+}
+
 input PostInput {
 
   origin: Int!
@@ -90,19 +105,29 @@ type Post {
   origin: Int!
   start: String!
   length: String!
-  upvote: Int!
+  rating: Float!
+  num_rating: Int!
   title: String!
   body: String!
 }
 
+type Rating{
+  id: Int!
+  story: Int!
+  rating: Int!
+  user: Int!
+}
+
 type Comment {
   id: Int!
+  story: Int!
   body: String!
   vote: Int!
   time: String! #DateTime not supported. proabably require some special library install
 }
 
 input CommentInput {
+  story: Int!
   body: String!
   time: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
