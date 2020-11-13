@@ -1,11 +1,13 @@
+/* eslint-disable prettier/prettier */
 import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { Chapter } from '../entities/Chapter'
 import { Comment } from '../entities/Comment'
 import { Fandom } from '../entities/Fandom'
 import { Post } from '../entities/Post'
-//import { Story } from '../entities/Story'
+import { Rating } from '../entities/Rating'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
@@ -27,55 +29,116 @@ interface Context {
   request: Request
   response: Response
   pubsub: PubSub
+  rating: Rating | null
 }
 
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => ctx.user,
+
     fandoms: () => Fandom.find(),
     fandom: async (_, { fandomId }) => (await Fandom.findOne({ where: { id: fandomId } }))!,
+
     posts: () => Post.find(),
     post: async (_, { postId }) => (await Post.findOne({ where: { id: postId } }))!,
+
+    chapters: () => Chapter.find(),
+    chapter: async (_, { chapterId }) => (await Chapter.findOne({ where: { id: chapterId } }))!,
+
     comments: () => Comment.find(),
     comment: async (_, { commentId }) => (await Comment.findOne({ where: { id: commentId } }))!,
+
+    ratings: () => Rating.find(),
+    rating: async (_, { ratingId }) => (await Rating.findOne({ where: { id: ratingId } })) || null,
+
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
+
+    getFandomChapters: async (_, { fandomId }) => (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: fandomId } }))! } }))!,
+    getPostChapters: async (_, { postId }) => (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postId } }))! } }))!,
   },
   Mutation: {
     addFandom: async (_, { input }, ctx) => {
-      const { fandomType, name, author, length } = input
+      const { fandomType, name, author } = input
       const fandom = new Fandom()
       fandom.fandomType = fandomType
       fandom.name = name
+      fandom.chapters = []
       fandom.author = author
-      fandom.length = length
       await fandom.save()
       return fandom
     },
 
-    makePost: async (_, { input }, ctx) => {
-      const { origin, start, length, title, body } = input
-      const post = new Post()
-      post.origin = origin
-      post.start = start
-      post.length = length
+    addChapter: async (_, { input }, ctx) => {
+      const { title, originDirectFromFandom, postOrFandomId, body } = input
+      const chapter = new Chapter()
+      chapter.originDirectFromFandom = originDirectFromFandom
+      if(originDirectFromFandom){
+        chapter.fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
+        chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
+      } else {
+        chapter.post = (await Post.findOne({ where: { id: postOrFandomId } }))!
+        chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
+      }
+      chapter.title = title
+      chapter.body = body
+      return chapter
+    },
 
+    makePost: async (_, { input }, ctx) => {
+      const { origin, title, description } = input
+      const post = new Post()
+      post.origin = (await Chapter.findOne({where: {id: origin}}))!
+      post.chapters = []
       post.title = title
-      post.body = body
+      post.description = description
       post.upvote = 0
+      post.rating = 0
+      post.num_rating = 0
       await post.save()
       return post
     },
 
     makeComment: async (_, { input }, ctx) => {
-      const { body, time } = input
+      const { story, body, time } = input
       const comment = new Comment()
+      comment.story=story
       comment.body = body
       comment.time = time
       comment.vote = 0
       await comment.save()
       return comment
     },
+
+    voteComment: async (_, { input }, ctx) => {
+      const { some_comment } = input
+      const comment = check(await Comment.findOne({ where: { id: some_comment } }))
+      //const some_user = check(await User.findOne({ where: { id: user } }))
+      //some_user.votes.push(some_comment)
+      comment.vote += 1
+      await comment.save()
+      return true
+    },
+
+    rateStory: async (_, { input }, ctx) => {
+      const { some_story, rating, user} = input
+      //const p= post(some_story)
+      const some_post = check(await Post.findOne({ where: { id: some_story } }))
+      const rate = new Rating()
+      rate.story=some_story
+      rate.rating=rating
+      rate.user=user
+      //const exist = check(await Rating.findOne({ where: { story: some_story} }))
+      const exist =null
+      if(exist==null){
+        // eslint-disable-next-line prettier/prettier
+        some_post.rating = Math.round(100*(some_post.rating * some_post.num_rating + rating) / (some_post.num_rating + 1))/100
+        some_post.num_rating += 1
+      }
+      await some_post.save()
+      return rate
+    },
+
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))

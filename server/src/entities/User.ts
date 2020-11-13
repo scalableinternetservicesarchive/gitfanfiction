@@ -22,6 +22,9 @@ export class User extends BaseEntity implements GraphqlUser {
   })
   password: string
 
+  @Column('simple-array', { nullable: true })
+  votes: number[]
+
   @Column({
     type: 'enum',
     enum: UserType,

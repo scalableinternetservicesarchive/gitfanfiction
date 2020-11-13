@@ -19,24 +19,37 @@ type Query {
   self: User
   fandoms: [Fandom!]!
   fandom (fandomId: Int!): Fandom
+
   posts:[Post!]!
   post (postId: Int!): Post
+
+  ratings: [Rating!]!
+  rating (ratingId: Int!): Rating
 
   comments:[Comment!]!
   comment (commentId: Int!): Comment
 
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
+
+  chapters: [Chapter!]!
+  chapter (chapterId: Int!): Chapter
+
+  getFandomChapters (fandomId: Int!): [Chapter!]!
+  getPostChapters (postId: Int!): [Chapter!]!
 }
 
 type Mutation {
   addFandom (input: FandomInput!): Fandom
 
+  addChapter(input: ChapterInput!): Chapter
+
   makePost (input: PostInput!): Post
   makeComment (input: CommentInput!): Comment
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
-
+  rateStory(input: RatingInput!): Rating
+  voteComment(input: VoteInput!): Boolean!
   # Moves the survey to the next question (or starts it if it hasn't started). ADMIN only.
   nextSurveyQuestion (surveyId: Int!): Survey
 }
@@ -53,19 +66,23 @@ type User {
   name: String!
 }
 
+input UserInput {
+  email: String!
+  password: String!
+}
+
 type Fandom {
   id: Int!
   fandomType: String!
   name: String!
+  chapters: [Chapter!]! # List of values denoting chapters in the book or films in the film series
   author: String!
-  length: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
 
 input FandomInput {
   fandomType: String!
   name: String!
   author: String!
-  length: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
 
 type Originstory{
@@ -74,35 +91,71 @@ type Originstory{
   type: String!
 }
 
-input PostInput {
-
-  origin: Int!
-  start: String!
-  length: String!
+type Post {
+  id: Int!
+  origin: Chapter!
+  rating: Float!
+  num_rating: Int!
+  chapters: [Chapter!]!
+  upvote: Int!
   title: String!
+  description: String!
+}
+
+input RatingInput{
+  some_story: Int!
+  rating: Int!
+  user: Int!
+}
+
+input VoteInput{
+  some_comment: Int!
+  user: Int!
+}
+
+input PostInput {
+  origin: Int!
+  title: String!
+  description: String!
+}
+
+type Chapter {
+  id: Int!
+  order: Int!
+  originDirectFromFandom: Boolean!
+  rating: Float!
+  num_rating: Int!
+  title: String!
+  post: Post
+  fandom: Fandom
+  children: [Post!]
   body: String!
 }
 
-
-type Post {
-
-  id: Int!
-  origin: Int!
-  start: String!
-  length: String!
-  upvote: Int!
+input ChapterInput {
   title: String!
-  body: String!
+  originDirectFromFandom: Boolean!
+  postOrFandomId: Int!
+  body: String! #Use "" for empty string.
+}
+
+type Rating{
+  id: Int!
+  story: Int!
+  rating: Int!
+  user: Int!
 }
 
 type Comment {
   id: Int!
+  story: Int!
   body: String!
   vote: Int!
   time: String! #DateTime not supported. proabably require some special library install
 }
 
 input CommentInput {
+  story: Int!
   body: String!
   time: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }

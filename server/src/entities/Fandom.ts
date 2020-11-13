@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Chapter } from './Chapter'
 
 @Entity()
 export class Fandom extends BaseEntity {
@@ -15,14 +16,13 @@ export class Fandom extends BaseEntity {
   })
   name: string
 
+  @OneToMany(() => Chapter, chapter => chapter.fandom)
+  chapters: Chapter[]
+
   @Column({
     length: 100,
     nullable: true,
   })
   author: string
 
-  @Column({
-    length: 500,
-  })
-  length: string
 }
