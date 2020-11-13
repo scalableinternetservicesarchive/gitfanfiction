@@ -24,12 +24,15 @@ export function LandingPage(props: HomePageProps) {
         </Toolbar>
       </AppBar>
 
-      <div style={styles.branch}>
-        <BranchDiagram />
+      <div style={styles.main_content}>
+        <div style={styles.branch}>
+          <BranchDiagram />
+        </div>
+        <div style={styles.searchbar}>
+          <SearchBar />
+        </div>
       </div>
-      <div style={styles.searchbar}>
-        <SearchBar />
-      </div>
+
     </div>
 
   )
@@ -58,19 +61,19 @@ const styles = {
     position: 'absolute',
     top: '40%',
     left: '50%',
-    transform: 'translate(-50%, -190%)',
+    transform: 'translate(-50%, -150%)',
   } as React.CSSProperties,
 
   appbar: {
-    background: 'none',
+    backgroundColor: '202020',
     fontFamily: 'Consolas',
   },
   appbarWrapper: {
     width: '80%',
-    margin: '0 auto',
+    margin: '15px auto',
   },
   appbarTitle: {
-    color: '#000',
+    color: '#fff',
     flex: '1',
     fontSize: '25',
     fontWeight: 'bold',
@@ -79,12 +82,13 @@ const styles = {
     textAlign: 'center',
   },
   icon: {
-    color: '#000',
+    color: '#fff',
     fontSize: '2rem',
   },
   iconDown: {
     color: '#000',
     fontSize: '4rem',
   },
-
+  main_content: {
+  } as React.CSSProperties,
 }
