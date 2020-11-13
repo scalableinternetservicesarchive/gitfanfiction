@@ -81,7 +81,7 @@ export const graphqlRoot: Resolvers<Context> = {
     },
 
     addChapter: async (_, { input }, ctx) => {
-      const { title, originDirectFromFandom, postOrFandomId, body } = input
+      const { title, length, originDirectFromFandom, postOrFandomId, body } = input
       const chapter = new Chapter()
       chapter.originDirectFromFandom = originDirectFromFandom
       if(originDirectFromFandom){
@@ -91,6 +91,7 @@ export const graphqlRoot: Resolvers<Context> = {
         chapter.post = (await Post.findOne({ where: { id: postOrFandomId } }))!
         chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       }
+      chapter.length = length
       chapter.title = title
       chapter.body = body
       await chapter.save()

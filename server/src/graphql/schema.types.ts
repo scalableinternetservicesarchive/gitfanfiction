@@ -191,6 +191,7 @@ export interface Chapter {
   id: Scalars['Int']
   order: Scalars['Int']
   originDirectFromFandom: Scalars['Boolean']
+  length: Scalars['Int']
   rating: Scalars['Float']
   num_rating: Scalars['Int']
   title: Scalars['String']
@@ -202,6 +203,7 @@ export interface Chapter {
 
 export interface ChapterInput {
   title: Scalars['String']
+  length: Scalars['Int']
   originDirectFromFandom: Scalars['Boolean']
   postOrFandomId: Scalars['Int']
   body: Scalars['String']
@@ -585,6 +587,7 @@ export type ChapterResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   originDirectFromFandom?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  length?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
   num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>

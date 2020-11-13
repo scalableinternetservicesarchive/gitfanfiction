@@ -125,6 +125,7 @@ type Chapter {
   id: Int!
   order: Int!
   originDirectFromFandom: Boolean!
+  length: Int!
   rating: Float!
   num_rating: Int!
   title: String!
@@ -136,6 +137,7 @@ type Chapter {
 
 input ChapterInput {
   title: String!
+  length: Int!
   originDirectFromFandom: Boolean!
   postOrFandomId: Int!
   body: String! #Use "" for empty string.

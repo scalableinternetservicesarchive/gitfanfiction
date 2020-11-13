@@ -48,7 +48,7 @@ query getChapters{
 ```
 
 Again, you can query any fields that you wish. The complete list of fields held by the chapter database is as follows:
-
+```
 {
     id
     order
@@ -56,8 +56,13 @@ Again, you can query any fields that you wish. The complete list of fields held 
     post
     fandom
     title
+    children {
+      ...
+    }
     body
 }
+```
+children query does not work on migration data!
 
 ### by specific ID
 ```
@@ -98,6 +103,7 @@ mutation addChapterPost {
     title: "Epilogue"
     body: "And they all lived happily ever after."
     postOrFandomId: 1
+    length: 25
     originDirectFromFandom: false
   }) {
     order
@@ -116,6 +122,7 @@ mutation addChapterFandom {
     title: "Cursed Child"
     body: ""
     postOrFandomId: 1
+    length: 18
     originDirectFromFandom: true
   }) {
     order

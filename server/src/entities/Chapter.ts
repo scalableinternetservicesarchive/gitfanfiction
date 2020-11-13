@@ -10,6 +10,9 @@ export class Chapter extends BaseEntity {
   @Column()
   order: number
 
+  @Column()
+  length: number
+
   @Column({
     type: "float",
     default: 0
