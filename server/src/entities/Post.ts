@@ -10,6 +10,17 @@ export class Post extends BaseEntity {
   origin: Chapter
 
   @Column({
+    type: "float",
+    default: 0
+  })
+  rating: number
+
+  @Column({
+    default: 0
+  })
+  num_rating: number
+
+  @Column({
     default: 0,
   })
   upvote: number
@@ -28,5 +39,4 @@ export class Post extends BaseEntity {
   get upvotes() {
     return this.upvote
   }
-
 }

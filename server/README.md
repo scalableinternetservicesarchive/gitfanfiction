@@ -2,6 +2,28 @@
 
 Chapters are the breakpoints from which new stories will start. Both posts and fandoms will contain chapters, but the querying is slightly different for each.
 
+## How to add a story
+
+```
+mutation addPost{
+  makePost(input: {
+    origin: 4
+    title: "The Investigation"
+    description: "When his name came out of the Goblet of Fire, Harry Potter made a decision that would change his life forever."
+  }) {
+    origin {
+      id
+      title
+    }
+    id
+    title
+    description
+  }
+}
+```
+
+This adds the story as a child of the chapter with id 4 (denoted by the field origin).
+
 ## How to query a chapter
 
 POST (a story made by user):

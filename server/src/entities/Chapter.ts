@@ -10,6 +10,17 @@ export class Chapter extends BaseEntity {
   @Column()
   order: number
 
+  @Column({
+    type: "float",
+    default: 0
+  })
+  rating: number
+
+  @Column({
+    default: 0
+  })
+  num_rating: number
+
   @Column()
   originDirectFromFandom: boolean
 
