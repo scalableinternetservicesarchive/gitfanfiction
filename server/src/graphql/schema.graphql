@@ -19,6 +19,7 @@ type Query {
   self: User
   fandoms: [Fandom!]!
   fandom (fandomId: Int!): Fandom
+
   posts:[Post!]!
   post (postId: Int!): Post
 
@@ -27,10 +28,18 @@ type Query {
 
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
+
+  chapters: [Chapter!]!
+  chapter (chapterId: Int!): Chapter
+
+  getFandomChapters (fandomId: Int!): [Chapter!]!
+  getPostChapters (postId: Int!): [Chapter!]!
 }
 
 type Mutation {
   addFandom (input: FandomInput!): Fandom
+
+  addChapter(input: ChapterInput!): Chapter
 
   makePost (input: PostInput!): Post
   makeComment (input: CommentInput!): Comment
@@ -53,19 +62,23 @@ type User {
   name: String!
 }
 
+input UserInput {
+  email: String!
+  password: String!
+}
+
 type Fandom {
   id: Int!
   fandomType: String!
   name: String!
+  chapters: [Chapter!]! # List of values denoting chapters in the book or films in the film series
   author: String!
-  length: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
 
 input FandomInput {
   fandomType: String!
   name: String!
   author: String!
-  length: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
 }
 
 type Originstory{
@@ -74,25 +87,37 @@ type Originstory{
   type: String!
 }
 
-input PostInput {
-
-  origin: Int!
-  start: String!
-  length: String!
+type Post {
+  id: Int!
+  origin: Chapter!
+  chapters: [Chapter!]!
+  upvote: Int!
   title: String!
+  description: String!
+}
+
+input PostInput {
+  origin: Int!
+  title: String!
+  description: String!
+}
+
+type Chapter {
+  id: Int!
+  order: Int!
+  originDirectFromFandom: Boolean #Is this directly part of a fandom? i.e. is the chapter directly from the original source material (main branch)?
+  title: String!
+  post: Post
+  fandom: Fandom
+  children: [Post!]
   body: String!
 }
 
-
-type Post {
-
-  id: Int!
-  origin: Int!
-  start: String!
-  length: String!
-  upvote: Int!
+input ChapterInput {
   title: String!
-  body: String!
+  originDirectFromFandom: Boolean!
+  postOrFandomId: Int!
+  body: String! #Use "" for empty string.
 }
 
 type Comment {

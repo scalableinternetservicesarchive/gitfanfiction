@@ -23,6 +23,10 @@ export interface Query {
   comment?: Maybe<Comment>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
+  chapters: Array<Chapter>
+  chapter?: Maybe<Chapter>
+  getFandomChapters: Array<Chapter>
+  getPostChapters: Array<Chapter>
 }
 
 export interface QueryFandomArgs {
@@ -41,9 +45,22 @@ export interface QuerySurveyArgs {
   surveyId: Scalars['Int']
 }
 
+export interface QueryChapterArgs {
+  chapterId: Scalars['Int']
+}
+
+export interface QueryGetFandomChaptersArgs {
+  fandomId: Scalars['Int']
+}
+
+export interface QueryGetPostChaptersArgs {
+  postId: Scalars['Int']
+}
+
 export interface Mutation {
   __typename?: 'Mutation'
   addFandom?: Maybe<Fandom>
+  addChapter?: Maybe<Chapter>
   makePost?: Maybe<Post>
   makeComment?: Maybe<Comment>
   answerSurvey: Scalars['Boolean']
@@ -52,6 +69,10 @@ export interface Mutation {
 
 export interface MutationAddFandomArgs {
   input: FandomInput
+}
+
+export interface MutationAddChapterArgs {
+  input: ChapterInput
 }
 
 export interface MutationMakePostArgs {
@@ -88,20 +109,24 @@ export interface User {
   name: Scalars['String']
 }
 
+export interface UserInput {
+  email: Scalars['String']
+  password: Scalars['String']
+}
+
 export interface Fandom {
   __typename?: 'Fandom'
   id: Scalars['Int']
   fandomType: Scalars['String']
   name: Scalars['String']
+  chapters: Array<Chapter>
   author: Scalars['String']
-  length: Scalars['String']
 }
 
 export interface FandomInput {
   fandomType: Scalars['String']
   name: Scalars['String']
   author: Scalars['String']
-  length: Scalars['String']
 }
 
 export interface Originstory {
@@ -111,22 +136,38 @@ export interface Originstory {
   type: Scalars['String']
 }
 
-export interface PostInput {
-  origin: Scalars['Int']
-  start: Scalars['String']
-  length: Scalars['String']
-  title: Scalars['String']
-  body: Scalars['String']
-}
-
 export interface Post {
   __typename?: 'Post'
   id: Scalars['Int']
-  origin: Scalars['Int']
-  start: Scalars['String']
-  length: Scalars['String']
+  origin: Chapter
+  chapters: Array<Chapter>
   upvote: Scalars['Int']
   title: Scalars['String']
+  description: Scalars['String']
+}
+
+export interface PostInput {
+  origin: Scalars['Int']
+  title: Scalars['String']
+  description: Scalars['String']
+}
+
+export interface Chapter {
+  __typename?: 'Chapter'
+  id: Scalars['Int']
+  order: Scalars['Int']
+  originDirectFromFandom?: Maybe<Scalars['Boolean']>
+  title: Scalars['String']
+  post?: Maybe<Post>
+  fandom?: Maybe<Fandom>
+  children?: Maybe<Array<Post>>
+  body: Scalars['String']
+}
+
+export interface ChapterInput {
+  title: Scalars['String']
+  originDirectFromFandom: Scalars['Boolean']
+  postOrFandomId: Scalars['Int']
   body: Scalars['String']
 }
 
@@ -263,11 +304,14 @@ export type ResolversTypes = {
   Subscription: ResolverTypeWrapper<{}>
   User: ResolverTypeWrapper<User>
   String: ResolverTypeWrapper<Scalars['String']>
+  UserInput: UserInput
   Fandom: ResolverTypeWrapper<Fandom>
   FandomInput: FandomInput
   Originstory: ResolverTypeWrapper<Originstory>
-  PostInput: PostInput
   Post: ResolverTypeWrapper<Post>
+  PostInput: PostInput
+  Chapter: ResolverTypeWrapper<Chapter>
+  ChapterInput: ChapterInput
   Comment: ResolverTypeWrapper<Comment>
   CommentInput: CommentInput
   UserType: UserType
@@ -286,11 +330,14 @@ export type ResolversParentTypes = {
   Subscription: {}
   User: User
   String: Scalars['String']
+  UserInput: UserInput
   Fandom: Fandom
   FandomInput: FandomInput
   Originstory: Originstory
-  PostInput: PostInput
   Post: Post
+  PostInput: PostInput
+  Chapter: Chapter
+  ChapterInput: ChapterInput
   Comment: Comment
   CommentInput: CommentInput
   Survey: Survey
@@ -327,6 +374,25 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerySurveyArgs, 'surveyId'>
   >
+  chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
+  chapter?: Resolver<
+    Maybe<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryChapterArgs, 'chapterId'>
+  >
+  getFandomChapters?: Resolver<
+    Array<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetFandomChaptersArgs, 'fandomId'>
+  >
+  getPostChapters?: Resolver<
+    Array<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetPostChaptersArgs, 'postId'>
+  >
 }
 
 export type MutationResolvers<
@@ -338,6 +404,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationAddFandomArgs, 'input'>
+  >
+  addChapter?: Resolver<
+    Maybe<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddChapterArgs, 'input'>
   >
   makePost?: Resolver<
     Maybe<ResolversTypes['Post']>,
@@ -397,8 +469,8 @@ export type FandomResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   fandomType?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  length?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
@@ -417,11 +489,25 @@ export type PostResolvers<
   ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  origin?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  start?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  length?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  origin?: Resolver<ResolversTypes['Chapter'], ParentType, ContextType>
+  chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
   upvote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
+
+export type ChapterResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Chapter'] = ResolversParentTypes['Chapter']
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  originDirectFromFandom?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
+  fandom?: Resolver<Maybe<ResolversTypes['Fandom']>, ParentType, ContextType>
+  children?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
@@ -480,6 +566,7 @@ export type Resolvers<ContextType = any> = {
   Fandom?: FandomResolvers<ContextType>
   Originstory?: OriginstoryResolvers<ContextType>
   Post?: PostResolvers<ContextType>
+  Chapter?: ChapterResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
   Survey?: SurveyResolvers<ContextType>
   SurveyQuestion?: SurveyQuestionResolvers<ContextType>

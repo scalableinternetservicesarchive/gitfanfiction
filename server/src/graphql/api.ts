@@ -2,10 +2,10 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { check } from '../../../common/src/util'
+import { Chapter } from '../entities/Chapter'
 import { Comment } from '../entities/Comment'
 import { Fandom } from '../entities/Fandom'
 import { Post } from '../entities/Post'
-//import { Story } from '../entities/Story'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
@@ -32,36 +32,60 @@ interface Context {
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => ctx.user,
+
     fandoms: () => Fandom.find(),
     fandom: async (_, { fandomId }) => (await Fandom.findOne({ where: { id: fandomId } }))!,
+
     posts: () => Post.find(),
     post: async (_, { postId }) => (await Post.findOne({ where: { id: postId } }))!,
+
+    chapters: () => Chapter.find(),
+    chapter: async (_, { chapterId }) => (await Chapter.findOne({ where: { id: chapterId } }))!,
+
     comments: () => Comment.find(),
     comment: async (_, { commentId }) => (await Comment.findOne({ where: { id: commentId } }))!,
+
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
+
+    getFandomChapters: async (_, { fandomId }) => (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: fandomId } }))! } }))!,
+    getPostChapters: async (_, { postId }) => (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postId } }))! } }))!,
   },
   Mutation: {
     addFandom: async (_, { input }, ctx) => {
-      const { fandomType, name, author, length } = input
+      const { fandomType, name, author } = input
       const fandom = new Fandom()
       fandom.fandomType = fandomType
       fandom.name = name
+      fandom.chapters = []
       fandom.author = author
-      fandom.length = length
       await fandom.save()
       return fandom
     },
 
-    makePost: async (_, { input }, ctx) => {
-      const { origin, start, length, title, body } = input
-      const post = new Post()
-      post.origin = origin
-      post.start = start
-      post.length = length
+    addChapter: async (_, { input }, ctx) => {
+      const { title, originDirectFromFandom, postOrFandomId, body } = input
+      const chapter = new Chapter()
+      chapter.originDirectFromFandom = originDirectFromFandom
+      if(originDirectFromFandom){
+        chapter.fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
+        chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
+      } else {
+        chapter.post = (await Post.findOne({ where: { id: postOrFandomId } }))!
+        chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
+      }
+      chapter.title = title
+      chapter.body = body
+      return chapter
+    },
 
+    makePost: async (_, { input }, ctx) => {
+      const { origin, title, description } = input
+      const post = new Post()
+      post.origin = (await Chapter.findOne({where: {id: origin}}))!
+      post.chapters = []
       post.title = title
-      post.body = body
+      post.description = description
       post.upvote = 0
       await post.save()
       return post
@@ -76,6 +100,7 @@ export const graphqlRoot: Resolvers<Context> = {
       await comment.save()
       return comment
     },
+
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))
