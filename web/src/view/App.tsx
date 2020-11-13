@@ -12,7 +12,9 @@ import { Route } from './nav/route'
 import { HomePage } from './our_work/page/HomePage'
 import { LoginPage } from './our_work/page/LoginPage'
 import { PostPage } from './our_work/page/PostPage'
+import { RequestFandomPage } from './our_work/page/RequestFandomPage'
 import { SignupPage } from './our_work/page/SignupPage'
+import { TestPage } from './our_work/page/TestPage'
 import { BrowseAll } from './page/BrowseAll'
 import { LandingPage } from './page/LandingPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
@@ -66,9 +68,11 @@ export function AppBody() {
         <SignupPage path={Route.SIGNUP} />
         <PostPage path={Route.POST} />
         <ViewStoryPage path={Route.VIEW_STORY} />
+        <RequestFandomPage path={Route.REQUEST_FANDOM} />
+        <TestPage path={'app/test'} />
       </Router>
       <Footer>
-        <FooterText>© 2020 John Rothfels</FooterText>
+        <FooterText>© 2020 Git Fan Fiction</FooterText>
       </Footer>
     </>
   )

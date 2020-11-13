@@ -21,6 +21,9 @@ import { checkEqual, Unpromise } from '../../common/src/util'
 import { Config } from './config'
 import { migrate } from './db/migrate'
 import { initORM } from './db/sql'
+import { Chapter } from './entities/Chapter'
+import { Fandom } from './entities/Fandom'
+import { Post } from './entities/Post'
 import { Session } from './entities/Session'
 import { User } from './entities/User'
 import { getSchema, graphqlRoot, pubsub } from './graphql/api'
@@ -102,6 +105,184 @@ server.express.post(
     }
     res.status(200).cookie('authToken', '', { maxAge: 0 }).send('Success!')
   })
+)
+
+server.express.post(
+  '/auth/signup',
+  asyncRoute(async (req, res) => {
+    console.log('POST /auth/signup')
+    const email = req.body.email
+    const password = req.body.password
+    const name = req.body.name
+
+    if (await User.findOne({ where: { email } })) {
+      res.status(403).send('Existing Email')
+      return
+    }
+
+    const user = new User()
+    user.name = name
+    user.password = password
+    user.email = email
+    await User.save(user).then(s => console.log('saved user ' + s.id))
+    res.status(200).send('Success!')
+  }
+
+  )
+)
+
+server.express.post(
+  '/request-fandom',
+  asyncRoute(async (req, res) => {
+    console.log('POST /request-fandom')
+
+    //title, author, genre, nbooks, chapters
+    const title = req.body.title;
+    const author = req.body.author;
+    const genre = req.body.genre;
+    const length = req.body.length;
+
+
+    const fandom = new Fandom()
+    fandom.author = author;
+    fandom.name = title;
+    fandom.fandomType = genre;
+    fandom.length = length.toString()
+    await Fandom.save(fandom).then(s => console.log('saved fandom ' + s.id))
+
+    let order = 1
+    const nbook = length.length;
+    for (let i = 0; i < nbook; i++) {
+      const singleBook = []
+      for (let j = 0; j < length[i]; j++) {
+        let chapter = new Chapter()
+        chapter.order = order
+        chapter.originDirectFromFandom = true
+        chapter.fandom = fandom
+        chapter.body = ""
+        chapter.title = ""
+        if (j == 0) chapter.title = "book/episode " + (i + 1) + " begins here"
+        singleBook.push(chapter)
+        order += 1
+      }
+      Chapter.save(singleBook).then(s => console.log('saved "' + title + '" / book ' + (i + 1) + ' / ' + length[i] + 'chapters'))
+    }
+
+    res.status(200).send('Success!')
+
+  }
+  )
+)
+
+server.express.post(
+  '/tree',
+  asyncRoute(async (req, res) => {
+    console.log('POST /tree ' + req.body.fandomId)
+
+    //title, author, genre, nbooks, chapters
+    const fid = req.body.fandomId
+
+    const fandom = await Fandom.findOne({ where: { id: fid } })
+
+    console.log(fandom)
+    if (fandom == undefined) { res.status(404).send('Do Not Exist'); return }
+
+
+    // res.status(200).send('Success!')
+
+    //maintain that zero is fandom id. always!!
+    const main = [0, fandom.fandomType, JSON.parse("[" + fandom.length + "]")]
+    const data = { main }
+
+    const sub = []
+    const posts = await Post.find({ where: { fandom } })
+    for (let i = 0; i < posts.length; i++) {
+      const postid = posts[i].id
+      const post = await Post.findOne({ where: { id: postid } })
+      if (post == undefined) { res.status(404).send('Do Not Exist'); return }
+      const origin = post.origin
+      //find origin and starting point
+      console.log(post, origin, postid)
+      let originid = undefined
+      let start = undefined
+      if (origin.originDirectFromFandom) {
+        originid = 0
+        const fandomLength = main[2]
+        let order = origin.order
+        let book = 1
+        for (let i = 0; order - fandomLength[i] > 0; i++) {
+          order = order - fandomLength
+          book++
+        }
+        start = [book, order]
+      }
+      else {
+        const chapter = await Chapter.findOne({ where: { id: origin.id } })
+        const post = await Post.findOne({ where: { chapters: chapter } })
+        console.log(post)
+        originid = chapter?.post.id
+        start = [1, origin.order - 1]
+      }
+
+      //find post length
+      // const posts = await Chapter.find({where: {postId:postid}})
+      // const length =
+      const postData = [
+        postid,
+        originid,
+        start,
+        // length,
+        post.upvote
+      ]
+      sub.push(postData)
+      console.log(sub)
+    }
+
+    res.status(200).send(JSON.stringify(data))
+
+    // what we need
+    // const exampleData: dataInterface = {
+    //   "main": [123456, "book", [30, 20, 50, 20]],
+    //   "sub": [
+    //     [464701, 464700, [1, 5], [500, 1000, 900, 400, 1000, 1000], 0],
+    //     [464700, 123456, [1, 5], [500, 1000, 900, 400, 1000, 1000], 30],
+    //     [225323, 123456, [2, 10], [1300, 900, 300, 2000], 3],
+    //     [235234, 123456, [2, 0], [1000], 0],
+    //     [234599, 225323, [1, 3], [1500], 3] //starts from 1 because there is only one book for substory 225323
+    //   ]
+    // }
+
+
+
+    // fandom.author = author;
+    // fandom.name = title;
+    // fandom.fandomType = genre;
+    // fandom.length = length.toString()
+    // await Fandom.save(fandom).then(s => console.log('saved fandom ' + s.id))
+
+    // let order = 1
+    // const nbook = length.length;
+    // for (let i = 0; i < nbook; i++) {
+    //   const singleBook = []
+    //   for (let j = 0; j < length[i]; j++) {
+    //     let chapter = new Chapter()
+    //     chapter.order = order
+    //     chapter.originDirectFromFandom = true
+    //     chapter.fandom = fandom
+    //     chapter.body = ""
+    //     chapter.title = ""
+    //     if (j == 0) chapter.title = "book/episode " + (i + 1) + " begins here"
+    //     singleBook.push(chapter)
+    //     order += 1
+    //   }
+    //   Chapter.save(singleBook).then(s => console.log('saved "' + title + '" / book ' + (i + 1) + ' / ' + length[i] + 'chapters'))
+    // }
+
+
+
+
+  }
+  )
 )
 
 server.express.get(

@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Chapter } from './Chapter'
+import { Fandom } from './Fandom'
 
 @Entity()
 export class Post extends BaseEntity {
@@ -8,6 +9,9 @@ export class Post extends BaseEntity {
 
   @ManyToOne(() => Chapter, chapter => chapter.children)
   origin: Chapter
+
+  @ManyToOne(() => Fandom, fandom => fandom.post)
+  fandom: Fandom
 
   @Column({
     type: "float",
@@ -28,12 +32,19 @@ export class Post extends BaseEntity {
   @OneToMany(() => Chapter, chapter => chapter.post)
   chapters: Chapter[]
 
+  @Column({
+    length: 250,
+    default: ""
+  })
+  length: string
+
   @Column()
   title: string
 
   @Column({
   })
   description: string
+
 
 
   get upvotes() {

@@ -7,15 +7,52 @@ import { AppRouteParams } from '../nav/route'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function HomePage(props: HomePageProps) {
 
+// export const fetchBranch = gql`
+//   query getBranchContext {
+//     fandom(fandomId:1){
+//       id
+//       name
+//       length
+//     }
+//     getFandomPosts (fandomId:1){
+//       id
+//       upvote
+//       length
+//     }
+//   }
+// `
+
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function TestPage(props: HomePageProps) {
+
+  const [error, setError] = React.useState("")
+
+  const fandomId = 1
+
+  fetch('/tree', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fandomId }),
+  })
+    .then(async res => {
+      if (res.status == 200) return res.text();
+      const err = await res.text()
+      throw err;
+    })
+    .then(setError)
+    .catch(err => {
+      setError(err.toString())
+    })
+
+  //-----
 
   return (
     <div>
       <Header>
         <div>
-          <div>git fan fiction</div>
+          <div>{error}</div>
           <a href="/app/post">post</a>
         </div>
         <div>

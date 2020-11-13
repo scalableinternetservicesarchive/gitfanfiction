@@ -17,6 +17,7 @@ export enum Route {
   SIGNUP = 'app/signup',
   POST = 'app/post',
   VIEW_STORY = 'app/view-story/:storyId',
+  REQUEST_FANDOM = 'app/request-fandom'
 }
 
 export enum PlaygroundApp {
