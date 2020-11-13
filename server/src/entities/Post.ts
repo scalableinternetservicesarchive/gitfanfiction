@@ -34,6 +34,7 @@ export class Post extends BaseEntity {
 
   @Column({
     length: 250,
+    default: ""
   })
   length: string
 
