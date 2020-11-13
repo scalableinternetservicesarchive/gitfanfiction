@@ -24,7 +24,7 @@ export function PuppyPage(props: HomePageProps) {
         <H3>UCLA, Fall 2020</H3>
       </Hero>
       <div>
-        <BranchDiagram />
+        <BranchDiagram width={800} height={400} />
         <ViewStoryBox />
       </div>
     </Page>

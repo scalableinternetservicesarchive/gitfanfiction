@@ -16,7 +16,7 @@ export enum Route {
   LANDING = 'app/landing',
   SIGNUP = 'app/signup',
   POST = 'app/post',
-  VIEW_STORY = 'app/view-story',
+  VIEW_STORY = 'app/view-story/:storyId',
 }
 
 export enum PlaygroundApp {
@@ -70,6 +70,7 @@ export function getPath(route: Route, arg?: Partial<ReturnType<typeof routeParam
 export interface AppRouteParams {
   userId?: string
   app?: PlaygroundApp
+  storyId?: string
 }
 
 /**
@@ -79,5 +80,6 @@ export function routeParams(params: AppRouteParams) {
   return {
     userId: Number(params.userId || 0),
     app: params.app,
+    storyId: Number(params.storyId || 0),
   }
 }
