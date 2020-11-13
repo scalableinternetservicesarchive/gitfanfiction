@@ -42,6 +42,8 @@ type Query {
 type Mutation {
   addFandom (input: FandomInput!): Fandom
 
+  addUser (input: UserInput!): User
+
   addChapter(input: ChapterInput!): Chapter
 
   makePost (input: PostInput!): Post

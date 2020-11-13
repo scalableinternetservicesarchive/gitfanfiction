@@ -66,6 +66,7 @@ export interface QueryGetPostChaptersArgs {
 export interface Mutation {
   __typename?: 'Mutation'
   addFandom?: Maybe<Fandom>
+  addUser?: Maybe<User>
   addChapter?: Maybe<Chapter>
   makePost?: Maybe<Post>
   makeComment?: Maybe<Comment>
@@ -77,6 +78,10 @@ export interface Mutation {
 
 export interface MutationAddFandomArgs {
   input: FandomInput
+}
+
+export interface MutationAddUserArgs {
+  input: UserInput
 }
 
 export interface MutationAddChapterArgs {
@@ -460,6 +465,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationAddFandomArgs, 'input'>
+  >
+  addUser?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddUserArgs, 'input'>
   >
   addChapter?: Resolver<
     Maybe<ResolversTypes['Chapter']>,
