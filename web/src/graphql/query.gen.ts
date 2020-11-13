@@ -24,6 +24,28 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchPost
+// ====================================================
+
+export interface FetchPost_post {
+  __typename: "Post";
+  title: string;
+}
+
+export interface FetchPost {
+  post: FetchPost_post | null;
+}
+
+export interface FetchPostVariables {
+  postId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 

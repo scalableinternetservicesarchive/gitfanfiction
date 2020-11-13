@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 
-export default function SearchBar({ width = 800, height = 100 }) {
+export default function SearchBar({ width = 600, height = 100 }) {
 
   const [title, setTitle] = React.useState("");
 
@@ -20,6 +20,8 @@ const styles = {
   main: {
     "border": 'black 2px solid',
     borderRadius: 10,
+    backgroundColor: 'white',
+    color: 'black',
   },
   subcontent: {
     display: "flex",
@@ -52,7 +54,7 @@ const styles = {
     width: 100
   },
   link: {
-    color: 'black',
+    color: 'white',
   }
 
 
