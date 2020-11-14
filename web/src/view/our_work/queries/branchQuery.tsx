@@ -7,10 +7,6 @@ export const fetchBranchRep = gql`
       name
       length
     }
-    getFandomPosts (fandomId:1){
-      id
-      upvote
-      length
-    }
+
   }
 `

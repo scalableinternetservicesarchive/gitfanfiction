@@ -4,10 +4,12 @@ import { Chapter } from '../entities/Chapter'
 import { Comment } from '../entities/Comment'
 import { Fandom } from '../entities/Fandom'
 import { Post } from '../entities/Post'
+import { Rating } from '../entities/Rating'
 import { Session } from '../entities/Session'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
+import { Upvote } from '../entities/Upvote'
 import { User } from '../entities/User'
 
 const baseConfig = {
@@ -24,7 +26,7 @@ export async function initORM() {
     username: process.env.MYSQL_USER || 'root',
     synchronize: true,
     logging: false,
-    entities: [User, Session, Survey, Fandom, SurveyQuestion, SurveyAnswer, Post, Comment, Chapter],
+    entities: [User, Session, Survey, Fandom, SurveyQuestion, SurveyAnswer, Post, Comment, Chapter, Upvote, Rating],
     extra: {
       connectionLimit: 6,
     },

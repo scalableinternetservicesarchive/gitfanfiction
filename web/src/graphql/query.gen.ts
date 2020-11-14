@@ -46,6 +46,26 @@ export interface FetchPostVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: getBranchContext
+// ====================================================
+
+export interface getBranchContext_fandom {
+  __typename: "Fandom";
+  id: number;
+  name: string;
+  length: string | null;
+}
+
+export interface getBranchContext {
+  fandom: getBranchContext_fandom | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 

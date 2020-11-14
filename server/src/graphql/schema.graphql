@@ -26,6 +26,9 @@ type Query {
   ratings: [Rating!]!
   rating (ratingId: Int!): Rating
 
+  upvotes: [Upvote!]!
+  upvote (upvoteId: Int!): Upvote
+
   comments:[Comment!]!
   comment (commentId: Int!): Comment
 
@@ -50,8 +53,8 @@ type Mutation {
   makeComment (input: CommentInput!): Comment
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
-  rateStory(input: RatingInput!): Rating
-  voteComment(input: VoteInput!): Boolean!
+  rateStory(input: RatingInput!): Post
+  voteComment(input: VoteInput!): Boolean
   # Moves the survey to the next question (or starts it if it hasn't started). ADMIN only.
   nextSurveyQuestion (surveyId: Int!): Survey
 }
@@ -109,7 +112,7 @@ type Post {
 input RatingInput{
   some_story: Int!
   rating: Int!
-  user: Int!
+  some_user: Int!
 }
 
 input VoteInput{
@@ -136,6 +139,7 @@ type Chapter {
   children: [Post!]
   body: String!
 }
+
 
 input ChapterInput {
   title: String!
@@ -164,6 +168,12 @@ input CommentInput {
   story: Int!
   body: String!
   time: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
+}
+
+type Upvote {
+  id: Int!
+  comment: Int!
+  user: Int!
 }
 
 enum UserType { ADMIN, USER }
