@@ -1,8 +1,10 @@
 
+import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
 import BranchDiagram from '../component/BranchDiagram';
+import { getPost } from '../gql/query';
 import { AppRouteParams } from '../nav/route';
 
 
@@ -24,9 +26,13 @@ interface PostPageProps extends RouteComponentProps, AppRouteParams { }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PostPage(props: PostPageProps) {
   const [content, setContent] = React.useState("");
-  const [postID, setPostID] = React.useState("");
+  const [postID, setPostID] = React.useState(0);
 
   console.log(postID)
+  //queries
+  const { loading, data } = useQuery(getPost, { variables: { postid: postID } })
+  loading ? null : console.log(data.post)
+
   // const fandomid = 1
 
   const contentRef = React.useRef(null);
@@ -85,7 +91,7 @@ export function PostPage(props: PostPageProps) {
         <ContextBox>
           <LeftContextBox>
             <DeviationBox>
-              place for deviation
+              place for deviation {data?.post?.title} {data?.post ? " >> " : null}
             </DeviationBox>
             <TitleBox>
               place to submit title
