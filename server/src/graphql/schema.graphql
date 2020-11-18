@@ -106,7 +106,12 @@ type Post {
   upvote: Int!
   title: String!
   description: String!
-  length: String
+  length: Int!
+
+  #terrible terriblt
+  ancestor: Int!
+  father: Int!
+  fatherIndex: String!
 }
 
 input RatingInput{
@@ -124,6 +129,12 @@ input PostInput {
   origin: Int!
   title: String!
   description: String!
+  length: Int!
+
+  # terrible terrible
+  ancestor: Int!
+  father: Int!
+  fatherIndex: String!
 }
 
 type Chapter {

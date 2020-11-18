@@ -33,10 +33,9 @@ export class Post extends BaseEntity {
   chapters: Chapter[]
 
   @Column({
-    length: 250,
-    default: ""
+    default: 0
   })
-  length: string
+  length: number
 
   @Column()
   title: string
@@ -44,6 +43,20 @@ export class Post extends BaseEntity {
   @Column({
   })
   description: string
+
+
+  //Terrible just Terrible
+  @Column()
+  ancestor: number // fandom id
+
+  @Column()
+  fatherIndex: string
+  // position from post (i.e.   3,13 = book 3 chapter 13)
+  // book 0 means post. book 1-n means fandom
+
+  @Column()
+  father: number // post or fandom id
+
 
 
 

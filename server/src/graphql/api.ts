@@ -91,7 +91,7 @@ export const graphqlRoot: Resolvers<Context> = {
       const { title, length, originDirectFromFandom, postOrFandomId, body } = input
       const chapter = new Chapter()
       chapter.originDirectFromFandom = originDirectFromFandom
-      if(originDirectFromFandom){
+      if (originDirectFromFandom) {
         chapter.fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
         chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       } else {
@@ -108,13 +108,20 @@ export const graphqlRoot: Resolvers<Context> = {
     makePost: async (_, { input }, ctx) => {
       const { origin, title, description } = input
       const post = new Post()
-      post.origin = (await Chapter.findOne({where: {id: origin}}))!
+      post.origin = (await Chapter.findOne({ where: { id: origin } }))!
       post.chapters = []
       post.title = title
       post.description = description
       post.upvote = 0
       post.rating = 0
       post.num_rating = 0
+      post.length = input.length
+
+      // terrible just terrible
+      post.father = input.father
+      post.ancestor = input.ancestor
+      post.fatherIndex = input.fatherIndex
+
       await post.save()
       return post
     },
@@ -122,7 +129,7 @@ export const graphqlRoot: Resolvers<Context> = {
     makeComment: async (_, { input }, ctx) => {
       const { story, body, time } = input
       const comment = new Comment()
-      comment.story=story
+      comment.story = story
       comment.body = body
       comment.time = time
       comment.vote = 0
@@ -136,14 +143,13 @@ export const graphqlRoot: Resolvers<Context> = {
       //const some_user = check(await User.findOne({ where: { id: user } }))
       //some_user.votes.push(some_comment)
 
-      const exist= check(await Upvote.findOne({ where: { comment: some_comment, user: user } }))
+      const exist = check(await Upvote.findOne({ where: { comment: some_comment, user: user } }))
       //const exist=null
       const upvote = new Upvote()
-      if (exist==null)
-      {
+      if (exist == null) {
         comment.vote += 1
-        upvote.comment=some_comment
-        upvote.user=user
+        upvote.comment = some_comment
+        upvote.user = user
         await upvote.save()
         await comment.save()
       }
@@ -152,19 +158,19 @@ export const graphqlRoot: Resolvers<Context> = {
     },
 
     rateStory: async (_, { input }, ctx) => {
-      const { some_story, rating, some_user} = input
+      const { some_story, rating, some_user } = input
       //const p= post(some_story)
       const some_post = check(await Post.findOne({ where: { id: some_story } }))
 
-      const exist = await Rating.findOne({ where: {story: some_story, user: some_user} })
+      const exist = await Rating.findOne({ where: { story: some_story, user: some_user } })
       //const exist =null
-      if(exist==null){
+      if (exist == null) {
         // eslint-disable-next-line prettier/prettier
         const rate = new Rating()
-        rate.story=some_story
-        rate.rating=rating
-        rate.user=some_user
-        some_post.rating = Math.round(100*(some_post.rating * some_post.num_rating + rating) / (some_post.num_rating + 1))/100
+        rate.story = some_story
+        rate.rating = rating
+        rate.user = some_user
+        some_post.rating = Math.round(100 * (some_post.rating * some_post.num_rating + rating) / (some_post.num_rating + 1)) / 100
         some_post.num_rating += 1
         await rate.save()
         await some_post.save()
