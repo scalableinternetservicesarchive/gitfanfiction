@@ -174,7 +174,7 @@ export interface Post {
   upvote: Scalars['Int']
   title: Scalars['String']
   description: Scalars['String']
-  length?: Maybe<Scalars['Int']>
+  length?: Maybe<Scalars['String']>
 }
 
 export interface RatingInput {
@@ -194,7 +194,6 @@ export interface PostInput {
   description: Scalars['String']
 
   //terrible terrible
-  length: Scalars['Int']
   father: Scalars['Int']
   ancestor: Scalars['Int']
   fatherIndex: Scalars['String']

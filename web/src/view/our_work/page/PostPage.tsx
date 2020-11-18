@@ -1,7 +1,10 @@
+
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
+import BranchDiagram from '../component/BranchDiagram';
 import { AppRouteParams } from '../nav/route';
+
 
 //image
 const logo = 'assets/image/webpage-general/logo.png';
@@ -21,13 +24,32 @@ interface PostPageProps extends RouteComponentProps, AppRouteParams { }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PostPage(props: PostPageProps) {
   const [content, setContent] = React.useState("");
+  const [postID, setPostID] = React.useState("");
+
+  console.log(postID)
+  // const fandomid = 1
 
   const contentRef = React.useRef(null);
+  const branchPanelRef = React.useRef(null);
+
+  //resize branch panel
+  const [branchPanelRefReady, setBranchPanelRefReady] = React.useState(false);
+  let branchPanelHeight;
+  let branchPanelWidth;
+  if (branchPanelRef.current) {
+    branchPanelHeight = (branchPanelRef as any).current.offsetHeight;
+    branchPanelWidth = (branchPanelRef as any).current.offsetWidth;
+  }
+  React.useEffect(() => {
+    setBranchPanelRefReady(true)
+  }, [branchPanelRef, branchPanelRefReady]);
   React.useEffect(() => {
     (contentRef as any).current.style.height = "0px";
     const scrollHeight = (contentRef as any).current.scrollHeight;
     (contentRef as any).current.style.height = scrollHeight + "px";
   }, [content]);
+
+
 
   //allows tabs
   React.useEffect(() => {
@@ -85,8 +107,12 @@ export function PostPage(props: PostPageProps) {
         </ContentBox>
       </Body>
       <SidePanel>
-        <BranchPanel>
-
+        <BranchPanel ref={branchPanelRef}>
+          {branchPanelRefReady ? <BranchDiagram
+            height={branchPanelHeight}
+            width={branchPanelWidth}
+            setPostId={setPostID}
+          /> : null}
         </BranchPanel>
         <NavigationPanel>
           hello
@@ -203,7 +229,7 @@ const ContentBox = style('div', 'ba', {
   width: "auto"
 })
 
-const SidePanel = style('div', 'fixed flex ba', {
+const SidePanel = style('div', 'fixed flex', {
   top: 100,
   left: 20,
   height: "75vh",

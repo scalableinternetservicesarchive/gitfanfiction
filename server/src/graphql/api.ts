@@ -13,7 +13,7 @@ import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
 import { Upvote } from '../entities/Upvote'
 import { User } from '../entities/User'
-import { Resolvers, UserType } from './schema.types'
+import { Resolvers } from './schema.types'
 
 export const pubsub = new PubSub()
 
@@ -76,26 +76,23 @@ export const graphqlRoot: Resolvers<Context> = {
       return fandom
     },
 
-    addUser: async (_, { input }, ctx) => {
-      const { email, password } = input
-      const user = new User()
-      user.password = password
-      user.email = email
-      user.name = "A User"
-      user.userType = UserType.User
-      await user.save()
-      return user
-    },
-
     addChapter: async (_, { input }, ctx) => {
       const { title, length, originDirectFromFandom, postOrFandomId, body } = input
       const chapter = new Chapter()
       chapter.originDirectFromFandom = originDirectFromFandom
       if (originDirectFromFandom) {
-        chapter.fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
+        const fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
+        if (fandom == undefined) throw new Error("non existing fandom id");
+        fandom.length = (fandom.length == "") ? ("" + length) : (fandom.length + "," + length)
+        fandom.save()
+        chapter.fandom = fandom
         chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       } else {
-        chapter.post = (await Post.findOne({ where: { id: postOrFandomId } }))!
+        const post = (await Post.findOne({ where: { id: postOrFandomId } }))!
+        if (post == undefined) throw new Error("non existing post id");
+        post.length = (post.length == "") ? ("" + length) : (post.length + "," + length)
+        post.save()
+        chapter.post = post
         chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       }
       chapter.length = length
@@ -109,13 +106,13 @@ export const graphqlRoot: Resolvers<Context> = {
       const { origin, title, description } = input
       const post = new Post()
       post.origin = (await Chapter.findOne({ where: { id: origin } }))!
+      if (post.origin == undefined) throw new Error("non existing chapter id");
       post.chapters = []
       post.title = title
       post.description = description
       post.upvote = 0
       post.rating = 0
       post.num_rating = 0
-      post.length = input.length
 
       // terrible just terrible
       post.father = input.father

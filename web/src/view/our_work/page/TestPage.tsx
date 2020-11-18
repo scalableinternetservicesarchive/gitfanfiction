@@ -1,9 +1,11 @@
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { style } from '../../../style/styled'
 import BranchDiagram from '../component/BranchDiagram'
 import SearchBar from '../component/SearchBar'
 import { AppRouteParams } from '../nav/route'
+
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
@@ -23,28 +25,76 @@ interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 //   }
 // `
 
+export const fetchPost = gql`
+query fetchPost($postid: Int!) {
+  post(postId: $postid) {
+    id
+    title
+  }
+}
+`
+
+export const addchapter = gql`
+mutation pleaseadd($title:String!,$length:Int!,$originDirectFromFandom:Boolean!,$postOrFandomId:Int!,$body:String!) {
+  addChapter(input:{
+    title : $title
+    length : $length
+    originDirectFromFandom : $originDirectFromFandom
+    postOrFandomId : $postOrFandomId
+    body : $body
+  }) {
+    id
+    title
+    body
+  }
+}
+`
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function TestPage(props: HomePageProps) {
 
-  const [error, setError] = React.useState("")
+  // const [error, setError] = React.useState("")
+  const [field, setField] = React.useState("")
+  const [fid, setFid] = React.useState(0)
+  const [pid, setPid] = React.useState(0)
 
-  const fandomId = 1
 
-  fetch('/tree', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fandomId }),
+  const { loading, data } = useQuery(fetchPost, {
+    variables: { postid: 1 },
   })
-    .then(async res => {
-      if (res.status == 200) return res.text();
-      const err = await res.text()
-      throw err;
-    })
-    .then(setError)
-    .catch(err => {
-      setError(err.toString())
-    })
+
+  const [addTodo, cc] = useMutation(addchapter);
+
+  const sendform = () =>
+    addTodo({
+      variables: {
+        title: "kljsfjlasfjljlk",
+        length: 5,
+        originDirectFromFandom: false,
+        postOrFandomId: 2,
+        body: "lkjsdlfkjsd"
+      }
+    });
+
+  if (!loading) console.log(data)
+  console.log(cc.data)
+
+  // const fandomId = 1
+  // fetch('/tree', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ fandomId }),
+  // })
+  //   .then(async res => {
+  //     if (res.status == 200) return res.text();
+  //     const err = await res.text()
+  //     throw err;
+  //   })
+  //   .then(setError)
+  //   .catch(err => {
+  //     setError(err.toString())
+  //   })
 
   //-----
 
@@ -52,7 +102,7 @@ export function TestPage(props: HomePageProps) {
     <div>
       <Header>
         <div>
-          <div>{error}</div>
+          <div>{loading ? null : data.post.title}</div>
           <a href="/app/post">post</a>
         </div>
         <div>
@@ -65,8 +115,16 @@ export function TestPage(props: HomePageProps) {
           <a href="/app/request-fandom">request fandom</a>
         </div>
       </Header>
+      <div>type fandom id here {pid} </div>
+
+      <input value={field} onChange={(event) => {
+        const a = parseInt(event.target.value)
+        if (!isNaN(a)) setFid(a)
+        setField(event.target.value);
+        if (event.target.value == "send") sendform();
+      }} />
       <SearchBar />
-      <BranchDiagram />
+      <BranchDiagram fandomId={fid} setPostId={setPid} />
     </div>
   )
 }

@@ -180,64 +180,34 @@ server.express.post(
     console.log('POST /tree ' + req.body.fandomId)
 
     //title, author, genre, nbooks, chapters
-    const fid = req.body.fandomId
+    const ancestorid = req.body.fandomId
 
-    const fandom = await Fandom.findOne({ where: { id: fid } })
-
-    console.log(fandom)
+    //get main (fandom) data ready
+    const fandom = await Fandom.findOne({ where: { id: ancestorid } })
     if (fandom == undefined) { res.status(404).send('Do Not Exist'); return }
+    const main = [0, fandom.fandomType, JSON.parse("[" + fandom.length + "]")] //maintain that zero is fandom id. always!!
 
-
-    // res.status(200).send('Success!')
-
-    //maintain that zero is fandom id. always!!
-    const main = [0, fandom.fandomType, JSON.parse("[" + fandom.length + "]")]
-    const data = { main }
-
+    //get sub (post) data ready
     const sub = []
-    const posts = await Post.find({ where: { fandom } })
-    for (let i = 0; i < posts.length; i++) {
-      const postid = posts[i].id
-      const post = await Post.findOne({ where: { id: postid } })
-      if (post == undefined) { res.status(404).send('Do Not Exist'); return }
-      const origin = post.origin
-      //find origin and starting point
-      console.log(post, origin, postid)
-      let originid = undefined
-      let start = undefined
-      if (origin.originDirectFromFandom) {
-        originid = 0
-        const fandomLength = main[2]
-        let order = origin.order
-        let book = 1
-        for (let i = 0; order - fandomLength[i] > 0; i++) {
-          order = order - fandomLength
-          book++
-        }
-        start = [book, order]
-      }
-      else {
-        const chapter = await Chapter.findOne({ where: { id: origin.id } })
-        const post = await Post.findOne({ where: { chapters: chapter } })
-        console.log(post)
-        originid = chapter?.post.id
-        start = [1, origin.order - 1]
-      }
+    const posts = await Post.find({ where: { ancestor: ancestorid } })
 
-      //find post length
-      // const posts = await Chapter.find({where: {postId:postid}})
-      // const length =
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i]
+      const index = post.fatherIndex.split(",").map((i) => parseInt(i))
+      const originid = (index[0] == 0) ? post.father : 0
+      const length = post.length.split(",").map((i) => parseInt(i))
+
       const postData = [
-        postid,
+        post.id,
         originid,
-        start,
-        // length,
+        index,
+        length,
         post.upvote
       ]
       sub.push(postData)
-      console.log(sub)
     }
 
+    const data = { main, sub }
     res.status(200).send(JSON.stringify(data))
 
     // what we need

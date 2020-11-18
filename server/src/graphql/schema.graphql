@@ -45,8 +45,6 @@ type Query {
 type Mutation {
   addFandom (input: FandomInput!): Fandom
 
-  addUser (input: UserInput!): User
-
   addChapter(input: ChapterInput!): Chapter
 
   makePost (input: PostInput!): Post
@@ -69,11 +67,6 @@ type User {
   email: String!
   password: String! #Store the hash equivalent of the password.
   name: String!
-}
-
-input UserInput {
-  email: String!
-  password: String!
 }
 
 type Fandom {
@@ -106,7 +99,7 @@ type Post {
   upvote: Int!
   title: String!
   description: String!
-  length: Int!
+  length: String!
 
   #terrible terriblt
   ancestor: Int!
@@ -129,7 +122,6 @@ input PostInput {
   origin: Int!
   title: String!
   description: String!
-  length: Int!
 
   # terrible terrible
   ancestor: Int!
