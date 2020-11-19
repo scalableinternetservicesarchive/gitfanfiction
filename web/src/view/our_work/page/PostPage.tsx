@@ -30,10 +30,14 @@ export function PostPage(props: PostPageProps) {
 
   console.log(postID)
   //queries
-  const { loading, data } = useQuery(getPost, { variables: { postid: postID } })
-  loading ? null : console.log(data.post)
+  const postData = useQuery(getPost, { variables: { postid: postID } })
+  // loading ? null : console.log(data.post)
 
-  // const fandomid = 1
+  React.useEffect(() => {
+    console.log("data", postData.data)
+  }, [postData])
+
+
 
   const contentRef = React.useRef(null);
   const branchPanelRef = React.useRef(null);
@@ -91,7 +95,7 @@ export function PostPage(props: PostPageProps) {
         <ContextBox>
           <LeftContextBox>
             <DeviationBox>
-              place for deviation {data?.post?.title} {data?.post ? " >> " : null}
+              place for deviation {postData.data?.post?.title} {postData.data?.post ? " >> " : null}
             </DeviationBox>
             <TitleBox>
               place to submit title

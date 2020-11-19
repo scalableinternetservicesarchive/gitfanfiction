@@ -6,6 +6,11 @@ query fetchPost($postid: Int!) {
     title
     length
   }
+  getPostChapters(postId: $postid) {
+    id
+    order
+    title
+  }
 }
 `
 

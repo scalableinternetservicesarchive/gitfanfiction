@@ -251,15 +251,16 @@ export default function BranchDiagram({ width = 800, height = 200, fandomId = 1,
     });
 
     // keyboard space handler
-    d3.select("body").on("keydown", function (event: any) {
-      // console.log(event);
-      if (event.keyCode == 32) {
-        if (event.srcElement.tagName != "INPUT") {
-          setPostId(saved_id);
-          // event.preventDefault();
-        }
-      }
-    });
+    // d3.select("body").on("keydown", function (event: any) {
+    //   // console.log(event);
+    //   if (event.keyCode == 32) {
+    //     if (event.srcElement.tagName != "INPUT") {
+    //       setPostId(saved_id);
+    //       // event.preventDefault();
+    //     }
+    //   }
+    // });
+
     //notable problem with this approach
     //no invalid data check. like suppose origin's chapter disappears. array overflow
     //
