@@ -24,6 +24,158 @@ export interface FetchUserContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: FetchPost
+// ====================================================
+
+export interface FetchPost_post {
+  __typename: "Post";
+  title: string;
+}
+
+export interface FetchPost {
+  post: FetchPost_post | null;
+}
+
+export interface FetchPostVariables {
+  postId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: attemptadd
+// ====================================================
+
+export interface attemptadd_addChapter {
+  __typename: "Chapter";
+  id: number;
+  title: string;
+  body: string;
+}
+
+export interface attemptadd {
+  addChapter: attemptadd_addChapter | null;
+}
+
+export interface attemptaddVariables {
+  title: string;
+  length: number;
+  originDirectFromFandom: boolean;
+  postOrFandomId: number;
+  body: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: fetchAPost
+// ====================================================
+
+export interface fetchAPost_post {
+  __typename: "Post";
+  title: string;
+  length: string;
+}
+
+export interface fetchAPost_getPostChapters {
+  __typename: "Chapter";
+  id: number;
+  order: number;
+  title: string;
+}
+
+export interface fetchAPost {
+  post: fetchAPost_post | null;
+  getPostChapters: fetchAPost_getPostChapters[];
+}
+
+export interface fetchAPostVariables {
+  postid: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: fetchSomePost
+// ====================================================
+
+export interface fetchSomePost_post {
+  __typename: "Post";
+  id: number;
+  title: string;
+}
+
+export interface fetchSomePost {
+  post: fetchSomePost_post | null;
+}
+
+export interface fetchSomePostVariables {
+  postid: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: pleaseadd
+// ====================================================
+
+export interface pleaseadd_addChapter {
+  __typename: "Chapter";
+  id: number;
+  title: string;
+  body: string;
+}
+
+export interface pleaseadd {
+  addChapter: pleaseadd_addChapter | null;
+}
+
+export interface pleaseaddVariables {
+  title: string;
+  length: number;
+  originDirectFromFandom: boolean;
+  postOrFandomId: number;
+  body: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: getBranchContext
+// ====================================================
+
+export interface getBranchContext_fandom {
+  __typename: "Fandom";
+  id: number;
+  name: string;
+  length: string | null;
+}
+
+export interface getBranchContext {
+  fandom: getBranchContext_fandom | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 

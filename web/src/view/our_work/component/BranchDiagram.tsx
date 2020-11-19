@@ -6,14 +6,19 @@ interface dataInterface {
   sub: [number, number, [number, number], number[], number][];
 }
 
-export default function BranchDiagram({ width = 800, height = 200 }) {
+
+export default function BranchDiagram({ width = 800, height = 200, fandomId = 1, setPostId = console.log }) {
 
   const [point, setPoint] = React.useState(0);
-  const [content, setContent] = React.useState(0);
+  point - point
+  // const [content, setContent] = React.useState(0);
   let ref: any = React.useRef();
-  [width, height] = [800, 200]
 
-  React.useEffect(() => {
+
+  //get branch data
+
+
+  const drawBranch = (exampleData: dataInterface) => {
 
     // data I am getting: {main, sub}
 
@@ -28,16 +33,16 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
     // upvote -> will translate to thickness
     // height is derived from random with seed = substory_Id
 
-    const exampleData: dataInterface = {
-      "main": [123456, "book", [30, 20, 50, 20]],
-      "sub": [
-        [464701, 464700, [1, 5], [500, 1000, 900, 400, 1000, 1000], 0],
-        [464700, 123456, [1, 5], [500, 1000, 900, 400, 1000, 1000], 30],
-        [225323, 123456, [2, 10], [1300, 900, 300, 2000], 3],
-        [235234, 123456, [2, 0], [1000], 0],
-        [234599, 225323, [1, 3], [1500], 3] //starts from 1 because there is only one book for substory 225323
-      ]
-    }
+    // const exampleData: dataInterface = {
+    //   "main": [123456, "book", [30, 20, 50, 20]],
+    //   "sub": [
+    //     [464701, 464700, [1, 5], [500, 1000, 900, 400, 1000, 1000], 0],
+    //     [464700, 123456, [1, 5], [500, 1000, 900, 400, 1000, 1000], 30],
+    //     [225323, 123456, [2, 10], [1300, 900, 300, 2000], 3],
+    //     [235234, 123456, [2, 0], [1000], 0],
+    //     [234599, 225323, [1, 3], [1500], 3] //starts from 1 because there is only one book for substory 225323
+    //   ]
+    // }
 
     const data = exampleData;
 
@@ -211,8 +216,10 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
         const i = delaunay.find(...p); //index of closest dot to p
 
         //id chosen
-        saved_id = data.sub[i][0];
-        setPoint(data.sub[i][0]);
+        if (data.sub.length > 0) {
+          saved_id = data.sub[i][0];
+          setPoint(data.sub[i][0]);
+        }
 
         //highlight the found one (i)
         sub_time_marker.classed("highlighted", (_, j) => i === j); //set its css class ".highlighted = true"
@@ -240,33 +247,57 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
 
     // click handler
     g_sub_time_marker.on("click", function (event) {
-      setContent(saved_id);
+      setPostId(saved_id);
     });
 
     // keyboard space handler
-    d3.select("body").on("keydown", function (event: any) {
-      console.log(event);
-      if (event.keyCode == 32) {
-        if (event.srcElement.tagName != "INPUT") {
-          setContent(saved_id);
-          event.preventDefault();
-        }
-      }
-    });
+    // d3.select("body").on("keydown", function (event: any) {
+    //   // console.log(event);
+    //   if (event.keyCode == 32) {
+    //     if (event.srcElement.tagName != "INPUT") {
+    //       setPostId(saved_id);
+    //       // event.preventDefault();
+    //     }
+    //   }
+    // });
+
     //notable problem with this approach
     //no invalid data check. like suppose origin's chapter disappears. array overflow
     //
 
-  }, []);
+  };
+
+  React.useEffect(() => {
+    if (fandomId <= 0) return;
+    fetch('/tree', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fandomId }),
+    })
+      .then(async res => {
+        if (res.status == 200) return res.text();
+        const err = await res.text()
+        throw err;
+      })
+      .then((res) => {
+        d3.select("svg").selectAll("*").remove();
+        console.log(JSON.parse(res));
+        drawBranch(JSON.parse(res));
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, [fandomId])
 
 
   return (
     <div>
 
       <svg className="container" ref={ref} width={width} height={height}
-        style={{ outline: "thin solid black" }}></svg>
-      <div>{"hover   :" + point}</div>
-      <div>{"selected:" + content}</div>
+      // style={{ outline: "thin solid black" }}
+      ></svg>
+      {/* <div>{"hover   :" + point}</div> */}
+      {/* <div>{"selected:" + content}</div> */}
     </div>
   )
 }

@@ -26,7 +26,7 @@ export function LandingPage(props: HomePageProps) {
 
       <div style={styles.main_content}>
         <div style={styles.branch}>
-          <BranchDiagram />
+          <BranchDiagram width={800} height={400} />
         </div>
         <div style={styles.searchbar}>
           <SearchBar />

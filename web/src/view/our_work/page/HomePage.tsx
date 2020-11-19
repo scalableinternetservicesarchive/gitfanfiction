@@ -24,6 +24,9 @@ export function HomePage(props: HomePageProps) {
         <div>
           <a href="/app/login">login</a>
         </div>
+        <div>
+          <a href="/app/request-fandom">request fandom</a>
+        </div>
       </Header>
       <SearchBar />
       <BranchDiagram />
@@ -32,7 +35,7 @@ export function HomePage(props: HomePageProps) {
 }
 
 const Header = style('div', 'w-100', {
-  height: 80,
+  height: 100,
   backgroundColor: '#8dc9bf',
   alignItems: 'center'
 })

@@ -18,6 +18,12 @@ export class Fandom extends BaseEntity {
   })
   name: string
 
+  @Column({
+    default: "",
+    length: 250,
+  })
+  length: string
+
   @Field((type) => [Chapter])
   @OneToMany(() => Chapter, chapter => chapter.fandom, {cascade: true})
   chapters: Chapter[]

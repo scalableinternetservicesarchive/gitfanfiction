@@ -1,12 +1,11 @@
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
+import { UserContext } from '../../auth/user';
+import Background_SideBranch from '../component/Background_SideBranch';
+import Header_Thick from '../component/Header_Thick';
 import { AppRouteParams } from '../nav/route';
 
-//img src
-const gear = 'assets/image/webpage-general/gear.png';
-const logo = 'assets/image/webpage-general/logo.png';
-const backgroundBranch = 'assets/image/webpage-specific/login-page/background-branch.png';
 interface LoginPageProps extends RouteComponentProps, AppRouteParams { }
 
 const textColor = "#9fc89d"
@@ -18,49 +17,115 @@ export function LoginPage(props: LoginPageProps) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  //copied from prof code
+  const [err, setError] = React.useState("")
+  const { user } = React.useContext(UserContext)
 
   return (<>
-    <Header>
-      <LeftHeaderBox>
-        <a href="/app/index"><img height={40} src={logo} alt="logo" /></a>
-      </LeftHeaderBox>
-      <RightHeaderBox>
-        <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
-        <a href="/app/setting">
-          <img style={{ margin: '0 25' }} height={50} src={gear} alt="gear" />
-        </a>
-      </RightHeaderBox>
-    </Header>
+    <Header_Thick />
+    <Background_SideBranch />
     <Body>
       <AbsFlex>
         <ContentBox>
-          <PromptBox><LoginPrompt>Log In</LoginPrompt></PromptBox>
-          <InputBox>
-            <div style={{ ...styles.inputField }}>
-              <div style={{ ...styles.field }}><pre>{"email : "}</pre></div>
-              <input style={{ ...styles.input }} type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-            </div>
-          </InputBox>
-          <InputBox>
-            <div style={{ ...styles.inputField }}>
-              <div style={{ ...styles.field }}><pre>{"password : "}</pre></div>
-              <input style={{ ...styles.input }} type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-            </div>
-          </InputBox>
-          <PromptBox>
-            <a style={{ color: textColor }} href="/app/signup">
-              <AltPrompt>Need an account?</AltPrompt>
-            </a>
-          </PromptBox>
+          {
+            user
+              ?
+              <a href="#" onClick={() => logout(setError)}> Log Out </a>
+              :
+              <div>
+                <PromptBox><LoginPrompt>Log In</LoginPrompt></PromptBox>
+                <InputBox>
+                  <div style={{ ...styles.inputField }}>
+                    <div style={{ ...styles.field }}><pre>{"email : "}</pre></div>
+                    <input
+                      style={{ ...styles.input }}
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      onKeyDown={(event) => { if (event.key === "Enter") login(email, password, setError) }}
+                    />
+                  </div>
+                </InputBox>
+                <InputBox>
+                  <div style={{ ...styles.inputField }}>
+                    <div style={{ ...styles.field }}><pre>{"password : "}</pre></div>
+                    <input
+                      style={{ ...styles.input }}
+                      type="password"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      onKeyDown={(event) => { if (event.key === "Enter") login(email, password, setError) }}
+                    />
+                  </div>
+                </InputBox>
+                <PromptBox>
+                  <a style={{ color: textColor }} href="/app/signup">
+                    <AltPrompt>Need an account?</AltPrompt>
+                  </a>
+                </PromptBox>
+              </div>
+          }
+          {err}
+          <h1>{user?.name} </h1>
         </ContentBox>
       </AbsFlex>
-      <SideImageBox>
-        <img style={{ width: "200", height: "520", marginTop: "50" }} src={backgroundBranch} alt="backgroundBranch" />
-      </SideImageBox>
     </Body>
   </>
   )
 }
+
+function logout(setError: any) {
+  return fetch('/auth/logout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then(res => {
+      if (res.status == 200) window.location.reload()
+      else throw 'invalid password / Email';
+    })
+    .catch(() => setError("log out Error"))
+}
+
+
+function login(email: string, password: string, setError: any) {
+  console.log("log in attempted")
+  if (email == "" || password == "") return;
+  if (!validate(email, password, setError)) {
+    setError('invalid email/password')
+    return
+  }
+
+  fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  })
+    .then(res => {
+      if (res.status == 200) return res.text();
+      else throw 'invalid password / Email';
+    })
+    .then(() => window.location.href = 'index')
+    .catch(err => {
+      setError(err.toString())
+    })
+}
+
+function validateEmail(email: string) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
+function validate(
+  email: string,
+  password: string,
+  setError: any
+) {
+  const validEmail = validateEmail(email)
+  const validPassword = Boolean(password)
+  console.log('valid', validEmail, validPassword)
+  return validEmail && validPassword
+}
+
 
 const styles = {
   inputField: {
@@ -88,51 +153,6 @@ const Body = style('div', 'flex w-100 h-100', {
   // borderWidth: 2,
   // borderColor: 'red',
 })
-const Header = style('header', 'fixed flex w-100', {
-  zIndex: 2,
-  justifyContent: 'space-between',
-  backgroundColor: '#94dacd',
-  // borderWidth: 2,
-  // borderColor: 'red',
-  height: 75
-})
-
-const LeftHeaderBox = style('div', 'flex ml4 mb3', {
-  // borderWidth: 2,
-  // borderColor: 'green',
-  alignItems: 'flex-end'
-
-})
-
-const RightHeaderBox = style('div', 'flex', {
-  // borderWidth: 2,
-  // borderColor: 'green',
-  alignItems: 'center'
-
-})
-
-const MenuItem = style('div', 'ba flex', {
-  borderWidth: 1.5,
-  borderColor: 'white',
-  width: 95,
-  height: 35,
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'white',
-  textDecorationLine: 'none',
-  fontSize: 20,
-  fontWeight: 300,
-  fontFamily: 'sans-serif',
-  margin: "0 5"
-})
-
-const SideImageBox = style('div', 'flex', {
-  // borderWidth: 1.5,
-  // borderColor: 'green',
-  width: 300,
-  justifyContent: 'center'
-
-})
 
 const AbsFlex = style('div', 'flex h-100 w-100', {
   position: "fixed",
@@ -141,25 +161,23 @@ const AbsFlex = style('div', 'flex h-100 w-100', {
   justifyContent: 'center',
 })
 
-const ContentBox = style('div', 'flex', {
+const ContentBox = style('div', {
   // borderWidth: 1.5,
   // borderColor: 'blue',
   width: 350,
-  height: 250,
   marginTop: 200,
-  flexDirection: "column",
 })
 
 const PromptBox = style('div', 'flex', {
   // borderWidth: 1.5,
   // borderColor: 'green',
-  flex: 1,
+  height: 65,
 })
 
 const InputBox = style('div', 'flex', {
   // borderWidth: 1.5,
   // borderColor: 'yellow',
-  flex: 1,
+  height: 65,
   alignItems: 'center',
   justifyContent: 'center',
 })

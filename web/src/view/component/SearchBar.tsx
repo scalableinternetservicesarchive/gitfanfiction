@@ -21,7 +21,7 @@ const styles = {
     "border": 'black 2px solid',
     "marginBottom": '30',
     borderRadius: '10',
-    color: 'black',
+    color: 'white',
     width: '50%'
   },
   subcontent: {
@@ -55,7 +55,7 @@ const styles = {
     height: '30',
   },
   link: {
-    color: 'black',
+    color: 'white',
   }
 
 

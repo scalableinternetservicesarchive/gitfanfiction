@@ -1,3 +1,4 @@
+
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { Colors } from '../../../../common/src/colors'
@@ -12,11 +13,11 @@ import TopRatedStories from '../component/TopRatedStories'
 import { AppRouteParams } from '../nav/route'
 import { Page } from './Page'
 
+
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function BrowseAll(props: HomePageProps) {
-
   return (
     <Page>
       <SearchBar />
@@ -36,11 +37,9 @@ export function BrowseAll(props: HomePageProps) {
         </div>
       </Main>
       <div style={{ display: 'flex', justifyContent: 'center', }}>
-        <BranchDiagram />
+        <BranchDiagram width={100} height={400} />
       </div>
-
       <TopRatedStories />
-
       <div style={styles.columns}>
         <FeaturedFandoms />
 

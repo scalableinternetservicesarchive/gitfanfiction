@@ -11,8 +11,9 @@ import { Rating } from '../entities/Rating'
 import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
+import { Upvote } from '../entities/Upvote'
 import { User } from '../entities/User'
-import { Resolvers, UserType } from './schema.types'
+import { Resolvers } from './schema.types'
 
 export const pubsub = new PubSub()
 
@@ -30,6 +31,7 @@ interface Context {
   response: Response
   pubsub: PubSub
   rating: Rating | null
+  upvote: Upvote | null
 }
 
 export const graphqlRoot: Resolvers<Context> = {
@@ -49,8 +51,13 @@ export const graphqlRoot: Resolvers<Context> = {
     comments: () => Comment.find(),
     comment: async (_, { commentId }) => (await Comment.findOne({ where: { id: commentId } }))!,
 
-    ratings: () => Rating.find(),
+    upvotes: () => Upvote.find(),
+    upvote: async (_, { upvoteId }) => (await Upvote.findOne({ where: { id: upvoteId } }))!,
+
+
+
     rating: async (_, { ratingId }) => (await Rating.findOne({ where: { id: ratingId } })) || null,
+    ratings: () => Rating.find(),
 
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
@@ -70,26 +77,23 @@ export const graphqlRoot: Resolvers<Context> = {
       return fandom
     },
 
-    addUser: async (_, { input }, ctx) => {
-      const { email, password } = input
-      const user = new User()
-      user.password = password
-      user.email = email
-      user.name = "A User"
-      user.userType = UserType.User
-      await user.save()
-      return user
-    },
-
     addChapter: async (_, { input }, ctx) => {
       const { title, length, originDirectFromFandom, postOrFandomId, body } = input
       const chapter = new Chapter()
       chapter.originDirectFromFandom = originDirectFromFandom
-      if(originDirectFromFandom){
-        chapter.fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
+      if (originDirectFromFandom) {
+        const fandom = (await Fandom.findOne({ where: { id: postOrFandomId } }))!
+        if (fandom == undefined) throw new Error("non existing fandom id");
+        fandom.length = (fandom.length == "") ? ("" + length) : (fandom.length + "," + length)
+        fandom.save()
+        chapter.fandom = fandom
         chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       } else {
-        chapter.post = (await Post.findOne({ where: { id: postOrFandomId } }))!
+        const post = (await Post.findOne({ where: { id: postOrFandomId } }))!
+        if (post == undefined) throw new Error("non existing post id");
+        post.length = (post.length == "") ? ("" + length) : (post.length + "," + length)
+        post.save()
+        chapter.post = post
         chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       }
       chapter.length = length
@@ -102,13 +106,20 @@ export const graphqlRoot: Resolvers<Context> = {
     makePost: async (_, { input }, ctx) => {
       const { origin, title, description } = input
       const post = new Post()
-      post.origin = (await Chapter.findOne({where: {id: origin}}))!
+      post.origin = (await Chapter.findOne({ where: { id: origin } }))!
+      if (post.origin == undefined) throw new Error("non existing chapter id");
       post.chapters = []
       post.title = title
       post.description = description
       post.upvote = 0
       post.rating = 0
       post.num_rating = 0
+
+      // terrible just terrible
+      post.father = input.father
+      post.ancestor = input.ancestor
+      post.fatherIndex = input.fatherIndex
+
       await post.save()
       return post
     },
@@ -116,7 +127,7 @@ export const graphqlRoot: Resolvers<Context> = {
     makeComment: async (_, { input }, ctx) => {
       const { story, body, time } = input
       const comment = new Comment()
-      comment.story=story
+      comment.story = story
       comment.body = body
       comment.time = time
       comment.vote = 0
@@ -125,32 +136,45 @@ export const graphqlRoot: Resolvers<Context> = {
     },
 
     voteComment: async (_, { input }, ctx) => {
-      const { some_comment } = input
+      const { some_comment, user } = input
       const comment = check(await Comment.findOne({ where: { id: some_comment } }))
       //const some_user = check(await User.findOne({ where: { id: user } }))
       //some_user.votes.push(some_comment)
-      comment.vote += 1
-      await comment.save()
+
+      const exist = check(await Upvote.findOne({ where: { comment: some_comment, user: user } }))
+      //const exist=null
+      const upvote = new Upvote()
+      if (exist == null) {
+        comment.vote += 1
+        upvote.comment = some_comment
+        upvote.user = user
+        await upvote.save()
+        await comment.save()
+      }
+
       return true
     },
 
     rateStory: async (_, { input }, ctx) => {
-      const { some_story, rating, user} = input
+      const { some_story, rating, some_user } = input
       //const p= post(some_story)
       const some_post = check(await Post.findOne({ where: { id: some_story } }))
-      const rate = new Rating()
-      rate.story=some_story
-      rate.rating=rating
-      rate.user=user
-      //const exist = check(await Rating.findOne({ where: { story: some_story} }))
-      const exist =null
-      if(exist==null){
+
+      const exist = await Rating.findOne({ where: { story: some_story, user: some_user } })
+      //const exist =null
+      if (exist == null) {
         // eslint-disable-next-line prettier/prettier
-        some_post.rating = Math.round(100*(some_post.rating * some_post.num_rating + rating) / (some_post.num_rating + 1))/100
+        const rate = new Rating()
+        rate.story = some_story
+        rate.rating = rating
+        rate.user = some_user
+        some_post.rating = Math.round(100 * (some_post.rating * some_post.num_rating + rating) / (some_post.num_rating + 1)) / 100
         some_post.num_rating += 1
+        await rate.save()
+        await some_post.save()
       }
-      await some_post.save()
-      return rate
+      //return {id:1,story:1,rating:1,user:1}
+      return some_post
     },
 
     answerSurvey: async (_, { input }, ctx) => {

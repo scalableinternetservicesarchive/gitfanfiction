@@ -26,6 +26,9 @@ type Query {
   ratings: [Rating!]!
   rating (ratingId: Int!): Rating
 
+  upvotes: [Upvote!]!
+  upvote (upvoteId: Int!): Upvote
+
   comments:[Comment!]!
   comment (commentId: Int!): Comment
 
@@ -42,16 +45,14 @@ type Query {
 type Mutation {
   addFandom (input: FandomInput!): Fandom
 
-  addUser (input: UserInput!): User
-
   addChapter(input: ChapterInput!): Chapter
 
   makePost (input: PostInput!): Post
   makeComment (input: CommentInput!): Comment
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
-  rateStory(input: RatingInput!): Rating
-  voteComment(input: VoteInput!): Boolean!
+  rateStory(input: RatingInput!): Post
+  voteComment(input: VoteInput!): Boolean
   # Moves the survey to the next question (or starts it if it hasn't started). ADMIN only.
   nextSurveyQuestion (surveyId: Int!): Survey
 }
@@ -68,17 +69,13 @@ type User {
   name: String!
 }
 
-input UserInput {
-  email: String!
-  password: String!
-}
-
 type Fandom {
   id: Int!
   fandomType: String!
   name: String!
   chapters: [Chapter!]! # List of values denoting chapters in the book or films in the film series
   author: String!
+  length: String
 }
 
 input FandomInput {
@@ -103,12 +100,18 @@ type Post {
   upvote: Int!
   title: String!
   description: String!
+  length: String!
+
+  #terrible terriblt
+  ancestor: Int!
+  father: Int!
+  fatherIndex: String!
 }
 
 input RatingInput{
   some_story: Int!
   rating: Int!
-  user: Int!
+  some_user: Int!
 }
 
 input VoteInput{
@@ -120,6 +123,11 @@ input PostInput {
   origin: Int!
   title: String!
   description: String!
+
+  # terrible terrible
+  ancestor: Int!
+  father: Int!
+  fatherIndex: String!
 }
 
 type Chapter {
@@ -137,6 +145,7 @@ type Chapter {
   children: [Post!]
   body: String!
 }
+
 
 input ChapterInput {
   title: String!
@@ -165,6 +174,12 @@ input CommentInput {
   story: Int!
   body: String!
   time: String! # comma-separated list of values denoting length of chapters in the book, or minutes in the film.
+}
+
+type Upvote {
+  id: Int!
+  comment: Int!
+  user: Int!
 }
 
 enum UserType { ADMIN, USER }

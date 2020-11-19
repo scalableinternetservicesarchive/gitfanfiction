@@ -6,7 +6,12 @@ interface dataInterface {
   sub: [number, number, [number, number], number[], number][];
 }
 
-export default function BranchDiagram({ width = 800, height = 200 }) {
+interface size {
+  width: number;
+  height: number;
+}
+
+export default function BranchDiagram({ width, height }: size) {
 
   const [point, setPoint] = React.useState(0);
   const [content, setContent] = React.useState(0);
