@@ -56,6 +56,8 @@
     "styletron-react": "^5.2.7",
     "subscriptions-transport-ws": "^0.9.18",
     "tslib": "^2.0.1",
+    "type-graphql": "^1.1.1",
+    "type-graphql-dataloader": "^0.3.6",
     "uuid": "^8.3.0"
   },
   "devDependencies": {

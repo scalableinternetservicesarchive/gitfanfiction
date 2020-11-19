@@ -1,13 +1,20 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { Chapter } from './Chapter'
+import { Field, ObjectType } from 'type-graphql';
+import { TypeormLoader } from 'type-graphql-dataloader';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Chapter } from './Chapter';
 
+@ObjectType()
 @Entity()
 export class Post extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @ManyToOne(() => Chapter, chapter => chapter.children)
+  @ManyToOne(() => Chapter, chapter => chapter.children, {cascade: true})
+  @TypeormLoader((type) => Chapter, (post: Post) => post.originId)
   origin: Chapter
+
+  @RelationId((post: Post) => post.origin)
+  originId: number;
 
   @Column({
     type: "float",
@@ -25,7 +32,8 @@ export class Post extends BaseEntity {
   })
   upvote: number
 
-  @OneToMany(() => Chapter, chapter => chapter.post)
+  @Field((type) => [Chapter])
+  @OneToMany((type) => Chapter, chapter => chapter.post, {cascade: true})
   chapters: Chapter[]
 
   @Column()

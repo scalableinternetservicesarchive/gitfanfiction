@@ -1,6 +1,8 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { Chapter } from './Chapter'
+import { Field, ObjectType } from 'type-graphql';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Chapter } from './Chapter';
 
+@ObjectType()
 @Entity()
 export class Fandom extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -16,7 +18,8 @@ export class Fandom extends BaseEntity {
   })
   name: string
 
-  @OneToMany(() => Chapter, chapter => chapter.fandom)
+  @Field((type) => [Chapter])
+  @OneToMany(() => Chapter, chapter => chapter.fandom, {cascade: true})
   chapters: Chapter[]
 
   @Column({

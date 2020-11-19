@@ -161,6 +161,7 @@ export interface Post {
   __typename?: 'Post'
   id: Scalars['Int']
   origin: Chapter
+  originId: Scalars['Int']
   rating: Scalars['Float']
   num_rating: Scalars['Int']
   chapters: Array<Chapter>
@@ -196,7 +197,9 @@ export interface Chapter {
   num_rating: Scalars['Int']
   title: Scalars['String']
   post?: Maybe<Post>
+  postId?: Maybe<Scalars['Int']>
   fandom?: Maybe<Fandom>
+  fandomId?: Maybe<Scalars['Int']>
   children?: Maybe<Array<Post>>
   body: Scalars['String']
 }
@@ -571,6 +574,7 @@ export type PostResolvers<
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   origin?: Resolver<ResolversTypes['Chapter'], ParentType, ContextType>
+  originId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
   num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
@@ -592,7 +596,9 @@ export type ChapterResolvers<
   num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
+  postId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   fandom?: Resolver<Maybe<ResolversTypes['Fandom']>, ParentType, ContextType>
+  fandomId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   children?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>

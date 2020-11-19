@@ -33,6 +33,7 @@ interface Context {
 }
 
 export const graphqlRoot: Resolvers<Context> = {
+
   Query: {
     self: (_, args, ctx) => ctx.user,
 
@@ -174,6 +175,24 @@ export const graphqlRoot: Resolvers<Context> = {
       ctx.pubsub.publish('SURVEY_UPDATE_' + surveyId, survey)
       return survey
     },
+  },
+  Post: {
+    chapters: async (parent, args, ctx, info) => {
+      return (await Chapter.find({ where: { fandom: (await Post.findOne({ where: { id: parent.id } }))! } }))!
+    },
+    origin: async (parent, args, ctx, info) => (await Chapter.findOne({ where: { id: parent.originId } }))!,
+  },
+  Fandom: {
+    chapters: async (parent, args, ctx, info) => {
+      return (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: parent.id } }))! } }))!
+    }
+  },
+  Chapter: {
+    children: async (parent, args, ctx, info) => {
+      return (await Post.find({ where: { origin: (await Chapter.findOne({ where: { id: parent.id } }))! } }))!
+    },
+    post: async (parent, args, ctx, info) => (await Post.findOne({ where: { id: parent.postId } }))!,
+    fandom: async (parent, args, ctx, info) => (await Fandom.findOne({ where: { id: parent.fandomId } }))!
   },
   Subscription: {
     surveyUpdates: {

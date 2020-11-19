@@ -96,6 +96,7 @@ type Originstory{
 type Post {
   id: Int!
   origin: Chapter!
+  originId: Int!
   rating: Float!
   num_rating: Int!
   chapters: [Chapter!]!
@@ -130,7 +131,9 @@ type Chapter {
   num_rating: Int!
   title: String!
   post: Post
+  postId: Int
   fandom: Fandom
+  fandomId: Int
   children: [Post!]
   body: String!
 }

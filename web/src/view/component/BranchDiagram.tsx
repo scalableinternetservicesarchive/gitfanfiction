@@ -28,6 +28,35 @@ export default function BranchDiagram({ width = 800, height = 200 }) {
     // upvote -> will translate to thickness
     // height is derived from random with seed = substory_Id
 
+    // the query you will want to make is this:
+    // "main": fandom (fandomId){
+    //   id
+    //   fandomType
+    //   chapters {
+    //      length
+    //   }
+    // }
+
+    // "sub": posts{
+    //    id
+    //    originDirectFromFandom
+    //    origin {
+    //       post {
+    //         id
+    //       }
+    //       fandom {
+    //         id
+    //       }
+    //    }
+    //    origin{
+    //       order
+    //    }
+    //    chapters{
+    //       length
+    //    }
+    //    upvote
+    // }
+
     const exampleData: dataInterface = {
       "main": [123456, "book", [30, 20, 50, 20]],
       "sub": [
