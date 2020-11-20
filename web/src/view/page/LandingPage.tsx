@@ -1,6 +1,5 @@
 
-import { AppBar, IconButton, Toolbar } from '@material-ui/core'
-import SortIcon from '@material-ui/icons/Sort'
+import { AppBar, Toolbar } from '@material-ui/core'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import BranchDiagram from '../component/BranchDiagram'
@@ -18,9 +17,6 @@ export function LandingPage(props: HomePageProps) {
           <div style={styles.appbarTitle}>
             git fanfiction
           </div>
-          <IconButton>
-            <SortIcon style={styles.icon} />
-          </IconButton>
         </Toolbar>
       </AppBar>
 

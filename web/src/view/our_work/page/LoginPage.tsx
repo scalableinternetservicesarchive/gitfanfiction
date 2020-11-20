@@ -1,15 +1,19 @@
+import { AppBar, Toolbar } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
 import { UserContext } from '../../auth/user';
 import Background_SideBranch from '../component/Background_SideBranch';
-import Header_Thick from '../component/Header_Thick';
 import { AppRouteParams } from '../nav/route';
+
+
+//image
+const gear = 'assets/image/webpage-general/gear.png';
+
 
 interface LoginPageProps extends RouteComponentProps, AppRouteParams { }
 
-const textColor = "#9fc89d"
-
+const textColor = "#000"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function LoginPage(props: LoginPageProps) {
@@ -22,54 +26,71 @@ export function LoginPage(props: LoginPageProps) {
   const { user } = React.useContext(UserContext)
 
   return (<>
-    <Header_Thick />
-    <Background_SideBranch />
-    <Body>
-      <AbsFlex>
-        <ContentBox>
-          {
-            user
-              ?
-              <a href="#" onClick={() => logout(setError)}> Log Out </a>
-              :
-              <div>
-                <PromptBox><LoginPrompt>Log In</LoginPrompt></PromptBox>
-                <InputBox>
-                  <div style={{ ...styles.inputField }}>
-                    <div style={{ ...styles.field }}><pre>{"email : "}</pre></div>
-                    <input
-                      style={{ ...styles.input }}
-                      type="email"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      onKeyDown={(event) => { if (event.key === "Enter") login(email, password, setError) }}
-                    />
-                  </div>
-                </InputBox>
-                <InputBox>
-                  <div style={{ ...styles.inputField }}>
-                    <div style={{ ...styles.field }}><pre>{"password : "}</pre></div>
-                    <input
-                      style={{ ...styles.input }}
-                      type="password"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      onKeyDown={(event) => { if (event.key === "Enter") login(email, password, setError) }}
-                    />
-                  </div>
-                </InputBox>
-                <PromptBox>
-                  <a style={{ color: textColor }} href="/app/signup">
-                    <AltPrompt>Need an account?</AltPrompt>
-                  </a>
-                </PromptBox>
-              </div>
-          }
-          {err}
-          <h1>{user?.name} </h1>
-        </ContentBox>
-      </AbsFlex>
-    </Body>
+    <Background>
+      <AppBar style={styles.appbar} elevation={0}>
+        <Toolbar style={styles.appbarWrapper}>
+          <LeftHeaderBox>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="/app/index">git fanfiction</a>
+          </LeftHeaderBox>
+          <MiddleHeaderBox>
+
+          </MiddleHeaderBox>
+          <RightHeaderBox>
+            <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
+            <a href="/app/setting">
+              <img style={{ margin: '0 25' }} height={30} src={gear} alt="gear" />
+            </a>
+          </RightHeaderBox>
+        </Toolbar>
+      </AppBar>
+      <Background_SideBranch />
+      <Body>
+        <AbsFlex>
+          <ContentBox>
+            {
+              user
+                ?
+                <a href="#" onClick={() => logout(setError)}> Log Out </a>
+                :
+                <div>
+                  <PromptBox><LoginPrompt>Log In</LoginPrompt></PromptBox>
+                  <InputBox>
+                    <div style={{ ...styles.inputField }}>
+                      <div style={{ ...styles.field }}><pre>{"email : "}</pre></div>
+                      <input
+                        style={{ ...styles.input }}
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        onKeyDown={(event) => { if (event.key === "Enter") login(email, password, setError) }}
+                      />
+                    </div>
+                  </InputBox>
+                  <InputBox>
+                    <div style={{ ...styles.inputField }}>
+                      <div style={{ ...styles.field }}><pre>{"password : "}</pre></div>
+                      <input
+                        style={{ ...styles.input }}
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        onKeyDown={(event) => { if (event.key === "Enter") login(email, password, setError) }}
+                      />
+                    </div>
+                  </InputBox>
+                  <PromptBox>
+                    <a style={{ color: textColor }} href="/app/signup">
+                      <AltPrompt>Need an account?</AltPrompt>
+                    </a>
+                  </PromptBox>
+                </div>
+            }
+            {err}
+            <h1>{user?.name} </h1>
+          </ContentBox>
+        </AbsFlex>
+      </Body>
+    </Background>
   </>
   )
 }
@@ -131,14 +152,14 @@ const styles = {
   inputField: {
     display: "flex",
     flexDirection: "row" as "row",
-    border: "#8dc9bf 4px solid",
+    border: "#000 3px solid",
     borderRadius: 10,
     paddingLeft: 10,
     height: 42,
     width: 300,
     alignItems: 'center',
     font: '18px sans-serif',
-    color: '#8dc9bf'
+    color: '#000'
   },
   field: {
   },
@@ -147,7 +168,33 @@ const styles = {
     color: textColor,
     // border: 'black 1px solid',
   },
+  appbar: {
+    backgroundColor: '202020',
+    fontFamily: 'Consolas',
+  },
+  appbarWrapper: {
+    width: '80%',
+    margin: '15px auto',
+  },
+  appbarTitle: {
+    color: '#fff',
+    flex: '1',
+    fontSize: '25',
+    fontWeight: 'bold',
+  } as React.CSSProperties,
+  container: {
+    textAlign: 'center',
+  },
 }
+
+const Background = style('div', {
+  color: '#000',
+  backgroundImage: "url('/app/assets/image/webpage-general/background2.jpg')",
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  minHeight: '100vh',
+  position: 'relative',
+})
 
 const Body = style('div', 'flex w-100 h-100', {
   // borderWidth: 2,
@@ -185,12 +232,14 @@ const InputBox = style('div', 'flex', {
 const LoginPrompt = style('div', 'flex', {
   font: "35px sans-serif",
   color: textColor,
+  fontFamily: 'Consolas',
   marginLeft: 15,
 })
 
 const AltPrompt = style('div', 'flex', {
   font: "15px sans-serif",
   color: textColor,
+  fontFamily: 'Consolas',
   marginLeft: 15,
   marginTop: 20,
 })
@@ -204,3 +253,47 @@ const AltPrompt = style('div', 'flex', {
 //   borderRightWidth: '4px',
 // })
 
+
+
+const LeftHeaderBox = style('div', 'flex ml3', {
+  // borderWidth: 2,
+  // borderColor: 'green',
+  alignItems: 'center',
+  fontFamily: 'Consolas',
+  flex: '1',
+  fontSize: '25',
+  fontWeight: 'bold',
+})
+
+const MiddleHeaderBox = style('div', 'ba flex ml3', {
+  flex: 1,
+  borderWidth: "0 0 0 0",
+  margin: "12 20",
+  padding: "1 3",
+  justifyContent: 'flex-end',
+  alignItems: 'flex-end',
+  font: '15px sans-serif',
+  fontWeight: 100,
+  color: "white",
+})
+
+const RightHeaderBox = style('div', ' flex', {
+  // borderWidth: 2,
+  // borderColor: 'green',
+  alignItems: 'center'
+
+})
+
+const MenuItem = style('div', 'ba flex', {
+  borderWidth: 1.5,
+  borderColor: 'white',
+  width: 70,
+  height: 22,
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  textDecorationLine: 'none',
+  fontSize: 15,
+  fontWeight: 300,
+  fontFamily: 'sans-serif',
+})
