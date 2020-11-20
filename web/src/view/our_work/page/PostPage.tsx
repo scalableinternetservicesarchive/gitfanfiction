@@ -123,12 +123,7 @@ export function PostPage(props: PostPageProps) {
             />
           </LeftHeaderBox>
           <MiddleHeaderBox>
-            <LeftHeaderBox>
-              hihii
-            </LeftHeaderBox>
-            <RightHeaderBox>
-              Welcome {user?.name}
-            </RightHeaderBox>
+            Welcome {user?.name}
           </MiddleHeaderBox>
           <RightHeaderBox>
             <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
@@ -193,9 +188,9 @@ export function PostPage(props: PostPageProps) {
               />
             </StoryBox>
 
-            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>New Submit</SubmitButton>
+            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>New Post</SubmitButton>
 
-            <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend</SubmitButton>
+            <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend Post</SubmitButton>
 
 
           </div>

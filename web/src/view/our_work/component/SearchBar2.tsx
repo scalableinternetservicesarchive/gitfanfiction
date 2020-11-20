@@ -39,7 +39,6 @@ export default function SearchBar2({ width = 300, height = 30, fontSize = 17, se
 }
 
 
-
 const customStyles = {
   menu: (provided: any, state: any) => ({
     color: state.isSelected ? 'grey' : 'black',
