@@ -1,10 +1,10 @@
+import { AppBar, Toolbar } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import { range } from 'd3';
 import * as React from 'react';
 import { style } from '../../../style/styled';
 import Background_SideBranch from '../component/Background_SideBranch';
 import { SubmitButton } from '../component/Button';
-import Header_Thick from '../component/Header_Thick';
 import { AppRouteParams } from '../nav/route';
 
 interface RequestFandomPageProps extends RouteComponentProps, AppRouteParams { }
@@ -14,6 +14,9 @@ const color = {
   line: "#629089",
   panel: "#70AD47"
 }
+
+//image
+const gear = 'assets/image/webpage-general/gear.png';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function RequestFandomPage(props: RequestFandomPageProps) {
@@ -69,24 +72,41 @@ export function RequestFandomPage(props: RequestFandomPageProps) {
           }
 
   return (<>
-    <Header_Thick />
-    <Background_SideBranch />
-    <Body>
-      <PushSide>
-        <TopLine>
-          Request Fandom:
+    <Background>
+      <AppBar style={styles.appbar} elevation={0}>
+        <Toolbar style={styles.appbarWrapper}>
+          <LeftHeaderBox>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="/app/index">git fanfiction</a>
+          </LeftHeaderBox>
+          <MiddleHeaderBox>
+
+          </MiddleHeaderBox>
+          <RightHeaderBox>
+            <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
+            <a href="/app/setting">
+              <img style={{ margin: '0 25' }} height={30} src={gear} alt="gear" />
+            </a>
+          </RightHeaderBox>
+        </Toolbar>
+      </AppBar>
+      <Background_SideBranch />
+      <Body>
+        <PushSide>
+          <TopLine>
+            Request Fandom:
         </TopLine>
-        <QuestionBox>
-          <QuestionSlot prompt="Title" value={title} setValue={setTitle} />
-          <QuestionSlot prompt="Author" value={author} setValue={setAuthor} />
-          <QuestionSlot prompt="Movie? Book?" value={genre} setValue={setGenre} />
-          {howManyBookOrEpisode}
-          {listChapter}
-          {validEntry ? <SubmitButton onClick={() => sendRequest({ title, author, genre, nbooks, chapters }, setError)} /> : null}
-          {error}
-        </QuestionBox>
-      </PushSide>
-    </Body>
+          <QuestionBox>
+            <QuestionSlot prompt="Title" value={title} setValue={setTitle} />
+            <QuestionSlot prompt="Author" value={author} setValue={setAuthor} />
+            <QuestionSlot prompt="Movie? Book?" value={genre} setValue={setGenre} />
+            {howManyBookOrEpisode}
+            {listChapter}
+            {validEntry ? <SubmitButton onClick={() => sendRequest({ title, author, genre, nbooks, chapters }, setError)} /> : null}
+            {error}
+          </QuestionBox>
+        </PushSide>
+      </Body>
+    </Background>
   </>
   )
 }
@@ -201,7 +221,10 @@ function QuestionSlot(props: any) {
 
 
 const Body = style('div', 'absolute w-100', {
-  marginBottom: 20
+  top: '60px',
+  marginBottom: 20,
+  display: 'flex',
+  justifyContent: 'center',
 })
 
 const PushSide = style('div', 'relative', {
@@ -247,3 +270,74 @@ const Instruction = style('div', 'relative', {
 //   borderRightWidth: '4px',
 // })
 
+const Background = style('div', {
+  color: '#000',
+  backgroundImage: "url('/app/assets/image/webpage-general/background2.jpg')",
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  minHeight: '100vh',
+  position: 'relative',
+})
+
+const LeftHeaderBox = style('div', 'flex ml3', {
+  // borderWidth: 2,
+  // borderColor: 'green',
+  alignItems: 'center',
+  fontFamily: 'Consolas',
+  flex: '1',
+  fontSize: '25',
+  fontWeight: 'bold',
+})
+
+const MiddleHeaderBox = style('div', 'ba flex ml3', {
+  flex: 1,
+  borderWidth: "0 0 0 0",
+  margin: "12 20",
+  padding: "1 3",
+  justifyContent: 'flex-end',
+  alignItems: 'flex-end',
+  font: '15px sans-serif',
+  fontWeight: 100,
+  color: "white",
+})
+
+const RightHeaderBox = style('div', ' flex', {
+  // borderWidth: 2,
+  // borderColor: 'green',
+  alignItems: 'center'
+
+})
+
+const MenuItem = style('div', 'ba flex', {
+  borderWidth: 1.5,
+  borderColor: 'white',
+  width: 70,
+  height: 22,
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  textDecorationLine: 'none',
+  fontSize: 15,
+  fontWeight: 300,
+  fontFamily: 'sans-serif',
+})
+
+const styles = {
+  appbar: {
+    backgroundColor: '202020',
+    fontFamily: 'Consolas',
+  },
+  appbarWrapper: {
+    width: '80%',
+    margin: '15px auto',
+  },
+  appbarTitle: {
+    color: '#fff',
+    flex: '1',
+    fontSize: '25',
+    fontWeight: 'bold',
+  } as React.CSSProperties,
+  container: {
+    textAlign: 'center',
+  },
+}

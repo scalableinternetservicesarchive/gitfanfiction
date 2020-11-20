@@ -18,8 +18,8 @@ export function ViewStoryPage(props: HomePageProps) {
       <AppBar style={styles.appbar} elevation={0}>
         <Toolbar style={styles.appbarWrapper}>
           <div style={styles.appbarTitle}>
-            git fanfiction
-              </div>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="/app/index">git fanfiction</a>
+          </div>
           <div style={{ color: 'white' }}>
             <SearchBar />
           </div>
@@ -67,7 +67,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     color: '#000',
-    backgroundImage: "url('/app/assets/background2.jpg')",
+    backgroundImage: "url('/app/assets/image/webpage-general/background2.jpg')",
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     minHeight: '100vh',
@@ -185,6 +185,7 @@ const styles = {
 
   storybox: {
     width: '45vw',
+    height: '678px',
     padding: '15px',
     position: 'relative',
     margin: '0 auto',
