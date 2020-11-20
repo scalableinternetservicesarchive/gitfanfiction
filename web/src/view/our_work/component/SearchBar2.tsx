@@ -4,7 +4,11 @@ import * as React from 'react';
 import Select from 'react-select';
 import { ALLFANDOM } from '../gql/query';
 
-export default function SearchBar2({ width = 600, height = 100, setFandomId = console.log }): any {
+//small size:
+//height: 22, fontsize = 14 width=300
+//regular size:
+//height: 30, fontsize = 15 width=600
+export default function SearchBar2({ width = 300, height = 30, fontSize = 17, setFandomId = console.log }): any {
 
   const fandomNames = useQuery(ALLFANDOM);
   const [result, setResult] = React.useState([])
@@ -17,15 +21,19 @@ export default function SearchBar2({ width = 600, height = 100, setFandomId = co
 
 
   return (
-    <div style={{ ...styles.main, "width": width }}>
-      <Select
-        options={result}
-        styles={customStyles}
-        placeholder="Search..."
-        menuColor='silver'
-        menuPlacement="auto"
-        onChange={(opt: any) => setFandomId(opt.value)}
-      />
+    <div style={{ "height": height, "width": width, fontSize: fontSize }}>
+      <div style={{ ...styles.main, "width": width }}>
+        <Select
+          options={result}
+          styles={customStyles}
+          placeholder="Search..."
+          menuColor='silver'
+          menuPlacement="auto"
+          height={height}
+          fontSize={fontSize}
+          onChange={(opt: any) => setFandomId(opt.value)}
+        />
+      </div>
     </div>
   )
 }
@@ -41,17 +49,23 @@ const customStyles = {
     background: '#fff',
     border: 0,
     boxShadow: 'none',
-    minHeight: '30px',
-    height: '30px',
+    minHeight: state.selectProps.height,
+    height: state.selectProps.height,
+    fontSize: state.selectProps.fontSize,
   }),
   valueContainer: (provided: any, state: any) => ({
     ...provided,
-    height: '30px',
+    height: state.selectProps.height,
+    fontSize: state.selectProps.fontSize,
     padding: '0 6px'
   }),
   indicatorsContainer: (provided: any, state: any) => ({
     ...provided,
-    height: '30px',
+    height: state.selectProps.height,
+  }),
+  dropdownIndicator: (provided: any, state: any) => ({
+    ...provided,
+    fontSize: state.selectProps.fontSize,
   }),
   indicatorSeparator: (provided: any, state: any) => ({
     display: 'none',

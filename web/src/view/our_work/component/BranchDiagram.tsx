@@ -280,8 +280,8 @@ export default function BranchDiagram({ width = 800, height = 200, fandomId = 1,
         throw err;
       })
       .then((res) => {
-        d3.select("svg").selectAll("*").remove();
-        console.log(JSON.parse(res));
+        d3.select(ref.current).selectAll("*").remove();
+        console.log("branch-rep", JSON.parse(res));
         drawBranch(JSON.parse(res));
       })
       .catch(err => {

@@ -6,10 +6,10 @@ import * as React from 'react';
 import { style } from '../../../style/styled';
 import { UserContext } from '../../auth/user';
 import BranchDiagram from '../component/BranchDiagram';
+import SearchBar2 from '../component/SearchBar2';
 import { ADDCHAPTER, MAKENEWPOST } from '../gql/mutation';
 import { fetchFandomData, fetchPostPageData } from '../gql/query';
 import { AppRouteParams } from '../nav/route';
-
 
 //image
 const gear = 'assets/image/webpage-general/gear.png';
@@ -32,9 +32,9 @@ export function PostPage(props: PostPageProps) {
   const [title, setTitle] = React.useState("");
   const [volume, setVolume] = React.useState(""); //
   const [chapter, setChapter] = React.useState(""); //
+  const [fandomID, setFandomID] = React.useState(1); //
   const { user } = React.useContext(UserContext);
 
-  const fandomID = 1;
   //queries
   const postData = useQuery(fetchPostPageData, { variables: { postid: postID } })
   const fandomData = useQuery(fetchFandomData, { variables: { fandomid: fandomID } })
@@ -58,6 +58,9 @@ export function PostPage(props: PostPageProps) {
         }
       })
 
+      setTitle("")
+      setContent("")
+      setPostID(postid)
       alert("submitted successfully");
     }
   }); //
@@ -111,10 +114,21 @@ export function PostPage(props: PostPageProps) {
       <AppBar style={styles.appbar} elevation={0}>
         <Toolbar style={styles.appbarWrapper}>
           <LeftHeaderBox>
-            <a style={{ textDecoration: 'none', color: 'white' }} href="/app/index">git fanfiction</a>
+            <a style={{ textDecoration: 'none', color: 'white', marginRight: 20 }} href="/app/index">git fanfiction</a>
+            <SearchBar2
+              width={300}
+              height={22}
+              fontSize={15}
+              setFandomId={setFandomID}
+            />
           </LeftHeaderBox>
           <MiddleHeaderBox>
-            Welcome {user?.name}
+            <LeftHeaderBox>
+              hihii
+            </LeftHeaderBox>
+            <RightHeaderBox>
+              Welcome {user?.name}
+            </RightHeaderBox>
           </MiddleHeaderBox>
           <RightHeaderBox>
             <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
@@ -134,6 +148,7 @@ export function PostPage(props: PostPageProps) {
                 height={branchPanelHeight}
                 width={branchPanelWidth}
                 setPostId={setPostID}
+                fandomId={fandomID}
               /> : null}
             </BranchPanel>
           </BranchBox>
@@ -148,7 +163,7 @@ export function PostPage(props: PostPageProps) {
             <div style={styles.titlebox}>
               <DeviationBox>
                 {postData.data?.post?.title}
-                {postData.data?.post ? <span>&nbsp;{'>>'}</span> : fandomData?.data?.fandom.name + " >> "}
+                {postData.data?.post ? <span>&nbsp;{'>>'}</span> : <span>{fandomData?.data?.fandom.name}&nbsp;{':'}</span>}
                 <span> </span>
                 {postData.data?.post ? null : <input placeholder="Volume" style={{ textAlign: "center", width: 120 }}
                   value={volume} onChange={(event) => setVolume(event.target.value)} />}
@@ -178,7 +193,10 @@ export function PostPage(props: PostPageProps) {
               />
             </StoryBox>
 
-            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Submit</SubmitButton>
+            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>New Submit</SubmitButton>
+
+            <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend</SubmitButton>
+
 
           </div>
 
@@ -270,6 +288,36 @@ const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, fandomData: 
   }
 }
 
+
+const OnExtend = (add_new_chapter: any, onFandom: Boolean, user: any, fandomData: any, postData: any, content: string, title: string, volume: string, chapter: string) => {
+
+  console.log("postData", postData);
+  console.log("fandomData", fandomData);
+  console.log("content", content);
+  console.log("title", title);
+  console.log("user", user);
+  console.log("volume", volume);
+  console.log("chapter", chapter);
+
+
+  const content_length = 1500;
+
+  //do we even have post data?
+  if (postData?.data?.post == null) { alert("post not selected"); return; }
+  if (title == "") { alert("Cannot Submit with empty title"); return; }
+
+  add_new_chapter({
+    variables: {
+      title: title,
+      originDirectFromFandom: false,
+      body: content,
+      postOrFandomId: postData.data.post.id,
+      length: content_length
+    }
+  })
+
+  alert("submitted successfully");
+}
 // make_new_post({
 //   variables: {
 //     title: title,
