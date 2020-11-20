@@ -4,9 +4,6 @@ export const MAKENEWPOST = gql`
 mutation MakeNewPost(
   $title:String!,
   $description: String!,
-  $body:String!
-  $length:Int!,
-  $originDirectFromFandom:Boolean!,
   $origin: Int!,
   $ancestor: Int!,
   $father: Int!,
@@ -24,12 +21,22 @@ mutation MakeNewPost(
     id
     title
   }
+}
+`
 
+export const ADDCHAPTER = gql`
+mutation AddChapter(
+  $title:String!,
+  $body:String!
+  $length:Int!,
+  $originDirectFromFandom:Boolean!,
+  $postOrFandomId: Int!,
+) {
   addChapter(input:{
     title : $title
     length : $length
     originDirectFromFandom : $originDirectFromFandom
-    postOrFandomId : $father
+    postOrFandomId : $postOrFandomId
     body : $body
   }) {
     id

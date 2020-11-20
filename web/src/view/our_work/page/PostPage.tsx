@@ -1,12 +1,13 @@
 
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { AppBar, Toolbar } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
 import { UserContext } from '../../auth/user';
 import BranchDiagram from '../component/BranchDiagram';
-import { fetchPostPageData } from '../gql/query';
+import { ADDCHAPTER, MAKENEWPOST } from '../gql/mutation';
+import { fetchFandomData, fetchPostPageData } from '../gql/query';
 import { AppRouteParams } from '../nav/route';
 
 
@@ -29,19 +30,46 @@ export function PostPage(props: PostPageProps) {
   const [content, setContent] = React.useState("");
   const [postID, setPostID] = React.useState(0);
   const [title, setTitle] = React.useState("");
-  // const [volume, setVolume] = React.useState(""); //
-  // const [chapter, setChapter] = React.useState(""); //
+  const [volume, setVolume] = React.useState(""); //
+  const [chapter, setChapter] = React.useState(""); //
   const { user } = React.useContext(UserContext);
 
-  console.log(postID)
+  const fandomID = 1;
   //queries
   const postData = useQuery(fetchPostPageData, { variables: { postid: postID } })
-  // const [make_new_post, mutData] = useMutation(MAKENEWPOST); //
+  const fandomData = useQuery(fetchFandomData, { variables: { fandomid: fandomID } })
+
+  const onFandom = !postID;
+
+  const [add_new_chapter] = useMutation(ADDCHAPTER);
+  const [make_new_post] = useMutation(MAKENEWPOST, {
+    onCompleted(data) {
+
+      const postid = data.makePost.id;
+      const content_length = 1500;
+
+      add_new_chapter({
+        variables: {
+          title: title,
+          originDirectFromFandom: false,
+          body: content,
+          postOrFandomId: postid,
+          length: content_length
+        }
+      })
+
+      alert("submitted successfully");
+    }
+  }); //
   // loading ? null : console.log(data.post)
-  // console.log("mudata", mutData);
+
   React.useEffect(() => {
-    console.log("data", postData.data)
+    console.log("postdata", postData.data)
   }, [postData])
+
+  React.useEffect(() => {
+    console.log("fandomdata", fandomData.data)
+  }, [fandomData])
 
   const contentRef = React.useRef(null);
   const branchPanelRef = React.useRef(null);
@@ -122,9 +150,11 @@ export function PostPage(props: PostPageProps) {
                 {postData.data?.post?.title}
                 {postData.data?.post ? <span>&nbsp;{'>>'}</span> : "place for deviation >> "}
                 <span> </span>
-                {postData.data?.post ? null : <input placeholder="Volume" style={{ textAlign: "center", width: 120 }} />}
+                {postData.data?.post ? null : <input placeholder="Volume" style={{ textAlign: "center", width: 120 }}
+                  value={volume} onChange={(event) => setVolume(event.target.value)} />}
                 {postData.data?.post ? null : ">>"}
-                <input placeholder="Chapter" style={{ width: 110, textAlign: "center" }} />
+                <input placeholder="Chapter" style={{ width: 110, textAlign: "center" }}
+                  value={chapter} onChange={(event) => setChapter(event.target.value)} />
               </DeviationBox>
               <TitleBox>
                 <input
@@ -148,7 +178,7 @@ export function PostPage(props: PostPageProps) {
               />
             </StoryBox>
 
-            <SubmitButton onClick={submit}>Submit</SubmitButton>
+            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, postData, content, title, volume, chapter)}>Submit</SubmitButton>
 
           </div>
 
@@ -160,10 +190,70 @@ export function PostPage(props: PostPageProps) {
   )
 }
 
-function submit() {
-  alert("Submitted!");
+
+const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, postorfandomData: any, content: string, title: string, volume: string, chapter: string) => {
+
+  console.log("postorfandomData", postorfandomData);
+  console.log("content", content);
+  console.log("title", title);
+  console.log("user", user);
+  console.log("volume", volume);
+  console.log("chapter", chapter);
+
+  //on Fandom
+  if (onFandom) {
+    // const length = fandom
+  }
+  else {
+    //do we even have post data?
+    const postData = postorfandomData;
+    if (postData?.data?.post == null) { alert("PostData not fetched"); return; }
+
+    // bound check
+    const length = postData.data.post.length.split(",").length
+    console.log(length)
+    const chapter_int = parseInt(chapter);
+    if (isNaN(chapter_int)) { alert("Invalid Chapter number"); return; }
+    if (chapter_int > length) { alert("the deviation you are writing from has " + length + " chapters. Your chapter starting point (" + chapter_int + ") excceed that length\n"); return; }
+    if (chapter_int <= 0) { alert("Invalid Chapter Number\n"); return; }
+    if (title == "") { alert("Cannot Submit with empty title"); return; }
+
+    //prepare necessary variables
+    const ancestor = postData.data.post.ancestor;
+    const father = postData.data.post.id;
+    const fatherIndex = "0," + chapter;
+    // // const title = title;
+    const origin = postData.data.post.origin.id;
+    const description = content;
+    //set content length
+    // const content_length = 900;
+
+    make_new_post({
+      variables: {
+        title: title,
+        description: description,
+        origin: origin,
+        ancestor: ancestor,
+        father: father,
+        fatherIndex: fatherIndex
+      }
+    })
+  }
 }
 
+// make_new_post({
+//   variables: {
+//     title: title,
+//     description: description,
+//     body: content,
+//     length: content_length,
+//     originDirectFromFandom: false,
+//     origin: origin,
+//     ancestor: ancestor,
+//     father: father,
+//     fatherIndex: fatherIndex
+//   }
+// })
 
 const LeftHeaderBox = style('div', 'flex ml3', {
   // borderWidth: 2,

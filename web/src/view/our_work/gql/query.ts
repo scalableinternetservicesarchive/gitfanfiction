@@ -19,6 +19,17 @@ query PostPageQuery($postid: Int!) {
 }
 `
 
+export const fetchFandomData = gql`
+query FandomDataQuery($fandomid: Int!) {
+  fandom(fandomId: $fandomid){
+    fandomType
+    name
+    length
+    author
+  }
+}
+`
+
 export const ALLFANDOM = gql`
 query AllFandom{
   fandoms {
