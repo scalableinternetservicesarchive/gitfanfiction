@@ -148,7 +148,7 @@ export function PostPage(props: PostPageProps) {
             <div style={styles.titlebox}>
               <DeviationBox>
                 {postData.data?.post?.title}
-                {postData.data?.post ? <span>&nbsp;{'>>'}</span> : "place for deviation >> "}
+                {postData.data?.post ? <span>&nbsp;{'>>'}</span> : fandomData?.data?.fandom.name + " >> "}
                 <span> </span>
                 {postData.data?.post ? null : <input placeholder="Volume" style={{ textAlign: "center", width: 120 }}
                   value={volume} onChange={(event) => setVolume(event.target.value)} />}
@@ -178,7 +178,7 @@ export function PostPage(props: PostPageProps) {
               />
             </StoryBox>
 
-            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, postData, content, title, volume, chapter)}>Submit</SubmitButton>
+            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Submit</SubmitButton>
 
           </div>
 
@@ -191,9 +191,10 @@ export function PostPage(props: PostPageProps) {
 }
 
 
-const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, postorfandomData: any, content: string, title: string, volume: string, chapter: string) => {
+const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, fandomData: any, postData: any, content: string, title: string, volume: string, chapter: string) => {
 
-  console.log("postorfandomData", postorfandomData);
+  console.log("postData", postData);
+  console.log("fandomData", fandomData);
   console.log("content", content);
   console.log("title", title);
   console.log("user", user);
@@ -203,10 +204,39 @@ const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, postorfandom
   //on Fandom
   if (onFandom) {
     // const length = fandom
+    const fChapter = fandomData.data.fandom.length.split(",")
+    const fVolume = fChapter.length
+    const chapter_int = parseInt(chapter);
+    const volume_int = parseInt(volume);
+
+    // bound check
+    if (isNaN(chapter_int) || chapter_int <= 0) { alert("Invalid Chapter number"); return; }
+    if (isNaN(volume_int) || volume_int <= 0) { alert("Invalid Volume number"); return; }
+    if (volume_int > fVolume) { alert("This fandom currently has up to  " + fVolume + " volume. Your stated volume (" + volume_int + ") excceed that length\n"); return; }
+    if (chapter_int > fChapter[volume_int - 1]) { alert("The chosen volume " + volume_int + " has " + fChapter[volume_int - 1] + " chapters. Your stated chapter (" + chapter_int + ") excceed that length\n"); return; }
+    if (title == "") { alert("Cannot Submit with empty title"); return; }
+
+    //prepare necessary variables
+    const description = content
+    const father = fandomData.data.fandom.id;
+    const ancestor = father;
+    const fatherIndex = volume + "," + chapter;
+
+    make_new_post({
+      variables: {
+        title: title,
+        description: description,
+        origin: 1, //wrong but not sure how I can find it
+        ancestor: ancestor,
+        father: father,
+        fatherIndex: fatherIndex
+      }
+    })
+
   }
-  else {
+  else {// on post
+
     //do we even have post data?
-    const postData = postorfandomData;
     if (postData?.data?.post == null) { alert("PostData not fetched"); return; }
 
     // bound check
@@ -223,7 +253,6 @@ const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, postorfandom
     const father = postData.data.post.id;
     const fatherIndex = "0," + chapter;
     // // const title = title;
-    const origin = postData.data.post.origin.id;
     const description = content;
     //set content length
     // const content_length = 900;
@@ -232,7 +261,7 @@ const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, postorfandom
       variables: {
         title: title,
         description: description,
-        origin: origin,
+        origin: 1, //wrong but not sure how I can find it
         ancestor: ancestor,
         father: father,
         fatherIndex: fatherIndex

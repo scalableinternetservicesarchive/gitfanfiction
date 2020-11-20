@@ -26,6 +26,7 @@ query FandomDataQuery($fandomid: Int!) {
     name
     length
     author
+    id
   }
 }
 `
