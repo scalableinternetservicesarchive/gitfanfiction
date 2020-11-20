@@ -1,11 +1,13 @@
 
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
 import { UserContext } from '../../auth/user';
 import BranchDiagram from '../component/BranchDiagram';
-import { getPost } from '../gql/query';
+import { SubmitButton } from '../component/Button';
+import { MAKENEWPOST } from '../gql/mutation';
+import { fetchPostPageData } from '../gql/query';
 import { AppRouteParams } from '../nav/route';
 
 
@@ -29,13 +31,16 @@ export function PostPage(props: PostPageProps) {
   const [content, setContent] = React.useState("");
   const [postID, setPostID] = React.useState(0);
   const [title, setTitle] = React.useState("");
+  const [volume, setVolume] = React.useState("");
+  const [chapter, setChapter] = React.useState("");
   const { user } = React.useContext(UserContext);
 
   console.log(postID)
   //queries
-  const postData = useQuery(getPost, { variables: { postid: postID } })
+  const postData = useQuery(fetchPostPageData, { variables: { postid: postID } })
+  const [make_new_post, mutData] = useMutation(MAKENEWPOST);
   // loading ? null : console.log(data.post)
-
+  console.log("mudata", mutData);
   React.useEffect(() => {
     console.log("data", postData.data)
   }, [postData])
@@ -99,9 +104,14 @@ export function PostPage(props: PostPageProps) {
               {postData.data?.post?.title}
               {postData.data?.post ? <span>&nbsp;{'>>'}</span> : "place for deviation >> "}
               <span> </span>
-              {postData.data?.post ? null : <input placeholder="Volume" style={{ textAlign: "center", width: 120 }} />}
+              {postData.data?.post ? null :
+                <input placeholder="Volume" style={{ textAlign: "center", width: 120 }}
+                  value={volume} onChange={(event) => setVolume(event.target.value)}
+                />}
               {postData.data?.post ? null : ">>"}
-              <input placeholder="Chapter" style={{ width: 110, textAlign: "center" }} />
+              <input placeholder="Chapter" style={{ width: 110, textAlign: "center" }}
+                value={chapter} onChange={(event) => setChapter(event.target.value)}
+              />
             </DeviationBox>
             <TitleBox>
               <input
@@ -114,7 +124,7 @@ export function PostPage(props: PostPageProps) {
             </TitleBox>
           </LeftContextBox>
           <RightContextBox>
-
+            <SubmitButton onClick={() => OnSubmit(make_new_post, user, postData, content, title, volume, chapter)} />
           </RightContextBox>
         </ContextBox>
         <ContentBox>
@@ -142,6 +152,56 @@ export function PostPage(props: PostPageProps) {
     </>
   )
 }
+
+
+const OnSubmit = (make_new_post: any, user: any, postData: any, content: string, title: string, volume: string, chapter: string) => {
+
+  console.log("postData", postData);
+  console.log("content", content);
+  console.log("title", title);
+  console.log("user", user);
+  console.log("volume", volume);
+  console.log("chapter", chapter);
+
+
+  if (postData?.data?.post == null) { alert("PostData not fetched"); return; }
+
+  // bound check
+  const length = postData.data.post.length.split(",").length
+  console.log(length)
+  const chapter_int = parseInt(chapter);
+  if (isNaN(chapter_int)) { alert("Invalid Chapter number"); return; }
+  if (chapter_int > length) { alert("the deviation you are writing from has " + length + " chapters. Your chapter starting point (" + chapter_int + ") excceed that length\n"); return; }
+  if (chapter_int <= 0) { alert("Invalid Chapter Number\n"); return; }
+  if (title == "") { alert("Cannot Submit with empty title"); return; }
+
+  //prepare necessary variables
+  const ancestor = postData.data.post.ancestor;
+  const father = postData.data.post.id;
+  const fatherIndex = "0," + chapter;
+  // // const title = title;
+  const origin = postData.data.post.origin.id;
+  const description = content;
+  //set content length
+  const content_length = 900;
+
+  make_new_post({
+    variables: {
+      title: title,
+      description: description,
+      body: content,
+      length: content_length,
+      originDirectFromFandom: false,
+      origin: origin,
+      ancestor: ancestor,
+      father: father,
+      fatherIndex: fatherIndex
+    }
+  })
+
+  alert("submitted successfully");
+}
+
 
 const styles = {
   contentTextArea: {
@@ -236,7 +296,7 @@ const TitleBox = style('div', 'flex', {
   fontSize: 20
 })
 
-const RightContextBox = style('div', 'ba flex h-100', {
+const RightContextBox = style('div', ' flex h-100', {
   width: 200
 })
 

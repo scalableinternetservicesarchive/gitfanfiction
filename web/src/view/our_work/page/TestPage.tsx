@@ -6,7 +6,6 @@ import BranchDiagram from '../component/BranchDiagram'
 import SearchBar from '../component/SearchBar'
 import { AppRouteParams } from '../nav/route'
 
-
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
 
@@ -125,6 +124,7 @@ export function TestPage(props: HomePageProps) {
       }} />
       <SearchBar />
       <BranchDiagram fandomId={fid} setPostId={setPid} />
+      {/* <Button variant="primary">WowWow</Button> */}
     </div>
   )
 }
