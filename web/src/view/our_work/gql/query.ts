@@ -1,10 +1,15 @@
 import { gql } from '@apollo/client'
 
-export const getPost = gql`
-query fetchAPost($postid: Int!) {
+export const fetchPostPageData = gql`
+query PostPageQuery($postid: Int!) {
   post(postId: $postid) {
+    origin {
+      id
+    }
     title
     length
+    ancestor
+    id
   }
   getPostChapters(postId: $postid) {
     id
@@ -14,3 +19,11 @@ query fetchAPost($postid: Int!) {
 }
 `
 
+export const ALLFANDOM = gql`
+query AllFandom{
+  fandoms {
+    id
+    name
+  }
+}
+`

@@ -1,11 +1,26 @@
 
+import { useQuery } from '@apollo/client';
 import * as React from 'react';
+import { ALLFANDOM } from '../gql/query';
 
 
-export default function SearchBar({ width = 600, height = 100 }) {
+export default function SearchBar({ width = 600, height = 100 }): any {
 
   const [title, setTitle] = React.useState("");
   const [option, setOption] = React.useState("");
+
+
+  const fandomNames = useQuery(ALLFANDOM);
+  console.log("fandomName", fandomNames);
+  React.useEffect(() => {
+    if (fandomNames.data == undefined) return;
+
+    const fandoms = fandomNames.data?.fandoms;
+    const result = fandoms.filter((f: any) => f.name.includes(title))
+    console.log(result);
+
+  }, [fandomNames, title])
+
 
   return (
     <div>

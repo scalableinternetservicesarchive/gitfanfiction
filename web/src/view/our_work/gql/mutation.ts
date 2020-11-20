@@ -1,17 +1,39 @@
 import { gql } from '@apollo/client'
 
-export const addchapter = gql`
-mutation attemptadd($title:String!,$length:Int!,$originDirectFromFandom:Boolean!,$postOrFandomId:Int!,$body:String!) {
+export const MAKENEWPOST = gql`
+mutation MakeNewPost(
+  $title:String!,
+  $description: String!,
+  $body:String!
+  $length:Int!,
+  $originDirectFromFandom:Boolean!,
+  $origin: Int!,
+  $ancestor: Int!,
+  $father: Int!,
+  $fatherIndex: String!
+) {
+
+  makePost(input:{
+    origin: $origin
+    title: $title
+    description: $description
+    ancestor: $ancestor
+    father: $father
+    fatherIndex: $fatherIndex
+  }) {
+    id
+    title
+  }
+
   addChapter(input:{
     title : $title
     length : $length
     originDirectFromFandom : $originDirectFromFandom
-    postOrFandomId : $postOrFandomId
+    postOrFandomId : $father
     body : $body
   }) {
     id
     title
-    body
   }
 }
 `
