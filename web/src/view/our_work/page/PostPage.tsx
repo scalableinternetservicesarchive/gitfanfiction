@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { style } from '../../../style/styled';
+import { UserContext } from '../../auth/user';
 import BranchDiagram from '../component/BranchDiagram';
 import { getPost } from '../gql/query';
 import { AppRouteParams } from '../nav/route';
@@ -27,6 +28,8 @@ interface PostPageProps extends RouteComponentProps, AppRouteParams { }
 export function PostPage(props: PostPageProps) {
   const [content, setContent] = React.useState("");
   const [postID, setPostID] = React.useState(0);
+  const [title, setTitle] = React.useState("");
+  const { user } = React.useContext(UserContext);
 
   console.log(postID)
   //queries
@@ -36,8 +39,6 @@ export function PostPage(props: PostPageProps) {
   React.useEffect(() => {
     console.log("data", postData.data)
   }, [postData])
-
-
 
   const contentRef = React.useRef(null);
   const branchPanelRef = React.useRef(null);
@@ -81,7 +82,7 @@ export function PostPage(props: PostPageProps) {
           <a href="/app/index"><img height={30} src={logo} alt="logo" /></a>
         </LeftHeaderBox>
         <MiddleHeaderBox>
-          Welcome Coolguy123
+          Welcome {user?.name}
         </MiddleHeaderBox>
         <RightHeaderBox>
           <a style={{ textDecoration: 'none' }} href="/app/index"><MenuItem>Main</MenuItem></a>
@@ -95,11 +96,21 @@ export function PostPage(props: PostPageProps) {
         <ContextBox>
           <LeftContextBox>
             <DeviationBox>
-              place for deviation {postData.data?.post?.title} {postData.data?.post ? " >> " : null}
+              {postData.data?.post?.title}
+              {postData.data?.post ? <span>&nbsp;{'>>'}</span> : "place for deviation >> "}
+              <span> </span>
+              {postData.data?.post ? null : <input placeholder="Volume" style={{ textAlign: "center", width: 120 }} />}
+              {postData.data?.post ? null : ">>"}
+              <input placeholder="Chapter" style={{ width: 110, textAlign: "center" }} />
             </DeviationBox>
             <TitleBox>
-              place to submit title
-
+              <input
+                style={{
+                  "width": "100%",
+                  "marginRight": 10
+                }}
+                placeholder="place to submit title" type="text" value={title}
+                onChange={(event) => setTitle(event.target.value)} />
             </TitleBox>
           </LeftContextBox>
           <RightContextBox>
