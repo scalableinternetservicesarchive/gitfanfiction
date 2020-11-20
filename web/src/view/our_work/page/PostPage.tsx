@@ -40,8 +40,6 @@ export function PostPage(props: PostPageProps) {
     console.log("data", postData.data)
   }, [postData])
 
-
-
   const contentRef = React.useRef(null);
   const branchPanelRef = React.useRef(null);
 
@@ -152,6 +150,7 @@ export function PostPage(props: PostPageProps) {
       </Columns>
 
     </div>
+
   )
 }
 
