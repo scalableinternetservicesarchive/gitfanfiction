@@ -4,7 +4,6 @@ import * as React from 'react';
 import { style } from '../../../style/styled';
 import Background_SideBranch from '../component/Background_SideBranch';
 import { AppRouteParams } from '../nav/route';
-
 interface LoginPageProps extends RouteComponentProps, AppRouteParams { }
 
 const textColor = "#000"

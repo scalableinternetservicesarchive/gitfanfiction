@@ -60,6 +60,18 @@ server.express.get('/', (req, res) => {
   res.redirect('/app')
 })
 
+//redirect here
+server.express.get(
+  '/app/post',
+  asyncRoute(async (req, res, next) => {
+    console.log('GET /app')
+    const authToken = req.cookies.authToken || req.header('x-authtoken')
+
+    if (authToken) renderApp(req, res)
+    else res.redirect("../app/login")
+  })
+)
+
 server.express.get('/app/*', (req, res) => {
   console.log('GET /app')
   renderApp(req, res)
