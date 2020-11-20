@@ -197,15 +197,16 @@ export function PostPage(props: PostPageProps) {
               />
             </StoryBox>
 
-            <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>New Post</SubmitButton>
+            <div>
+              <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>New Post</SubmitButton>
 
-            {
-              (user != null && postData?.data != undefined && postData?.data?.post?.authorId == user?.id)
-                ? <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend Post</SubmitButton>
-                : null
-            }
+              {
+                (user != null && postData?.data != undefined && postData?.data?.post?.authorId == user?.id)
+                  ? <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend Post</SubmitButton>
+                  : null
+              }
 
-
+            </div>
 
           </div>
 
