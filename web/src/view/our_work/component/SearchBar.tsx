@@ -5,13 +5,24 @@ import * as React from 'react';
 export default function SearchBar({ width = 600, height = 100 }) {
 
   const [title, setTitle] = React.useState("");
+  const [option, setOption] = React.useState("");
 
   return (
-    <div style={{ ...styles.main, "width": width }}>
-      <div style={{ ...styles.subcontent }}>
-        <div style={{ ...styles.searchText }}>{"Search Bar :"}</div>
-        <input style={{ ...styles.search }} type="text" value={title} onChange={(event) => setTitle(event.target.value)} />
+    <div>
+      <div style={{ ...styles.main, "width": width }}>
+        <div style={{ ...styles.subcontent }}>
+          <div style={{ ...styles.searchText }}>{"Search Bar :"}</div>
+          <input style={{ ...styles.search }} type="text" value={title} onChange={(event) => setTitle(event.target.value)} />
+        </div>
       </div>
+      <div style={{ ...styles.optionMenu }}>
+        <input type="radio" id="fandomSelect" name="type" value="fandom" onClick={() => setOption("fandom")}></input>
+        <label> Fandom</label>
+        <br />
+        <input type="radio" id="storySelect" name="type" value="story" onClick={() => setOption("story")}></input>
+        <label> Story</label>
+      </div>
+      <a href={`/app/search?query=${title}&option=${option}`}>Search</a>
     </div>
   )
 }
@@ -22,6 +33,9 @@ const styles = {
     borderRadius: 10,
     backgroundColor: 'white',
     color: 'black',
+  },
+  optionMenu: {
+    padding: 5
   },
   subcontent: {
     display: "flex",
