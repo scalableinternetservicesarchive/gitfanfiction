@@ -15,6 +15,7 @@ import { PostPage } from './our_work/page/PostPage'
 import { RequestFandomPage } from './our_work/page/RequestFandomPage'
 import { SignupPage } from './our_work/page/SignupPage'
 import { TestPage } from './our_work/page/TestPage'
+import { ViewPage } from './our_work/page/ViewPage'
 import { BrowseAll } from './page/BrowseAll'
 import { LandingPage } from './page/LandingPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
@@ -71,6 +72,7 @@ export function AppBody() {
         <ViewStoryPage path={Route.VIEW_STORY} />
         <RequestFandomPage path={Route.REQUEST_FANDOM} />
         <TestPage path={'app/test'} />
+        <ViewPage path={'app/view'} />
         <SearchPage path={Route.SEARCH} />
       </Router>
       <Footer>

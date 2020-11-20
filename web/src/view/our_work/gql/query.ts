@@ -32,6 +32,16 @@ query FandomDataQuery($fandomid: Int!) {
 }
 `
 
+export const fetchChapters = gql`
+query FetchChapters($postid: Int!) {
+  getPostChapters(postId:$postid){
+    order
+    title
+    body
+  }
+}
+`
+
 export const ALLFANDOM = gql`
 query AllFandom{
   fandoms {
