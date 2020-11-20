@@ -54,8 +54,6 @@ export const graphqlRoot: Resolvers<Context> = {
     upvotes: () => Upvote.find(),
     upvote: async (_, { upvoteId }) => (await Upvote.findOne({ where: { id: upvoteId } }))!,
 
-
-
     rating: async (_, { ratingId }) => (await Rating.findOne({ where: { id: ratingId } })) || null,
     ratings: () => Rating.find(),
 
@@ -64,6 +62,10 @@ export const graphqlRoot: Resolvers<Context> = {
 
     getFandomChapters: async (_, { fandomId }) => (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: fandomId } }))! } }))!,
     getPostChapters: async (_, { postId }) => (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postId } }))! } }))!,
+
+    searchFandom: async(_, { query }) => (await Fandom.find({where: { name: query }}))!,
+    searchPost: async(_, { query }) => (await Post.find({where: { title: query }}))!,
+
   },
   Mutation: {
     addFandom: async (_, { input }, ctx) => {

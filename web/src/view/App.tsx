@@ -19,6 +19,7 @@ import { BrowseAll } from './page/BrowseAll'
 import { LandingPage } from './page/LandingPage'
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { PuppyPage } from './page/PuppyPage'
+import { SearchPage } from './page/SearchPage'
 import { ViewStoryPage } from './page/ViewStoryPage'
 
 const Styletron = require('styletron-engine-monolithic')
@@ -70,6 +71,7 @@ export function AppBody() {
         <ViewStoryPage path={Route.VIEW_STORY} />
         <RequestFandomPage path={Route.REQUEST_FANDOM} />
         <TestPage path={'app/test'} />
+        <SearchPage path={Route.SEARCH} />
       </Router>
       <Footer>
         <FooterText>© 2020 Git Fan Fiction</FooterText>

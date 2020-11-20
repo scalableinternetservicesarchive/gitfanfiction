@@ -40,6 +40,9 @@ type Query {
 
   getFandomChapters (fandomId: Int!): [Chapter!]!
   getPostChapters (postId: Int!): [Chapter!]!
+
+  searchFandom (query: String!): [Fandom!]!
+  searchPost (query: String!): [Post!]!
 }
 
 type Mutation {

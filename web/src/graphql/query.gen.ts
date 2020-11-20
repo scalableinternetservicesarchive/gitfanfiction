@@ -176,6 +176,52 @@ export interface getBranchContext {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: searchFandoms
+// ====================================================
+
+export interface searchFandoms_searchFandom {
+  __typename: "Fandom";
+  name: string;
+  author: string;
+}
+
+export interface searchFandoms {
+  searchFandom: searchFandoms_searchFandom[];
+}
+
+export interface searchFandomsVariables {
+  query: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: searchPosts
+// ====================================================
+
+export interface searchPosts_searchPost {
+  __typename: "Post";
+  title: string;
+  description: string;
+}
+
+export interface searchPosts {
+  searchPost: searchPosts_searchPost[];
+}
+
+export interface searchPostsVariables {
+  query: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FetchSurveys
 // ====================================================
 

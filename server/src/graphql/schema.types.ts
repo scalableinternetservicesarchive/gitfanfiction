@@ -31,6 +31,8 @@ export interface Query {
   chapter?: Maybe<Chapter>
   getFandomChapters: Array<Chapter>
   getPostChapters: Array<Chapter>
+  searchFandom: Array<Fandom>
+  searchPost: Array<Post>
 }
 
 export interface QueryFandomArgs {
@@ -67,6 +69,14 @@ export interface QueryGetFandomChaptersArgs {
 
 export interface QueryGetPostChaptersArgs {
   postId: Scalars['Int']
+}
+
+export interface QuerySearchFandomArgs {
+  query: Scalars['String']
+}
+
+export interface QuerySearchPostArgs {
+  query: Scalars['String']
 }
 
 export interface Mutation {
@@ -361,11 +371,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
   Int: ResolverTypeWrapper<Scalars['Int']>
+  String: ResolverTypeWrapper<Scalars['String']>
   Mutation: ResolverTypeWrapper<{}>
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   Subscription: ResolverTypeWrapper<{}>
   User: ResolverTypeWrapper<User>
-  String: ResolverTypeWrapper<Scalars['String']>
   Fandom: ResolverTypeWrapper<Fandom>
   FandomInput: FandomInput
   Originstory: ResolverTypeWrapper<Originstory>
@@ -391,11 +401,11 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {}
   Int: Scalars['Int']
+  String: Scalars['String']
   Mutation: {}
   Boolean: Scalars['Boolean']
   Subscription: {}
   User: User
-  String: Scalars['String']
   Fandom: Fandom
   FandomInput: FandomInput
   Originstory: Originstory
@@ -476,6 +486,18 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryGetPostChaptersArgs, 'postId'>
+  >
+  searchFandom?: Resolver<
+    Array<ResolversTypes['Fandom']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchFandomArgs, 'query'>
+  >
+  searchPost?: Resolver<
+    Array<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchPostArgs, 'query'>
   >
 }
 
