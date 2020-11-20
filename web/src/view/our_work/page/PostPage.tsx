@@ -147,6 +147,9 @@ export function PostPage(props: PostPageProps) {
                 onChange={(event) => setContent(event.target.value)}
               />
             </StoryBox>
+
+            <SubmitButton onClick={submit}>Submit</SubmitButton>
+
           </div>
 
         </Column>
@@ -155,6 +158,10 @@ export function PostPage(props: PostPageProps) {
     </div>
 
   )
+}
+
+function submit() {
+  alert("Submitted!");
 }
 
 
@@ -211,6 +218,30 @@ const TitleBox = style('div', 'flex', {
   fontSize: 20
 })
 
+const SubmitButton = style('div', {
+  width: '150px',
+  padding: '15px',
+  position: 'relative',
+  margin: '0 auto',
+  display: 'flex',
+  float: 'right',
+  top: '160px',
+  fontFamily: 'Consolas',
+
+  textDecoration: "none",
+  border: '2px solid white',
+  borderRadius: "4px",
+  boxShadow: "0px 4px 30px -6px rgba(36, 52, 70, 0.65)",
+  background: "#24292e",
+  color: "#fff",
+  fontWeight: "bold",
+  fontSize: "16px",
+  textAlign: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
+  transition: "all .3s ease-in-out"
+})
+
 // const RightContextBox = style('div', ' flex h-100', {
 //   width: 200
 // })
@@ -256,6 +287,7 @@ const StoryBox = style('div', {
   width: '45vw',
   height: 'auto',
   minHeight: '440px',
+  minWidth: '800px',
   padding: '15px',
   position: 'relative',
   margin: '0 auto',
@@ -280,7 +312,8 @@ const Column = style('div', {
 const styles = {
   contentTextArea: {
     padding: 10,
-    width: "100%"
+    width: "100%",
+    minHeight: '400px',
   },
   root: {
     display: 'flex',
@@ -405,6 +438,7 @@ const styles = {
     width: '45vw',
     height: 'auto',
     minHeight: '250px',
+    minWidth: '500px',
     padding: '15px',
     position: 'relative',
     margin: '0 auto',
@@ -419,7 +453,8 @@ const styles = {
 
   titlebox: {
     width: '45vw',
-    height: '7vh',
+    height: '100px',
+    minWidth: '800px',
     padding: '15px',
     position: 'relative',
     top: '130px',
@@ -429,17 +464,4 @@ const styles = {
 
 
   } as React.CSSProperties,
-
-  story_info: {
-
-  },
-  columns: {
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'center',
-  },
-  column: {
-    flex: '1',
-    marginRight: '40px',
-  },
 }
