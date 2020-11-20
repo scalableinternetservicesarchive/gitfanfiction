@@ -19,3 +19,11 @@ query PostPageQuery($postid: Int!) {
 }
 `
 
+export const ALLFANDOM = gql`
+query AllFandom{
+  fandoms {
+    id
+    name
+  }
+}
+`

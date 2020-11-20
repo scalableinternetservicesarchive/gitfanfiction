@@ -1,9 +1,11 @@
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import Select from 'react-select'
 import { style } from '../../../style/styled'
 import BranchDiagram from '../component/BranchDiagram'
 import SearchBar from '../component/SearchBar'
+import SearchBar2 from '../component/SearchBar2'
 import { AppRouteParams } from '../nav/route'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
@@ -96,6 +98,18 @@ export function TestPage(props: HomePageProps) {
   //   })
 
   //-----
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
+
 
   return (
     <div>
@@ -123,11 +137,39 @@ export function TestPage(props: HomePageProps) {
         if (event.target.value == "send") sendform();
       }} />
       <SearchBar />
+      <SearchBar2 />
       <BranchDiagram fandomId={fid} setPostId={setPid} />
       {/* <Button variant="primary">WowWow</Button> */}
+
+      <div style={{ width: 100 }}>
+        <Select
+          options={options}
+          menuColor='silver'
+          onChange={(opt: any) => console.log(opt.label, opt.value)}
+        />
+
+      </div>
+
     </div>
   )
 }
+
+// const customStyles = {
+//   menu: (provided: any, state: any) => ({
+//     color: state.isSelected ? 'grey' : 'black',
+//   }),
+//   control: (base: any) => ({
+//     ...base,
+//     height: 35,
+//     minHeight: 35
+//   })
+//   // singleValue: (provided:any, state:any) => {
+//   //   const opacity = state.isDisabled ? 0.5 : 1;
+//   //   const transition = 'opacity 300ms';
+
+//   //   return { ...provided, opacity, transition };
+//   // }
+// }
 
 const Header = style('div', 'w-100', {
   height: 100,
