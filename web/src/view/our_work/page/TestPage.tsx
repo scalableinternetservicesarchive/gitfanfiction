@@ -1,7 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import Select from 'react-select'
 import { style } from '../../../style/styled'
 import BranchDiagram from '../component/BranchDiagram'
 import SearchBar from '../component/SearchBar'
@@ -98,17 +97,17 @@ export function TestPage(props: HomePageProps) {
   //   })
 
   //-----
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
+  // const options = [
+  //   { value: 'chocolate', label: 'Chocolate' },
+  //   { value: 'strawberry', label: 'Strawberry' },
+  //   { value: 'vanilla', label: 'Vanilla' },
+  //   { value: 'vanilla', label: 'Vanilla' },
+  //   { value: 'vanilla', label: 'Vanilla' },
+  //   { value: 'vanilla', label: 'Vanilla' },
+  //   { value: 'vanilla', label: 'Vanilla' },
+  //   { value: 'vanilla', label: 'Vanilla' },
+  //   { value: 'vanilla', label: 'Vanilla' }
+  // ]
 
 
   return (
@@ -137,16 +136,16 @@ export function TestPage(props: HomePageProps) {
         if (event.target.value == "send") sendform();
       }} />
       <SearchBar />
-      <SearchBar2 />
+      <SearchBar2 setFandomId={(i: any) => alert("fandomID " + i)} />
       <BranchDiagram fandomId={fid} setPostId={setPid} />
       {/* <Button variant="primary">WowWow</Button> */}
 
       <div style={{ width: 100 }}>
-        <Select
+        {/* <Select
           options={options}
           menuColor='silver'
           onChange={(opt: any) => console.log(opt.label, opt.value)}
-        />
+        /> */}
 
       </div>
 
