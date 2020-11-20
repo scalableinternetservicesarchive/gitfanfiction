@@ -9,7 +9,7 @@ export class Post extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @ManyToOne(() => Chapter, chapter => chapter.children, {cascade: true})
+  @ManyToOne(() => Chapter, chapter => chapter.children, { cascade: true })
   @TypeormLoader((type) => Chapter, (post: Post) => post.originId)
   origin: Chapter
 
@@ -33,7 +33,7 @@ export class Post extends BaseEntity {
   upvote: number
 
   @Field((type) => [Chapter])
-  @OneToMany((type) => Chapter, chapter => chapter.post, {cascade: true})
+  @OneToMany((type) => Chapter, chapter => chapter.post, { cascade: true })
   chapters: Chapter[]
 
   @Column({
@@ -61,6 +61,10 @@ export class Post extends BaseEntity {
   @Column()
   father: number // post or fandom id
 
+  @Column({
+    default: 0, //means error. no one wrote it
+  })
+  authorId: number //user id
 
 
 

@@ -63,13 +63,14 @@ export const graphqlRoot: Resolvers<Context> = {
     getFandomChapters: async (_, { fandomId }) => (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: fandomId } }))! } }))!,
     getPostChapters: async (_, { postId }) => (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postId } }))! } }))!,
 
-    searchFandom: async(_, { query }) => (await Fandom.find({where: { name: query }}))!,
-    searchPost: async(_, { query }) => (await Post.find({where: { title: query }}))!,
+    searchFandom: async (_, { query }) => (await Fandom.find({ where: { name: query } }))!,
+    searchPost: async (_, { query }) => (await Post.find({ where: { title: query } }))!,
 
   },
   Mutation: {
     addFandom: async (_, { input }, ctx) => {
       const { fandomType, name, author } = input
+
       const fandom = new Fandom()
       fandom.fandomType = fandomType
       fandom.name = name
@@ -80,6 +81,7 @@ export const graphqlRoot: Resolvers<Context> = {
     },
 
     addChapter: async (_, { input }, ctx) => {
+
       const { title, length, originDirectFromFandom, postOrFandomId, body } = input
       const chapter = new Chapter()
       chapter.originDirectFromFandom = originDirectFromFandom
@@ -91,8 +93,15 @@ export const graphqlRoot: Resolvers<Context> = {
         chapter.fandom = fandom
         chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
       } else {
+        //if user is not logged in, he cannot add chapter to post
+        if (ctx.user == null) throw new Error("cannot extend chapter without logging in");
+
         const post = (await Post.findOne({ where: { id: postOrFandomId } }))!
         if (post == undefined) throw new Error("non existing post id");
+
+        //use must be the author to add chapter to his own post
+        if (ctx.user.id != post.authorId) throw new Error("cannot extend post that is not your own");
+
         post.length = (post.length == "") ? ("" + length) : (post.length + "," + length)
         post.save()
         chapter.post = post
@@ -106,6 +115,9 @@ export const graphqlRoot: Resolvers<Context> = {
     },
 
     makePost: async (_, { input }, ctx) => {
+
+      if (ctx.user == null) throw new Error("cannot make post without logging in");
+
       const { origin, title, description } = input
       const post = new Post()
       post.origin = (await Chapter.findOne({ where: { id: origin } }))!
@@ -121,6 +133,7 @@ export const graphqlRoot: Resolvers<Context> = {
       post.father = input.father
       post.ancestor = input.ancestor
       post.fatherIndex = input.fatherIndex
+      post.authorId = ctx.user.id
 
       await post.save()
       return post

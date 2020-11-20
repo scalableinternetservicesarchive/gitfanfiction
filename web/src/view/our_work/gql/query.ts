@@ -10,6 +10,7 @@ query PostPageQuery($postid: Int!) {
     length
     ancestor
     id
+    authorId
   }
   getPostChapters(postId: $postid) {
     id

@@ -109,6 +109,7 @@ type Post {
   ancestor: Int!
   father: Int!
   fatherIndex: String!
+  authorId: Int!
 }
 
 input RatingInput{

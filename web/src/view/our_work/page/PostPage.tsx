@@ -41,7 +41,12 @@ export function PostPage(props: PostPageProps) {
 
   const onFandom = !postID;
 
-  const [add_new_chapter] = useMutation(ADDCHAPTER);
+  const [add_new_chapter] = useMutation(ADDCHAPTER, {
+    onError(error) {
+      console.log(error);
+      alert("Error - adding chapter failed");
+    }
+  });
   const [make_new_post] = useMutation(MAKENEWPOST, {
     onCompleted(data) {
 
@@ -62,6 +67,10 @@ export function PostPage(props: PostPageProps) {
       setContent("")
       setPostID(postid)
       alert("submitted successfully");
+    },
+    onError(error) {
+      console.log(error);
+      alert("Error - post failed");
     }
   }); //
   // loading ? null : console.log(data.post)
@@ -190,7 +199,12 @@ export function PostPage(props: PostPageProps) {
 
             <SubmitButton onClick={() => OnSubmit(make_new_post, onFandom, user, fandomData, postData, content, title, volume, chapter)}>New Post</SubmitButton>
 
-            <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend Post</SubmitButton>
+            {
+              (user != null && postData?.data != undefined && postData?.data?.post?.authorId == user?.id)
+                ? <SubmitButton onClick={() => OnExtend(add_new_chapter, onFandom, user, fandomData, postData, content, title, volume, chapter)}>Extend Post</SubmitButton>
+                : null
+            }
+
 
 
           </div>
@@ -213,6 +227,8 @@ const OnSubmit = (make_new_post: any, onFandom: Boolean, user: any, fandomData: 
   console.log("user", user);
   console.log("volume", volume);
   console.log("chapter", chapter);
+
+  if (user == null) { alert("You must be logged in"); return; }
 
   //on Fandom
   if (onFandom) {
