@@ -39,6 +39,12 @@ query FetchChapters($postid: Int!) {
     title
     body
   }
+  post(postId: $postid) {
+    title
+    length
+    id
+    authorId
+  }
 }
 `
 

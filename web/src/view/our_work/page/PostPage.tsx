@@ -27,6 +27,8 @@ interface PostPageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PostPage(props: PostPageProps) {
+
+
   const [content, setContent] = React.useState("");
   const [postID, setPostID] = React.useState(0);
   const [title, setTitle] = React.useState("");
@@ -34,6 +36,16 @@ export function PostPage(props: PostPageProps) {
   const [chapter, setChapter] = React.useState(""); //
   const [fandomID, setFandomID] = React.useState(1); //
   const { user } = React.useContext(UserContext);
+
+  //before anything else, get post id if it excceeds
+  React.useEffect(() => {
+    const url = window.location.href.split('#')
+    if (url.length < 3) return;
+    const postID = parseInt(url[url.length - 1]);
+    const fandomID = parseInt(url[url.length - 2]);
+    setFandomID(fandomID)
+    setPostID(postID)
+  }, [])
 
   //queries
   const postData = useQuery(fetchPostPageData, { variables: { postid: postID } })
@@ -158,7 +170,8 @@ export function PostPage(props: PostPageProps) {
           </BranchBox>
 
           <div style={styles["#sidebar"]} id="sidebar">
-            Hello
+            hello
+            <a href={"/app/view#" + fandomID + "#" + postID}> preview this post </a>
           </div>
         </Column>
 

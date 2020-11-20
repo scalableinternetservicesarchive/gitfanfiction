@@ -39,6 +39,17 @@ export function ViewPage(props: PostPageProps) {
 
   // loading ? null : console.log(data.post)
 
+  //before anything else, get post id if it excceeds
+  React.useEffect(() => {
+    const url = window.location.href.split('#')
+    if (url.length < 3) return;
+    const postID = parseInt(url[url.length - 1]);
+    const fandomID = parseInt(url[url.length - 2]);
+    setFandomID(fandomID)
+    setPostID(postID)
+  }, [])
+
+
   React.useEffect(() => {
     console.log("chapterdata", chapterData.data);
     const chapters = chapterData?.data?.getPostChapters;
@@ -47,7 +58,7 @@ export function ViewPage(props: PostPageProps) {
     if (chapter >= chapters.length) { alert("end of chapter"); setChapter(0); return; };
     setContent(chapters[chapter].body);
     setTitle("Chapter " + (chapter + 1) + " of " + chapters.length + " : " + chapters[chapter].title);
-    setVolume(chapters[0].title)
+    setVolume(chapterData?.data?.post.title)
   }, [chapterData, chapter])
 
   React.useEffect(() => {
@@ -129,7 +140,8 @@ export function ViewPage(props: PostPageProps) {
           </BranchBox>
 
           <div style={styles["#sidebar"]} id="sidebar">
-            Hello
+            <div>Hello</div>
+            <a href={"/app/post#" + fandomID + "#" + postID}> create new post from this story </a>
           </div>
         </Column>
 
