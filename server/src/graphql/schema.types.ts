@@ -24,7 +24,7 @@ export interface Query {
   upvotes: Array<Upvote>
   upvote?: Maybe<Upvote>
   comments: Array<Comment>
-  comment?: Maybe<Comment>
+  comment: Array<Maybe<Comment>>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
   chapters: Array<Chapter>
@@ -430,287 +430,288 @@ export type ResolversParentTypes = {
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
-  > = {
-    self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
-    fandoms?: Resolver<Array<ResolversTypes['Fandom']>, ParentType, ContextType>
-    fandom?: Resolver<
-      Maybe<ResolversTypes['Fandom']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryFandomArgs, 'fandomId'>
-    >
-    posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
-    post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'postId'>>
-    ratings?: Resolver<Array<ResolversTypes['Rating']>, ParentType, ContextType>
-    rating?: Resolver<
-      Maybe<ResolversTypes['Rating']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryRatingArgs, 'ratingId'>
-    >
-    upvotes?: Resolver<Array<ResolversTypes['Upvote']>, ParentType, ContextType>
-    upvote?: Resolver<
-      Maybe<ResolversTypes['Upvote']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryUpvoteArgs, 'upvoteId'>
-    >
-    comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>
-    comment?: Resolver<
-      Maybe<ResolversTypes['Comment']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryCommentArgs, 'commentId'>
-    >
-    surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
-    survey?: Resolver<
-      Maybe<ResolversTypes['Survey']>,
-      ParentType,
-      ContextType,
-      RequireFields<QuerySurveyArgs, 'surveyId'>
-    >
-    chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
-    chapter?: Resolver<
-      Maybe<ResolversTypes['Chapter']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryChapterArgs, 'chapterId'>
-    >
-    getFandomChapters?: Resolver<
-      Array<ResolversTypes['Chapter']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryGetFandomChaptersArgs, 'fandomId'>
-    >
-    getPostChapters?: Resolver<
-      Array<ResolversTypes['Chapter']>,
-      ParentType,
-      ContextType,
-      RequireFields<QueryGetPostChaptersArgs, 'postId'>
-    >
-    searchFandom?: Resolver<
-      Array<ResolversTypes['Fandom']>,
-      ParentType,
-      ContextType,
-      RequireFields<QuerySearchFandomArgs, 'query'>
-    >
-    searchPost?: Resolver<
-      Array<ResolversTypes['Post']>,
-      ParentType,
-      ContextType,
-      RequireFields<QuerySearchPostArgs, 'query'>
-    >
-  }
+> = {
+  self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  fandoms?: Resolver<Array<ResolversTypes['Fandom']>, ParentType, ContextType>
+  fandom?: Resolver<
+    Maybe<ResolversTypes['Fandom']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFandomArgs, 'fandomId'>
+  >
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'postId'>>
+  ratings?: Resolver<Array<ResolversTypes['Rating']>, ParentType, ContextType>
+  rating?: Resolver<
+    Maybe<ResolversTypes['Rating']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryRatingArgs, 'ratingId'>
+  >
+  upvotes?: Resolver<Array<ResolversTypes['Upvote']>, ParentType, ContextType>
+  upvote?: Resolver<
+    Maybe<ResolversTypes['Upvote']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUpvoteArgs, 'upvoteId'>
+  >
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>
+  comment?: Resolver<
+    Array<Maybe<ResolversTypes['Comment']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryCommentArgs, 'commentId'>
+  >
+  surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
+  survey?: Resolver<
+    Maybe<ResolversTypes['Survey']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySurveyArgs, 'surveyId'>
+  >
+  chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
+  chapter?: Resolver<
+    Maybe<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryChapterArgs, 'chapterId'>
+  >
+  getFandomChapters?: Resolver<
+    Array<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetFandomChaptersArgs, 'fandomId'>
+  >
+  getPostChapters?: Resolver<
+    Array<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetPostChaptersArgs, 'postId'>
+  >
+  searchFandom?: Resolver<
+    Array<ResolversTypes['Fandom']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchFandomArgs, 'query'>
+  >
+  searchPost?: Resolver<
+    Array<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchPostArgs, 'query'>
+  >
+}
 
 export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
-  > = {
-    addFandom?: Resolver<
-      Maybe<ResolversTypes['Fandom']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationAddFandomArgs, 'input'>
-    >
-    addChapter?: Resolver<
-      Maybe<ResolversTypes['Chapter']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationAddChapterArgs, 'input'>
-    >
-    makePost?: Resolver<
-      Maybe<ResolversTypes['Post']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationMakePostArgs, 'input'>
-    >
-    makeComment?: Resolver<
-      Maybe<ResolversTypes['Comment']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationMakeCommentArgs, 'input'>
-    >
-    answerSurvey?: Resolver<
-      ResolversTypes['Boolean'],
-      ParentType,
-      ContextType,
-      RequireFields<MutationAnswerSurveyArgs, 'input'>
-    >
-    rateStory?: Resolver<
-      Maybe<ResolversTypes['Post']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationRateStoryArgs, 'input'>
-    >
-    voteComment?: Resolver<
-      Maybe<ResolversTypes['Boolean']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationVoteCommentArgs, 'input'>
-    >
-    nextSurveyQuestion?: Resolver<
-      Maybe<ResolversTypes['Survey']>,
-      ParentType,
-      ContextType,
-      RequireFields<MutationNextSurveyQuestionArgs, 'surveyId'>
-    >
-  }
+> = {
+  addFandom?: Resolver<
+    Maybe<ResolversTypes['Fandom']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddFandomArgs, 'input'>
+  >
+  addChapter?: Resolver<
+    Maybe<ResolversTypes['Chapter']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddChapterArgs, 'input'>
+  >
+  makePost?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationMakePostArgs, 'input'>
+  >
+  makeComment?: Resolver<
+    Maybe<ResolversTypes['Comment']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationMakeCommentArgs, 'input'>
+  >
+  answerSurvey?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationAnswerSurveyArgs, 'input'>
+  >
+  rateStory?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationRateStoryArgs, 'input'>
+  >
+  voteComment?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationVoteCommentArgs, 'input'>
+  >
+  nextSurveyQuestion?: Resolver<
+    Maybe<ResolversTypes['Survey']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationNextSurveyQuestionArgs, 'surveyId'>
+  >
+}
 
 export type SubscriptionResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
-  > = {
-    surveyUpdates?: SubscriptionResolver<
-      Maybe<ResolversTypes['Survey']>,
-      'surveyUpdates',
-      ParentType,
-      ContextType,
-      RequireFields<SubscriptionSurveyUpdatesArgs, 'surveyId'>
-    >
-  }
+> = {
+  surveyUpdates?: SubscriptionResolver<
+    Maybe<ResolversTypes['Survey']>,
+    'surveyUpdates',
+    ParentType,
+    ContextType,
+    RequireFields<SubscriptionSurveyUpdatesArgs, 'surveyId'>
+  >
+}
 
 export type UserResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    userType?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>
-    email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    password?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  userType?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type FandomResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Fandom'] = ResolversParentTypes['Fandom']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    fandomType?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
-    author?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    length?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  fandomType?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
+  author?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  length?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type OriginstoryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Originstory'] = ResolversParentTypes['Originstory']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    length?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>
-    type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  length?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type PostResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    origin?: Resolver<ResolversTypes['Chapter'], ParentType, ContextType>
-    originId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
-    num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
-    upvote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    length?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    ancestor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    father?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    fatherIndex?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  origin?: Resolver<ResolversTypes['Chapter'], ParentType, ContextType>
+  originId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
+  num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  chapters?: Resolver<Array<ResolversTypes['Chapter']>, ParentType, ContextType>
+  upvote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  length?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  ancestor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  father?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  fatherIndex?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  authorId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type ChapterResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Chapter'] = ResolversParentTypes['Chapter']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    originDirectFromFandom?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-    length?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
-    num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
-    postId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-    fandom?: Resolver<Maybe<ResolversTypes['Fandom']>, ParentType, ContextType>
-    fandomId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-    children?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>
-    body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  originDirectFromFandom?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  length?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
+  num_rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
+  postId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  fandom?: Resolver<Maybe<ResolversTypes['Fandom']>, ParentType, ContextType>
+  fandomId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  children?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type RatingResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Rating'] = ResolversParentTypes['Rating']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    story?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    user?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  story?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  user?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type CommentResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    story?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    vote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    time?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  story?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  vote?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  time?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type UpvoteResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Upvote'] = ResolversParentTypes['Upvote']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    comment?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    user?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  comment?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  user?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type SurveyResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Survey'] = ResolversParentTypes['Survey']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    isStarted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-    isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-    currentQuestion?: Resolver<Maybe<ResolversTypes['SurveyQuestion']>, ParentType, ContextType>
-    questions?: Resolver<Array<Maybe<ResolversTypes['SurveyQuestion']>>, ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  isStarted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  currentQuestion?: Resolver<Maybe<ResolversTypes['SurveyQuestion']>, ParentType, ContextType>
+  questions?: Resolver<Array<Maybe<ResolversTypes['SurveyQuestion']>>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type SurveyQuestionResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['SurveyQuestion'] = ResolversParentTypes['SurveyQuestion']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    prompt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    choices?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>
-    answers?: Resolver<Array<ResolversTypes['SurveyAnswer']>, ParentType, ContextType>
-    survey?: Resolver<ResolversTypes['Survey'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  prompt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  choices?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>
+  answers?: Resolver<Array<ResolversTypes['SurveyAnswer']>, ParentType, ContextType>
+  survey?: Resolver<ResolversTypes['Survey'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type SurveyAnswerResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['SurveyAnswer'] = ResolversParentTypes['SurveyAnswer']
-  > = {
-    id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-    answer?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-    question?: Resolver<ResolversTypes['SurveyQuestion'], ParentType, ContextType>
-    __isTypeOf?: IsTypeOfResolverFn<ParentType>
-  }
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  answer?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  question?: Resolver<ResolversTypes['SurveyQuestion'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
 
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>

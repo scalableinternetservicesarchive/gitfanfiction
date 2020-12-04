@@ -49,7 +49,7 @@ export const graphqlRoot: Resolvers<Context> = {
     chapter: async (_, { chapterId }) => (await Chapter.findOne({ where: { id: chapterId } }))!,
 
     comments: () => Comment.find(),
-    comment: async (_, { commentId }) => (await Comment.findOne({ where: { id: commentId } }))!,
+    comment: async (_, { commentId }) => (await Comment.find({ where: { story: commentId } }))!,
 
     upvotes: () => Upvote.find(),
     upvote: async (_, { upvoteId }) => (await Upvote.findOne({ where: { id: upvoteId } }))!,

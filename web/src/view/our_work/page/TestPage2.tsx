@@ -1,11 +1,10 @@
 
-import { AppBar, Toolbar } from '@material-ui/core'
-import { RouteComponentProps } from '@reach/router'
-import * as React from 'react'
-import BranchDiagram from '../component/BranchDiagram'
-import SearchBar2 from '../component/SearchBar2'
-import { AppRouteParams } from '../nav/route'
-
+import { useMutation } from '@apollo/client';
+import { RouteComponentProps } from '@reach/router';
+import * as React from 'react';
+import { SubmitButton } from '../component/Button';
+import { ADDCOMMENT } from '../gql/mutation';
+import { AppRouteParams } from '../nav/route';
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,50 +12,42 @@ interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
 export function TestPage(props: HomePageProps) {
 
-  const [fandomID, setFandomID] = React.useState()
+  const [id, setId] = React.useState("");
+  const [body, setBody] = React.useState("");
+  const [add_comment] = useMutation(ADDCOMMENT);
+
+  let a = styles;
+  a = a;
+
 
   return (
     <>
-      <div className="background" style={{ ...styles.root, height: "100vh" }}>
-        <AppBar style={styles.appbar} elevation={0}>
-          <Toolbar style={styles.appbarWrapper}>
-            <div style={styles.appbarTitle}>
-              git fanfiction
-          </div>
-          </Toolbar>
-        </AppBar>
+      <input type="text" value={id} onChange={(event) => setId(event.target.value)} />
+      hello world
+      <input type="text" value={body} onChange={(event) => setBody(event.target.value)} />
+      <SubmitButton onClick={() => make_a_comment(add_comment, id, body)} />
 
-
-
-        <div style={{ height: "80vh", width: "100vw", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <div style={{ height: "30vh", width: "50vw", display: "flex", flexDirection: "column" }} >
-            <div style={{ flex: 1, width: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <BranchDiagram width={700} fandomId={fandomID} />
-            </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <SearchBar2 width={700} setFandomId={setFandomID} />
-            </div>
-          </div>
-        </div>
-
-
-        {/* <div style={styles.main_content}>
-        <div style={styles.branch}>
-          <BranchDiagram width={800} height={400} />
-        </div>
-        <div style={styles.searchbar}>
-          <SearchBar />
-          <SubmitButton onClick={() => { setHeight(4000) }}>hi</SubmitButton>
-        </div>
-      </div> */}
-
-      </div>
-      <div style={{ height: 3000, backgroundColor: "black" }}>
-
-      </div>
     </>
   )
 }
+
+const make_a_comment = (add_comment: any, id: string, body: string) => {
+  const n_id = parseInt(id);
+  if (isNaN(n_id)) {
+    alert("is not a valid story id")
+    return;
+  }
+
+  alert("it worked")
+  add_comment({
+    variables: {
+      story: n_id,
+      body: body,
+      time: ""
+    }
+  })
+}
+
 
 const styles = {
   root: {

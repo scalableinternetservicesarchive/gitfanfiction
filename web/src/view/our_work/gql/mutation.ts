@@ -44,3 +44,21 @@ mutation AddChapter(
   }
 }
 `
+
+export const ADDCOMMENT = gql`
+  mutation MakeComment (
+    $story:Int!,
+    $body:String!,
+    $time:String!
+  ){
+    makeComment(
+      input:{
+        story:$story
+        body:$body
+        time:$time
+      }
+    ){
+      id
+    }
+  }
+`

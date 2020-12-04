@@ -30,7 +30,7 @@ type Query {
   upvote (upvoteId: Int!): Upvote
 
   comments:[Comment!]!
-  comment (commentId: Int!): Comment
+  comment (commentId: Int!): [Comment]!
 
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey

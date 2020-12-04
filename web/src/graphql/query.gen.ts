@@ -46,26 +46,26 @@ export interface FetchPostVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: attemptadd
+// GraphQL mutation operation: MakeNewPost
 // ====================================================
 
-export interface attemptadd_addChapter {
-  __typename: "Chapter";
+export interface MakeNewPost_makePost {
+  __typename: "Post";
   id: number;
   title: string;
-  body: string;
 }
 
-export interface attemptadd {
-  addChapter: attemptadd_addChapter | null;
+export interface MakeNewPost {
+  makePost: MakeNewPost_makePost | null;
 }
 
-export interface attemptaddVariables {
+export interface MakeNewPostVariables {
   title: string;
-  length: number;
-  originDirectFromFandom: boolean;
-  postOrFandomId: number;
-  body: string;
+  description: string;
+  origin: number;
+  ancestor: number;
+  father: number;
+  fatherIndex: string;
 }
 
 /* tslint:disable */
@@ -74,28 +74,88 @@ export interface attemptaddVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: fetchAPost
+// GraphQL mutation operation: AddChapter
 // ====================================================
 
-export interface fetchAPost_post {
-  __typename: "Post";
+export interface AddChapter_addChapter {
+  __typename: "Chapter";
+  id: number;
   title: string;
-  length: string;
 }
 
-export interface fetchAPost_getPostChapters {
+export interface AddChapter {
+  addChapter: AddChapter_addChapter | null;
+}
+
+export interface AddChapterVariables {
+  title: string;
+  body: string;
+  length: number;
+  originDirectFromFandom: boolean;
+  postOrFandomId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: MakeComment
+// ====================================================
+
+export interface MakeComment_makeComment {
+  __typename: "Comment";
+  id: number;
+}
+
+export interface MakeComment {
+  makeComment: MakeComment_makeComment | null;
+}
+
+export interface MakeCommentVariables {
+  story: number;
+  body: string;
+  time: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: PostPageQuery
+// ====================================================
+
+export interface PostPageQuery_post_origin {
+  __typename: "Chapter";
+  id: number;
+}
+
+export interface PostPageQuery_post {
+  __typename: "Post";
+  origin: PostPageQuery_post_origin;
+  title: string;
+  length: string;
+  ancestor: number;
+  id: number;
+  authorId: number;
+}
+
+export interface PostPageQuery_getPostChapters {
   __typename: "Chapter";
   id: number;
   order: number;
   title: string;
 }
 
-export interface fetchAPost {
-  post: fetchAPost_post | null;
-  getPostChapters: fetchAPost_getPostChapters[];
+export interface PostPageQuery {
+  post: PostPageQuery_post | null;
+  getPostChapters: PostPageQuery_getPostChapters[];
 }
 
-export interface fetchAPostVariables {
+export interface PostPageQueryVariables {
   postid: number;
 }
 
@@ -105,21 +165,24 @@ export interface fetchAPostVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: fetchSomePost
+// GraphQL query operation: FandomDataQuery
 // ====================================================
 
-export interface fetchSomePost_post {
-  __typename: "Post";
+export interface FandomDataQuery_fandom {
+  __typename: "Fandom";
+  fandomType: string;
+  name: string;
+  length: string | null;
+  author: string;
   id: number;
-  title: string;
 }
 
-export interface fetchSomePost {
-  post: fetchSomePost_post | null;
+export interface FandomDataQuery {
+  fandom: FandomDataQuery_fandom | null;
 }
 
-export interface fetchSomePostVariables {
-  postid: number;
+export interface FandomDataQueryVariables {
+  fandomid: number;
 }
 
 /* tslint:disable */
@@ -128,26 +191,50 @@ export interface fetchSomePostVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: pleaseadd
+// GraphQL query operation: FetchChapters
 // ====================================================
 
-export interface pleaseadd_addChapter {
+export interface FetchChapters_getPostChapters {
   __typename: "Chapter";
+  order: number;
+  title: string;
+  body: string;
+}
+
+export interface FetchChapters_post {
+  __typename: "Post";
+  title: string;
+  length: string;
   id: number;
-  title: string;
-  body: string;
+  authorId: number;
 }
 
-export interface pleaseadd {
-  addChapter: pleaseadd_addChapter | null;
+export interface FetchChapters {
+  getPostChapters: FetchChapters_getPostChapters[];
+  post: FetchChapters_post | null;
 }
 
-export interface pleaseaddVariables {
-  title: string;
-  length: number;
-  originDirectFromFandom: boolean;
-  postOrFandomId: number;
-  body: string;
+export interface FetchChaptersVariables {
+  postid: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: AllFandom
+// ====================================================
+
+export interface AllFandom_fandoms {
+  __typename: "Fandom";
+  id: number;
+  name: string;
+}
+
+export interface AllFandom {
+  fandoms: AllFandom_fandoms[];
 }
 
 /* tslint:disable */
