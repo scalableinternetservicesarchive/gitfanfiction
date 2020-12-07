@@ -1,34 +1,94 @@
 
-import { useMutation } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { RouteComponentProps } from '@reach/router';
 import * as React from 'react';
 import { SubmitButton } from '../component/Button';
-import { ADDCOMMENT } from '../gql/mutation';
+import { ADDCOMMENT, RATESTORY, VOTECOMMENT } from '../gql/mutation';
 import { AppRouteParams } from '../nav/route';
+
+
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 
 export function TestPage(props: HomePageProps) {
-
-  const [id, setId] = React.useState("");
-  const [body, setBody] = React.useState("");
-  const [add_comment] = useMutation(ADDCOMMENT);
-
   let a = styles;
   a = a;
+  const [id, setId] = React.useState("");
+  const [some_user, setBody] = React.useState("");
+  const [rate, setRating] = React.useState("");
+
+  const [add_comment] = useMutation(ADDCOMMENT);
+  const [rate_story] = useMutation(RATESTORY);
+  const [vote_comment] =useMutation(VOTECOMMENT);
+  const showComments = gql`
+    query ShowComments($storyId:Int!){
+      comment(storyId: $storyId){
+        body
+      }
+    }
+  `
+  const {loading, data } = useQuery(showComments, { variables: { postid: parseInt(id) } })
+  if (!loading) console.log("mydata",data)
+
+
+//      <SubmitButton onClick={() => make_a_comment(add_comment, id, body)} />
 
 
   return (
     <>
-      <input type="text" value={id} onChange={(event) => setId(event.target.value)} />
+      <input type="text" value={id} style={ {border: '1px black solid'}} onChange={(event) => setId(event.target.value)} />
       hello world
-      <input type="text" value={body} onChange={(event) => setBody(event.target.value)} />
-      <SubmitButton onClick={() => make_a_comment(add_comment, id, body)} />
+      <input type="text" value={rate} style={ {border: '1px green solid'}}  onChange={(event) => setRating(event.target.value)} />
+
+      <input type="text" value={some_user} style={ {border: '1px red solid'}}  onChange={(event) => setBody(event.target.value)} />
+      <SubmitButton onClick={() => make_a_comment(add_comment, id, rate)} />
+      <SubmitButton onClick={() => rate_a_story(rate_story, id, rate, some_user)} />
+      <SubmitButton onClick={() => vote_a_comment(vote_comment, id, some_user)} />
+      <h1 style={{fontSize: '20px'}}>{data}</h1>
+
+
 
     </>
   )
+}
+
+
+
+
+/*console.log(commentData);
+}
+
+const show_some_comment = (id: string) => {
+  const n_id = parseInt(id);
+  if (isNaN(n_id)) {
+    alert("is not a valid story id")
+    return;
+  }
+
+  alert("it worked")*/
+
+
+
+
+const rate_a_story = (rate_story: any, id: string, rate:string, some_user:string) => {
+  const n_id = parseInt(id);
+  const n_rate = parseInt(rate);
+  const n_user = parseInt(some_user);
+  if (isNaN(n_id)) {
+    alert("is not a valid story id")
+    return;
+  }
+
+  alert("it worked")
+  rate_story({
+    variables: {
+      some_story: n_id,
+      rating: n_rate,
+      some_user: n_user
+    }
+  })
 }
 
 const make_a_comment = (add_comment: any, id: string, body: string) => {
@@ -44,6 +104,24 @@ const make_a_comment = (add_comment: any, id: string, body: string) => {
       story: n_id,
       body: body,
       time: ""
+    }
+  })
+}
+
+const vote_a_comment = (vote_comment: any, id: string, body: string) => {
+  const n_id = parseInt(id);
+  const user = parseInt(body);
+
+  if (isNaN(n_id)) {
+    alert("is not a valid story id")
+    return;
+  }
+
+  alert("it worked")
+  vote_comment({
+    variables: {
+      some_comment: n_id,
+      user: user
     }
   })
 }

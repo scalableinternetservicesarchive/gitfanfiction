@@ -30,7 +30,7 @@ type Query {
   upvote (upvoteId: Int!): Upvote
 
   comments:[Comment!]!
-  comment (commentId: Int!): [Comment]!
+  comment (storyId: Int!): [Comment]!
 
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
@@ -55,7 +55,7 @@ type Mutation {
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
   rateStory(input: RatingInput!): Post
-  voteComment(input: VoteInput!): Boolean
+  voteComment(input: VoteInput!): Comment
   # Moves the survey to the next question (or starts it if it hasn't started). ADMIN only.
   nextSurveyQuestion (surveyId: Int!): Survey
 }

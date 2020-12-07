@@ -1117,7 +1117,7 @@
             "description": null,
             "args": [
               {
-                "name": "commentId",
+                "name": "storyId",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1612,8 +1612,8 @@
               }
             ],
             "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
+              "kind": "OBJECT",
+              "name": "Comment",
               "ofType": null
             },
             "isDeprecated": false,

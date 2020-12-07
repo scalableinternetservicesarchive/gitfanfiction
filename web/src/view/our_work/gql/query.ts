@@ -20,6 +20,15 @@ query PostPageQuery($postid: Int!) {
 }
 `
 
+export const fetchComments = gql`
+query ViewpageQuery($postid: Int!) {
+  comment(storyId: $postid){
+    id
+  }
+}
+`
+
+
 export const fetchFandomData = gql`
 query FandomDataQuery($fandomid: Int!) {
   fandom(fandomId: $fandomid){

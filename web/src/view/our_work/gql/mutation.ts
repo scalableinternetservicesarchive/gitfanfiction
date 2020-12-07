@@ -45,6 +45,42 @@ mutation AddChapter(
 }
 `
 
+
+export const RATESTORY = gql`
+  mutation RateStory (
+    $some_story:Int!,
+    $rating: Int!
+    $some_user: Int!
+  ){
+    rateStory(
+      input:{
+        some_story: $some_story
+        rating: $rating
+        some_user: $some_user
+
+      }
+    ){
+      rating
+    }
+  }
+`
+
+export const VOTECOMMENT = gql`
+  mutation VoteComment (
+    $some_comment:Int!,
+    $user: Int!
+  ){
+    voteComment(
+      input:{
+        some_comment: $some_comment
+        user: $user
+      }
+    ){
+      vote
+    }
+  }
+`
+
 export const ADDCOMMENT = gql`
   mutation MakeComment (
     $story:Int!,

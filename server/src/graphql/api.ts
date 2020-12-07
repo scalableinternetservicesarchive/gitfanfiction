@@ -49,7 +49,7 @@ export const graphqlRoot: Resolvers<Context> = {
     chapter: async (_, { chapterId }) => (await Chapter.findOne({ where: { id: chapterId } }))!,
 
     comments: () => Comment.find(),
-    comment: async (_, { commentId }) => (await Comment.find({ where: { story: commentId } }))!,
+    comment: async (_, { storyId }) => (await Comment.find({ where: { story: storyId } }))!,
 
     upvotes: () => Upvote.find(),
     upvote: async (_, { upvoteId }) => (await Upvote.findOne({ where: { id: upvoteId } }))!,
@@ -156,7 +156,7 @@ export const graphqlRoot: Resolvers<Context> = {
       //const some_user = check(await User.findOne({ where: { id: user } }))
       //some_user.votes.push(some_comment)
 
-      const exist = check(await Upvote.findOne({ where: { comment: some_comment, user: user } }))
+      const exist = await Upvote.findOne({ where: { comment: some_comment, user: user } })
       //const exist=null
       const upvote = new Upvote()
       if (exist == null) {
@@ -167,7 +167,7 @@ export const graphqlRoot: Resolvers<Context> = {
         await comment.save()
       }
 
-      return true
+      return comment
     },
 
     rateStory: async (_, { input }, ctx) => {

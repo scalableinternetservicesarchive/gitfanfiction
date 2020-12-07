@@ -101,6 +101,53 @@ export interface AddChapterVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: RateStory
+// ====================================================
+
+export interface RateStory_rateStory {
+  __typename: "Post";
+  rating: number;
+}
+
+export interface RateStory {
+  rateStory: RateStory_rateStory | null;
+}
+
+export interface RateStoryVariables {
+  some_story: number;
+  rating: number;
+  some_user: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: VoteComment
+// ====================================================
+
+export interface VoteComment_voteComment {
+  __typename: "Comment";
+  vote: number;
+}
+
+export interface VoteComment {
+  voteComment: VoteComment_voteComment | null;
+}
+
+export interface VoteCommentVariables {
+  some_comment: number;
+  user: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: MakeComment
 // ====================================================
 
@@ -156,6 +203,28 @@ export interface PostPageQuery {
 }
 
 export interface PostPageQueryVariables {
+  postid: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: ViewpageQuery
+// ====================================================
+
+export interface ViewpageQuery_comment {
+  __typename: "Comment";
+  body: string;
+}
+
+export interface ViewpageQuery {
+  comment: (ViewpageQuery_comment | null)[];
+}
+
+export interface ViewpageQueryVariables {
   postid: number;
 }
 

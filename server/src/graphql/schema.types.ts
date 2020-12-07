@@ -52,7 +52,7 @@ export interface QueryUpvoteArgs {
 }
 
 export interface QueryCommentArgs {
-  commentId: Scalars['Int']
+  storyId: Scalars['Int']
 }
 
 export interface QuerySurveyArgs {
@@ -87,7 +87,7 @@ export interface Mutation {
   makeComment?: Maybe<Comment>
   answerSurvey: Scalars['Boolean']
   rateStory?: Maybe<Post>
-  voteComment?: Maybe<Scalars['Boolean']>
+  voteComment?: Maybe<Comment>
   nextSurveyQuestion?: Maybe<Survey>
 }
 
@@ -460,7 +460,7 @@ export type QueryResolvers<
     Array<Maybe<ResolversTypes['Comment']>>,
     ParentType,
     ContextType,
-    RequireFields<QueryCommentArgs, 'commentId'>
+    RequireFields<QueryCommentArgs, 'storyId'>
   >
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
@@ -543,7 +543,7 @@ export type MutationResolvers<
     RequireFields<MutationRateStoryArgs, 'input'>
   >
   voteComment?: Resolver<
-    Maybe<ResolversTypes['Boolean']>,
+    Maybe<ResolversTypes['Comment']>,
     ParentType,
     ContextType,
     RequireFields<MutationVoteCommentArgs, 'input'>
