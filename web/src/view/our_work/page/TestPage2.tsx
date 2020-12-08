@@ -20,13 +20,16 @@ export function TestPage(props: HomePageProps) {
   const [some_user, setBody] = React.useState("");
   const [rate, setRating] = React.useState("");
 
+
   const [add_comment] = useMutation(ADDCOMMENT, { onCompleted(data) { window.location.reload() } });
   const [rate_story] = useMutation(RATESTORY, { onCompleted(data) { window.location.reload() } });
   const [vote_comment] = useMutation(VOTECOMMENT, { onCompleted(data) { window.location.reload() } });
   const showComments = gql`
     query ShowComments($storyId:Int!){
       comment(storyId: $storyId){
+        id
         body
+        vote
       }
     }
   `
@@ -53,7 +56,9 @@ export function TestPage(props: HomePageProps) {
       <SubmitButton title="Upvote C" onClick={() => vote_a_comment(vote_comment, id, some_user)} />
 
       {data?.comment.map((item: any, index: any) => {
-        return <h1 key={index} style={{ fontSize: '20px' }}>{item.body}</h1>
+        return <h1 key={index} style={{ fontSize: '20px' }}>{item.body}
+        <button style={{ border: '1px green solid'}}
+        onClick={() => vote_a_comment(vote_comment, item.id, some_user)}>{item.vote}</button></h1>
       })}
 
 
