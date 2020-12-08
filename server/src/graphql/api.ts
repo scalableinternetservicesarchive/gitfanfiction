@@ -119,14 +119,14 @@ export const graphqlRoot: Resolvers<Context> = {
     makePost: async (_, { input }, ctx) => {
 
       if (ctx.user == null) throw new Error("cannot make post without logging in");
-      if (!await User.findOne({ where: {id: ctx.user} })){
+      if (!await User.findOne({ where: { id: ctx.user.id } })) {
         throw new Error('Non Existing user id');
       }
 
 
       const { origin, title, description } = input
       if (!title || !description || !origin) throw new Error("all fields have to be filled in");
-      if (!await Post.findOne({ where: {id: origin} })){
+      if (!await Post.findOne({ where: { id: origin } })) {
         throw new Error('Non Existing Story');
       }
       const post = new Post()
@@ -152,7 +152,7 @@ export const graphqlRoot: Resolvers<Context> = {
     makeComment: async (_, { input }, ctx) => {
       const { story, body, time } = input
       if (body == null) throw new Error("Comment can not be empty");
-      if (!await Post.findOne({ where: {id: story} })){
+      if (!await Post.findOne({ where: { id: story } })) {
         throw new Error('Non Existing Story');
       }
       const comment = new Comment()
@@ -168,7 +168,7 @@ export const graphqlRoot: Resolvers<Context> = {
       const { some_comment, user } = input
       if (some_comment == null) throw new Error("Comment can not be empty");
       //if (user == null) throw new Error("cannot make post without logging in");
-      if (!await User.findOne({ where: {id: user} })){
+      if (!await User.findOne({ where: { id: user } })) {
         throw new Error('Non Existing user id');
       }
 
@@ -193,13 +193,13 @@ export const graphqlRoot: Resolvers<Context> = {
     rateStory: async (_, { input }, ctx) => {
       const { some_story, rating, some_user } = input
       if (some_user == null) throw new Error("cannot make post without logging in");
-      if (!await User.findOne({ where: {id: some_user} })){
+      if (!await User.findOne({ where: { id: some_user } })) {
         throw new Error('Non Existing user id');
       }
-      if (!await Post.findOne({ where: {id: some_story} })){
+      if (!await Post.findOne({ where: { id: some_story } })) {
         throw new Error('Non Existing Story');
       }
-      if (rating !=1 && rating!=2 && rating !=3 && rating !=4 && rating !=5) throw new Error("Rating has to be an integer from 1-5");
+      if (rating != 1 && rating != 2 && rating != 3 && rating != 4 && rating != 5) throw new Error("Rating has to be an integer from 1-5");
 
       //const p= post(some_story)
       const some_post = check(await Post.findOne({ where: { id: some_story } }))
