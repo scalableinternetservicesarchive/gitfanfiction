@@ -1,28 +1,167 @@
 
+import { useMutation, useQuery } from '@apollo/client'
 import { AppBar, Toolbar } from '@material-ui/core'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { style } from '../../../style/styled'
 import BranchDiagram from '../component/BranchDiagram'
 import SearchBar2 from '../component/SearchBar2'
+import { ADDCOMMENT } from '../gql/mutation'
+import { fetchChapters, fetchComments } from '../gql/query'
 import { AppRouteParams } from '../nav/route'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
+const gear = 'assets/image/webpage-general/gear.png';
 
 export function TestPage(props: HomePageProps) {
 
-  const [fandomID, setFandomID] = React.useState()
+  const [fandomId, setFandomId] = React.useState(0)
+  const [postId, setPostId] = React.useState(0)
+  const [chapterId, setChapterId] = React.useState(0)
+  const [chapter_i, setChapter_i] = React.useState(0)
+  const [comment, setComment] = React.useState("")
+
+
+  const [add_comment] = useMutation(ADDCOMMENT, {
+    onCompleted(data) {
+      window.location.href = "index#" + fandomId + "#" + postId + "#" + chapterId;
+      window.location.reload()
+    }
+  });
+
+  const fetchChapterData = useQuery(fetchChapters, { variables: { postid: postId } })
+  const fetchCommentData = useQuery(fetchComments, { variables: { storyId: chapterId } })
+  const chapterData = fetchChapterData?.data?.getPostChapters;
+  const commentData = fetchCommentData?.data?.comment;
+  // console.log("comm1", chapterId, commentData)
+
+  //before anything else, get fandom and post id if it excceeds
+  React.useEffect(() => {
+    const url = window.location.href.split('#')
+    if (url.length < 4) return;
+    const chapterID = parseInt(url[url.length - 1]);
+    const postID = parseInt(url[url.length - 2]);
+    const fandomID = parseInt(url[url.length - 3]);
+    setFandomId(fandomID)
+    setChapterId(chapterID)
+    setPostId(postID)
+
+    // setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 500);
+  }, [])
+
+
+  React.useEffect((): any => {
+    //sets comment id after all post data chapter data had been collected
+    if (chapterData == undefined) return;
+    if (chapterData == null) return;
+    if (chapterData.length == 0) return;
+
+    let sortedChapterData = [...chapterData]
+    sortedChapterData.sort((a: any, b: any) => a.order - b.order)
+    setChapterId(sortedChapterData[chapter_i].id)
+
+  }, [fetchChapterData, chapter_i])
+
+  const chapterContent = (chapterData: any) => {
+    //creates chapter and comment section
+    console.log("trio", fandomId, postId, chapterId);
+    //valildation
+    if (chapterData == undefined || chapterData == null)
+      return null
+    if (chapterData.length == 0)
+      return null
+    if (commentData == undefined || commentData == null)
+      return null
+
+    // console.log("chapterData", chapterData)
+    let sortedChapterData = [...chapterData]
+    sortedChapterData.sort((a: any, b: any) => a.order - b.order)
+    const total_length = chapterData.length;
+
+    console.log("comm13", chapterId, commentData)
+    return (<div>
+
+      <div style={{ height: 50, backgroundColor: "black" }} />
+      <div style={{ border: "1px white solid", margin: "100px", padding: "10px", marginBottom: 30 }}>
+        <h1 style={{ fontSize: 30, color: "white" }}>Title: {sortedChapterData[0].title}</h1>
+        <div style={{ height: 5 }} />
+        <h1 style={{ color: "white" }}>Sub Title: {sortedChapterData[chapter_i].title}</h1>
+        <div style={{ height: 30 }} />
+        <h1 style={{ color: "white" }}><pre>{sortedChapterData[chapter_i].body}</pre></h1>
+
+        <div style={{ height: 30 }} />
+
+        <span
+          style={{ border: "1px white solid", padding: "2px", color: "white" }}
+          onClick={() => setChapter_i((chapter_i - 1) < 0 || (chapter_i - 1) >= total_length ? chapter_i : chapter_i - 1)}>
+          Back
+          </span>
+
+        <span
+          style={{ border: "1px white solid", margin: "10px", padding: "2px", color: "white" }}
+          onClick={() => setChapter_i((chapter_i + 1) < 0 || (chapter_i + 1) >= total_length ? chapter_i : chapter_i + 1)}>
+          Next
+          </span>
+
+        <div style={{ height: 10 }} />
+      </div>
+
+
+      {/* comment area */}
+      <div style={{ border: "1px white solid", margin: "100px", padding: "10px", marginTop: 0 }}>
+        <h1 style={{ fontSize: 30, color: "white" }}>Comment:</h1>
+
+        {commentData.map((item: any, index: any) => {
+          return <h1 key={index} style={{ marginLeft: 10, fontSize: '20px', color: "white" }}>{item.body} </h1>
+          {/* <button style={{ border: '1px green solid'}}
+        onClick={() => vote_a_comment(vote_comment, item.id, some_user)}>{item.vote}</button> */}
+        })}
+
+        <div style={{ height: 10 }} />
+        <h1 style={{ fontSize: 30, color: "white" }}>comment here:        </h1>
+
+        <input type="text" value={comment} style={{ backgroundColor: "white", border: '1px green solid' }} onChange={(event) => setComment(event.target.value)} />
+
+        <div style={{ height: 20 }} />
+        <h1
+          style={{ border: "1px white solid", padding: "2px", width: 80, color: "white", textAlign: "center" }}
+          onClick={() => make_a_comment(add_comment, chapterId, comment)}>
+          Submit
+        </h1>
+
+
+      </div>
+
+      <div style={{ height: 10, backgroundColor: "black" }} />
+    </div>);
+  }
+
 
   return (
     <>
       <div className="background" style={{ ...styles.root, height: "100vh" }}>
         <AppBar style={styles.appbar} elevation={0}>
           <Toolbar style={styles.appbarWrapper}>
-            <div style={styles.appbarTitle}>
-              git fanfiction
-          </div>
+            <LeftHeaderBox>
+              <a style={{ textDecoration: 'none', color: 'white' }} href="/app/index">git fanfiction</a>
+            </LeftHeaderBox>
+            <MiddleHeaderBox>
+              <ButtonElements>
+                <a style={{ textDecoration: 'none' }} href="/app/post"><MenuItem>Post</MenuItem></a>
+              </ButtonElements>
+              <ButtonElements>
+                <a style={{ textDecoration: 'none' }} href="/app/request-fandom"><MenuItemRequestFandom>Request Fandom</MenuItemRequestFandom></a>
+              </ButtonElements>
+            </MiddleHeaderBox>
+            <RightHeaderBox>
+              <a style={{ textDecoration: 'none' }} href="/app/login"><MenuItem>Login</MenuItem></a>
+              <a href="/app/setting">
+                <img style={{ margin: '0 25' }} height={30} src={gear} alt="gear" />
+              </a>
+            </RightHeaderBox>
           </Toolbar>
         </AppBar>
 
@@ -31,10 +170,14 @@ export function TestPage(props: HomePageProps) {
         <div style={{ height: "80vh", width: "100vw", display: "flex", justifyContent: "center", alignItems: "center" }}>
           <div style={{ height: "30vh", width: "50vw", display: "flex", flexDirection: "column" }} >
             <div style={{ flex: 1, width: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <BranchDiagram width={700} fandomId={fandomID} />
+              <BranchDiagram
+                // width={700}
+                setPostId={setPostId}
+                fandomId={fandomId}
+              />
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <SearchBar2 width={700} setFandomId={setFandomID} />
+              <SearchBar2 width={700} setFandomId={setFandomId} />
             </div>
           </div>
         </div>
@@ -51,11 +194,17 @@ export function TestPage(props: HomePageProps) {
       </div> */}
 
       </div>
-      <div style={{ height: 3000, backgroundColor: "black" }}>
 
+      <div style={{ backgroundColor: "black" }}>
+        {chapterContent(chapterData)}
       </div>
     </>
   )
+}
+
+
+const make_a_comment = (add_comment: any, chapterId: Number, body: string) => {
+
 }
 
 const styles = {
@@ -114,6 +263,67 @@ const styles = {
   } as React.CSSProperties,
 }
 
+const LeftHeaderBox = style('div', 'flex ml3', {
+  // borderWidth: 2,
+  // borderColor: 'green',
+  alignItems: 'center',
+  fontFamily: 'Consolas',
+  flex: '1',
+  fontSize: '25',
+  fontWeight: 'bold',
+})
+
+
+const MiddleHeaderBox = style('div', 'ba flex ml3', {
+  flex: 1,
+  borderWidth: "0 0 0 0",
+  margin: "12 20",
+  padding: "1 3",
+  justifyContent: 'flex-end',
+  alignItems: 'flex-end',
+  font: '15px sans-serif',
+  fontWeight: 100,
+  color: "white",
+})
+
+const RightHeaderBox = style('div', ' flex', {
+  // borderWidth: 2,
+  // borderColor: 'green',
+  alignItems: 'center'
+
+})
+
+const MenuItem = style('div', 'ba flex', {
+  borderWidth: 1.5,
+  borderColor: 'white',
+  width: 70,
+  height: 22,
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  textDecorationLine: 'none',
+  fontSize: 15,
+  fontWeight: 300,
+  fontFamily: 'sans-serif',
+})
+
+const MenuItemRequestFandom = style('div', 'ba flex', {
+  borderWidth: 1.5,
+  borderColor: 'white',
+  width: 150,
+  height: 22,
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  textDecorationLine: 'none',
+  fontSize: 15,
+  fontWeight: 300,
+  fontFamily: 'sans-serif',
+})
+
+const ButtonElements = style('div', {
+  padding: '0 0 0 20',
+})
 
 
 // import { gql, useMutation, useQuery } from '@apollo/client'

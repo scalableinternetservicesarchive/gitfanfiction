@@ -20,13 +20,13 @@ query PostPageQuery($postid: Int!) {
 }
 `
 
-export const fetchComments = gql`
-query ViewpageQuery($postid: Int!) {
-  comment(storyId: $postid){
-    id
-  }
-}
-`
+// export const fetchComments = gql`
+// query ViewpageQuery($postid: Int!) {
+//   comment(storyId: $postid){
+//     id
+//   }
+// }
+// `
 
 
 export const fetchFandomData = gql`
@@ -44,6 +44,7 @@ query FandomDataQuery($fandomid: Int!) {
 export const fetchChapters = gql`
 query FetchChapters($postid: Int!) {
   getPostChapters(postId:$postid){
+    id
     order
     title
     body
@@ -62,6 +63,16 @@ query AllFandom{
   fandoms {
     id
     name
+  }
+}
+`
+
+export const fetchComments = gql`
+query ShowComments($storyId:Int!){
+  comment(storyId: $storyId){
+    id
+    body
+    vote
   }
 }
 `

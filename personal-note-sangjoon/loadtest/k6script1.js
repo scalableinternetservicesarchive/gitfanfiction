@@ -3,7 +3,11 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 export let options = {
-  vus: 3, duration: "1s"
+  startVUs: 0,
+  stages: [
+  { duration: '60s', target: 500 },
+  { duration: '60s', target: 0 },
+  ],
 };
 
 const JSONparams = {
@@ -14,8 +18,9 @@ const JSONparams = {
 
 export default function () {
 
-  // signup(__VU)
-  getTree();
+  signup(__VU)
+  makepostroute()
+  // getTree();
 
   sleep(1)
 }
@@ -77,10 +82,12 @@ function login(__VU, shouldcheck=false) {
 }
 
 function makepost(__VU, shouldcheck=false){
+  const fandom = 2
+
   const postpayload = JSON.stringify({
     "operationName": "MakeNewPost",
     "query":"mutation MakeNewPost($title: String!, $description: String!, $origin: Int!, $ancestor: Int!, $father: Int!, $fatherIndex: String!) {   makePost(input: {origin: $origin, title: $title, description: $description, ancestor: $ancestor, father: $father, fatherIndex: $fatherIndex}) {     id     title     __typename   } } ",
-    "variables": {"title": "title from "+__VU, "description": "some description"+__VU, "origin": 1, "ancestor": 1, "father": 1, "fatherIndex": "1,1"}
+    "variables": {"title": "title from "+__VU, "description": "some description"+__VU, "origin": 1, "ancestor": fandom, "father": fandom, "fatherIndex": "1,1"}
   })
   let makepost = http.post('http://localhost:3000/graphql', postpayload, JSONparams);
 

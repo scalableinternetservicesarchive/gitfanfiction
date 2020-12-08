@@ -9,11 +9,11 @@ import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
-import { HomePage } from './our_work/page/HomePage'
 import { LoginPage } from './our_work/page/LoginPage'
 import { PostPage } from './our_work/page/PostPage'
 import { RequestFandomPage } from './our_work/page/RequestFandomPage'
 import { SignupPage } from './our_work/page/SignupPage'
+import * as TempPage from './our_work/page/TestPage'
 import { TestPage } from './our_work/page/TestPage2'
 import { ViewPage } from './our_work/page/ViewPage'
 import { BrowseAll } from './page/BrowseAll'
@@ -60,7 +60,7 @@ export function AppBody() {
       <Router className={bodyClass}>
         <Redirect noThrow from="app" to="index" />
         <Redirect noThrow from="app/playground" to="surveys" />
-        <HomePage path={Route.HOME} />
+        <TempPage.TestPage path={Route.HOME} />
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <PuppyPage path={Route.PUPPY} />

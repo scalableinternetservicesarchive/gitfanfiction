@@ -165,7 +165,7 @@ export const graphqlRoot: Resolvers<Context> = {
     makeComment: async (_, { input }, ctx) => {
       const { story, body, time } = input
       if (body == null) throw new Error("Comment can not be empty");
-      if (!await Post.findOne({ where: { id: story } })) {
+      if (!await Chapter.findOne({ where: { id: story } })) {
         throw new Error('Non Existing Story');
       }
       const comment = new Comment()

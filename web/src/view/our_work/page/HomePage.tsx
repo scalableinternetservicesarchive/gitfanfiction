@@ -3,7 +3,7 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { style } from '../../../style/styled'
 import BranchDiagram from '../component/BranchDiagram'
-import SearchBar from '../component/SearchBar'
+import SearchBar2 from '../component/SearchBar2'
 import { AppRouteParams } from '../nav/route'
 
 interface HomePageProps extends RouteComponentProps, AppRouteParams { }
@@ -14,7 +14,10 @@ const gear = 'assets/image/webpage-general/gear.png';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function HomePage(props: HomePageProps) {
+  const [fandomId, setFandomId] = React.useState(1)
+  const [postId, setPostId] = React.useState(0)
 
+  console.log(postId)
 
   return (
     <div style={styles.root}>
@@ -42,9 +45,13 @@ export function HomePage(props: HomePageProps) {
       <Columns>
         <div style={{ verticalAlign: 'middle', top: '150px' }}>
           <Column>
-            <BranchDiagram />
+            <BranchDiagram
+              setPostId={setPostId}
+              fandomId={fandomId}
+            />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <SearchBar />
+              <SearchBar2
+                setFandomId={setFandomId} />
             </div>
           </Column>
         </div>
