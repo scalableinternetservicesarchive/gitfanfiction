@@ -15,13 +15,13 @@ interface HomePageProps extends RouteComponentProps, AppRouteParams { }
 export function TestPage(props: HomePageProps) {
   let a = styles;
   a = a;
-  const [id, setId] = React.useState("");
+  const [id, setId] = React.useState("1");
   const [some_user, setBody] = React.useState("");
   const [rate, setRating] = React.useState("");
 
   const [add_comment] = useMutation(ADDCOMMENT);
   const [rate_story] = useMutation(RATESTORY);
-  const [vote_comment] =useMutation(VOTECOMMENT);
+  const [vote_comment] = useMutation(VOTECOMMENT);
   const showComments = gql`
     query ShowComments($storyId:Int!){
       comment(storyId: $storyId){
@@ -29,24 +29,30 @@ export function TestPage(props: HomePageProps) {
       }
     }
   `
-  const {loading, data } = useQuery(showComments, { variables: { postid: parseInt(id) } })
-  if (!loading) console.log("mydata",data)
 
+  const { loading, data } = useQuery(showComments, { variables: { storyId: parseInt(id) } })
+  if (!loading) console.log("mydata", data)
+  console.log(data)
 
-//      <SubmitButton onClick={() => make_a_comment(add_comment, id, body)} />
+  //      <SubmitButton onClick={() => make_a_comment(add_comment, id, body)} />
 
 
   return (
     <>
-      <input type="text" value={id} style={ {border: '1px black solid'}} onChange={(event) => setId(event.target.value)} />
-      hello world
-      <input type="text" value={rate} style={ {border: '1px green solid'}}  onChange={(event) => setRating(event.target.value)} />
-
-      <input type="text" value={some_user} style={ {border: '1px red solid'}}  onChange={(event) => setBody(event.target.value)} />
+      storyid (intger):
+      <input type="text" value={id} style={{ border: '1px black solid' }} onChange={(event) => setId(event.target.value)} />
+      comment (string):
+      <input type="text" value={rate} style={{ border: '1px green solid' }} onChange={(event) => setRating(event.target.value)} />
+      vote (string):
+      <input type="text" value={some_user} style={{ border: '1px red solid' }} onChange={(event) => setBody(event.target.value)} />
       <SubmitButton onClick={() => make_a_comment(add_comment, id, rate)} />
       <SubmitButton onClick={() => rate_a_story(rate_story, id, rate, some_user)} />
       <SubmitButton onClick={() => vote_a_comment(vote_comment, id, some_user)} />
-      <h1 style={{fontSize: '20px'}}>{data}</h1>
+
+      {data?.comment.map((item: any, index: any) => {
+        return <h1 key={index} style={{ fontSize: '20px' }}>{item.body}</h1>
+      })}
+
 
 
 
@@ -72,7 +78,7 @@ const show_some_comment = (id: string) => {
 
 
 
-const rate_a_story = (rate_story: any, id: string, rate:string, some_user:string) => {
+const rate_a_story = (rate_story: any, id: string, rate: string, some_user: string) => {
   const n_id = parseInt(id);
   const n_rate = parseInt(rate);
   const n_user = parseInt(some_user);
@@ -106,6 +112,8 @@ const make_a_comment = (add_comment: any, id: string, body: string) => {
       time: ""
     }
   })
+
+  // window.location = window.location;
 }
 
 const vote_a_comment = (vote_comment: any, id: string, body: string) => {
