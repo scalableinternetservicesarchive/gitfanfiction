@@ -16,6 +16,7 @@ export function TestPage(props: HomePageProps) {
   let a = styles;
   a = a;
   const [id, setId] = React.useState("1");
+  const [comment, setComment] = React.useState("");
   const [some_user, setBody] = React.useState("");
   const [rate, setRating] = React.useState("");
 
@@ -31,23 +32,25 @@ export function TestPage(props: HomePageProps) {
   `
 
   const { loading, data } = useQuery(showComments, { variables: { storyId: parseInt(id) } })
-  if (!loading) console.log("mydata", data)
-  console.log(data)
+  loading
 
   //      <SubmitButton onClick={() => make_a_comment(add_comment, id, body)} />
 
 
   return (
     <>
-      storyid (intger):
+      id (intger):
       <input type="text" value={id} style={{ border: '1px black solid' }} onChange={(event) => setId(event.target.value)} />
       comment (string):
+      <input type="text" value={comment} style={{ border: '1px green solid' }} onChange={(event) => setComment(event.target.value)} />
+      rating (int):
       <input type="text" value={rate} style={{ border: '1px green solid' }} onChange={(event) => setRating(event.target.value)} />
-      vote (string):
+      userid (int):
       <input type="text" value={some_user} style={{ border: '1px red solid' }} onChange={(event) => setBody(event.target.value)} />
-      <SubmitButton onClick={() => make_a_comment(add_comment, id, rate)} />
-      <SubmitButton onClick={() => rate_a_story(rate_story, id, rate, some_user)} />
-      <SubmitButton onClick={() => vote_a_comment(vote_comment, id, some_user)} />
+
+      <SubmitButton title="Comment" onClick={() => make_a_comment(add_comment, id, comment)} />
+      <SubmitButton title="Rate Story" onClick={() => rate_a_story(rate_story, id, rate, some_user)} />
+      <SubmitButton title="Upvote C" onClick={() => vote_a_comment(vote_comment, id, some_user)} />
 
       {data?.comment.map((item: any, index: any) => {
         return <h1 key={index} style={{ fontSize: '20px' }}>{item.body}</h1>

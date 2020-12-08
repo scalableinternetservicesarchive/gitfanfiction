@@ -22,9 +22,9 @@ export default function Button() {
   )
 }
 
-export function SubmitButton(props: any) {
-  return <SubmitButtonElement onClick={props.onClick}>
-    Submit
+export function SubmitButton({ title = "Submit", onClick }: any) {
+  return <SubmitButtonElement onClick={onClick}>
+    {title}
   </SubmitButtonElement>
 }
 
