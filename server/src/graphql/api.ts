@@ -126,7 +126,7 @@ export const graphqlRoot: Resolvers<Context> = {
 
       const { origin, title, description } = input
       if (!title || !description || !origin) throw new Error("all fields have to be filled in");
-      if (!await Post.findOne({ where: { id: origin } })) {
+      if (input.ancestor != input.father && !await Post.findOne({ where: { id: origin } })) {
         throw new Error('Non Existing Story');
       }
       const post = new Post()

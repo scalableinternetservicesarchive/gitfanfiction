@@ -65,9 +65,11 @@ function makepost(__VU, shouldcheck=false){
   const postpayload = JSON.stringify({
     "operationName": "MakeNewPost",
     "query":"mutation MakeNewPost($title: String!, $description: String!, $origin: Int!, $ancestor: Int!, $father: Int!, $fatherIndex: String!) {   makePost(input: {origin: $origin, title: $title, description: $description, ancestor: $ancestor, father: $father, fatherIndex: $fatherIndex}) {     id     title     __typename   } } ",
-    "variables": {"title": "title from "+__VU, "description": "some description"+__VU, "origin": 1, "ancestor": 1, "father": 1, "fatherIndex": "1,12"}
+    "variables": {"title": "title from "+__VU, "description": "some description"+__VU, "origin": 1, "ancestor": 1, "father": 1, "fatherIndex": "1,1"}
   })
   let makepost = http.post('http://localhost:3000/graphql', postpayload, JSONparams);
+
+  console.log(JSON.stringify(makepost))
 
   if (shouldcheck) check(makepost, { 'status was 200': (r) => r.status == 200 });
   return JSON.parse(makepost.body).data.makePost.id
