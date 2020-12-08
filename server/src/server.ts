@@ -31,7 +31,6 @@ import { ConnectionManager } from './graphql/ConnectionManager'
 import { expressLambdaProxy } from './lambda/handler'
 import { renderApp } from './render'
 
-
 const getuser = (a: ContextParameters): User => {
   // console.log("I am:")
   // console.log(a.request.body)
@@ -184,6 +183,21 @@ server.express.post(
 
   }
   )
+)
+
+server.express.get(
+  '/eraseallpost',
+  asyncRoute(async (req, res) => {
+
+    const chapters = await Chapter.find({ where: { fandom: null } })
+    await Chapter.remove(chapters);
+
+    const posts = await Post.find()
+    await Post.remove(posts);
+    // const posts = await Post.find({ where: { ancestor: null } })
+
+    res.status(200).send('erase success!')
+  })
 )
 
 server.express.post(
