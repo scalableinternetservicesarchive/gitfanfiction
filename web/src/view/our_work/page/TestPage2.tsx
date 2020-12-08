@@ -20,9 +20,9 @@ export function TestPage(props: HomePageProps) {
   const [some_user, setBody] = React.useState("");
   const [rate, setRating] = React.useState("");
 
-  const [add_comment] = useMutation(ADDCOMMENT);
-  const [rate_story] = useMutation(RATESTORY);
-  const [vote_comment] = useMutation(VOTECOMMENT);
+  const [add_comment] = useMutation(ADDCOMMENT, { onCompleted(data) { window.location.reload() } });
+  const [rate_story] = useMutation(RATESTORY, { onCompleted(data) { window.location.reload() } });
+  const [vote_comment] = useMutation(VOTECOMMENT, { onCompleted(data) { window.location.reload() } });
   const showComments = gql`
     query ShowComments($storyId:Int!){
       comment(storyId: $storyId){
@@ -85,8 +85,8 @@ const rate_a_story = (rate_story: any, id: string, rate: string, some_user: stri
   const n_id = parseInt(id);
   const n_rate = parseInt(rate);
   const n_user = parseInt(some_user);
-  if (isNaN(n_id)) {
-    alert("is not a valid story id")
+  if (isNaN(n_id) || isNaN(n_rate) || isNaN(n_user)) {
+    alert("is not a valid story id / rating / user id")
     return;
   }
 
@@ -115,8 +115,6 @@ const make_a_comment = (add_comment: any, id: string, body: string) => {
       time: ""
     }
   })
-
-  // window.location = window.location;
 }
 
 const vote_a_comment = (vote_comment: any, id: string, body: string) => {
