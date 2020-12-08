@@ -30,6 +30,7 @@ import { getSchema, graphqlRoot, pubsub } from './graphql/api'
 import { ConnectionManager } from './graphql/ConnectionManager'
 import { expressLambdaProxy } from './lambda/handler'
 import { renderApp } from './render'
+const servercache = require('./servercache.ts');
 
 const getuser = (a: ContextParameters): User => {
   // console.log("I am:")
@@ -196,14 +197,24 @@ server.express.get(
     await Post.remove(posts);
     // const posts = await Post.find({ where: { ancestor: null } })
 
+    treeCache.flushall('ASYNC');
     res.status(200).send('erase success!')
   })
 )
 
+
+const treeCache = servercache.treeCache;
 server.express.post(
   '/tree',
   asyncRoute(async (req, res) => {
     console.log('POST /tree ' + req.body.fandomId)
+
+    //caching
+    const treeCacheResp = await treeCache.get(req.body.fandomId)
+    if (treeCacheResp) {
+      res.status(200).send(treeCacheResp)
+      return;
+    }
 
     //title, author, genre, nbooks, chapters
     const ancestorid = req.body.fandomId
@@ -234,7 +245,11 @@ server.express.post(
     }
 
     const data = { main, sub }
-    res.status(200).send(JSON.stringify(data))
+
+    const stringdata = JSON.stringify(data)
+
+    await treeCache.set(req.body.fandomId, stringdata)
+    res.status(200).send(stringdata)
 
     // what we need
     // const exampleData: dataInterface = {

@@ -14,6 +14,9 @@ import { SurveyQuestion } from '../entities/SurveyQuestion'
 import { Upvote } from '../entities/Upvote'
 import { User } from '../entities/User'
 import { Resolvers } from './schema.types'
+const servercache = require('../servercache.ts');
+const treeCache = servercache.treeCache;
+
 
 export const pubsub = new PubSub()
 
@@ -94,6 +97,9 @@ export const graphqlRoot: Resolvers<Context> = {
         fandom.save()
         chapter.fandom = fandom
         chapter.order = (await Chapter.find({ where: { fandom: (await Fandom.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
+
+        //renew cache
+        treeCache.set(fandom.id, null)
       } else {
         //if user is not logged in, he cannot add chapter to post
         if (ctx.user == null) throw new Error("cannot extend chapter without logging in");
@@ -108,10 +114,15 @@ export const graphqlRoot: Resolvers<Context> = {
         post.save()
         chapter.post = post
         chapter.order = (await Chapter.find({ where: { post: (await Post.findOne({ where: { id: postOrFandomId } }))! } }))!.length + 1
+
+        //renew cache
+        treeCache.set(post.ancestor, null)
       }
       chapter.length = length
       chapter.title = title
       chapter.body = body
+
+
       await chapter.save()
       return chapter
     },
@@ -123,12 +134,14 @@ export const graphqlRoot: Resolvers<Context> = {
         throw new Error('Non Existing user id');
       }
 
+      console.log(input.origin)
 
       const { origin, title, description } = input
       if (!title || !description || !origin) throw new Error("all fields have to be filled in");
-      if (input.ancestor != input.father && !await Post.findOne({ where: { id: origin } })) {
-        throw new Error('Non Existing Story');
-      }
+      // type checking impossible because front end doesn't know how to find valid originid (chapterid)
+      // if (input.ancestor != input.father && !await Post.findOne({ where: { id: origin } })) {
+      //   throw new Error('Non Existing Story');
+      // }
       const post = new Post()
       post.origin = (await Chapter.findOne({ where: { id: origin } }))!
       if (post.origin == undefined) throw new Error("non existing chapter id");

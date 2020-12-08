@@ -3,7 +3,7 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 export let options = {
-  vus: 10, duration: "1s"
+  vus: 3, duration: "1s"
 };
 
 const JSONparams = {
@@ -13,8 +13,24 @@ const JSONparams = {
 };
 
 export default function () {
+
+  // signup(__VU)
+  getTree();
+
+  sleep(1)
+}
+
+function getTree(){
+    //sign up
+    const payload = JSON.stringify({fandomId:1});
+
+    let signup = http.post('http://localhost:3000/tree', payload, JSONparams);
+    check(signup, { 'status was 200': (r) => r.status == 200 });
+}
+
+function makepostroute(){
   //log in page
-  let res = http.get('http://localhost:3000/app/login');
+  // let res = http.get('http://localhost:3000/app/login');
   // check(res, { 'status was 200': (r) => r.status == 200 });
 
   // signup(__VU)
@@ -29,9 +45,8 @@ export default function () {
 
   // add chapter
   addchapter(__VU,postid,true)
-
-  sleep(1)
 }
+
 
 function signup(__VU, shouldcheck=false) {
   const id = __VU;
@@ -69,7 +84,7 @@ function makepost(__VU, shouldcheck=false){
   })
   let makepost = http.post('http://localhost:3000/graphql', postpayload, JSONparams);
 
-  console.log(JSON.stringify(makepost))
+  // console.log(JSON.stringify(makepost))
 
   if (shouldcheck) check(makepost, { 'status was 200': (r) => r.status == 200 });
   return JSON.parse(makepost.body).data.makePost.id
@@ -78,7 +93,7 @@ function makepost(__VU, shouldcheck=false){
 function addchapter(__VU,post_id, shouldcheck=false){
   const postpayload = JSON.stringify({
     "query": "mutation AddChapter($title: String!, $body: String!, $length: Int!, $originDirectFromFandom: Boolean!, $postOrFandomId: Int!) {   addChapter(input: {title: $title, length: $length, originDirectFromFandom: $originDirectFromFandom, postOrFandomId: $postOrFandomId, body: $body}) {     id     title     __typename   } } ",
-    "variables": {"title": "some chapter title"+__VU, "originDirectFromFandom": false, "body": "some story with some content", "postOrFandomId": post_id, "length": 1500}
+    "variables": {"title": "some chapter title"+__VU, "originDirectFromFandom": false, "body": "some story with some content"+__VU, "postOrFandomId": post_id, "length": 1500}
   })
   let addchapter = http.post('http://localhost:3000/graphql', postpayload, JSONparams);
 
