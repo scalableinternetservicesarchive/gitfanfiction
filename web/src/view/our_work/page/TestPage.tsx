@@ -33,7 +33,7 @@ export function TestPage(props: HomePageProps) {
   });
 
   const fetchChapterData = useQuery(fetchChapters, { variables: { postid: postId } })
-  const fetchCommentData = useQuery(fetchComments, { variables: { storyId: chapterId } })
+  const fetchCommentData = useQuery(fetchComments, { variables: { storyId: chapterId }, skip: (chapterId == 0) })
   const chapterData = fetchChapterData?.data?.getPostChapters;
   const commentData = fetchCommentData?.data?.comment;
   // console.log("comm1", chapterId, commentData)
@@ -81,36 +81,8 @@ export function TestPage(props: HomePageProps) {
     sortedChapterData.sort((a: any, b: any) => a.order - b.order)
     const total_length = chapterData.length;
 
-    console.log("comm13", chapterId, commentData)
-    return (<div>
 
-      <div style={{ height: 50, backgroundColor: "black" }} />
-      <div style={{ border: "1px white solid", margin: "100px", padding: "10px", marginBottom: 30 }}>
-        <h1 style={{ fontSize: 30, color: "white" }}>Title: {sortedChapterData[0].title} &nbsp;&nbsp;[{chapter_i + 1} of {total_length}]</h1>
-        <div style={{ height: 5 }} />
-        <h1 style={{ color: "white" }}>Sub Title: {sortedChapterData[chapter_i].title}</h1>
-        <div style={{ height: 30 }} />
-        <h1 style={{ color: "white" }}><pre>{sortedChapterData[chapter_i].body}</pre></h1>
-
-        <div style={{ height: 30 }} />
-
-        <span
-          style={{ border: "1px white solid", padding: "2px", color: "white" }}
-          onClick={() => setChapter_i((chapter_i - 1) < 0 || (chapter_i - 1) >= total_length ? chapter_i : chapter_i - 1)}>
-          Back
-          </span>
-
-        <span
-          style={{ border: "1px white solid", margin: "10px", padding: "2px", color: "white" }}
-          onClick={() => setChapter_i((chapter_i + 1) < 0 || (chapter_i + 1) >= total_length ? chapter_i : chapter_i + 1)}>
-          Next
-          </span>
-
-        <div style={{ height: 10 }} />
-      </div>
-
-
-      {/* comment area */}
+    const commentArea = (
       <div style={{ border: "1px white solid", margin: "100px", padding: "10px", marginTop: 0 }}>
         <h1 style={{ fontSize: 30, color: "white" }}>Comment:</h1>
 
@@ -134,6 +106,43 @@ export function TestPage(props: HomePageProps) {
           Submit
         </h1>
       </div>
+    )
+
+    // console.log("comm13", chapterId, commentData)
+    return (<div>
+
+      <div style={{ height: 50, backgroundColor: "black" }} />
+      <div style={{ border: "1px white solid", margin: "100px", padding: "10px", marginBottom: 30 }}>
+        <h1 style={{ fontSize: 30, color: "white" }}>Title: {sortedChapterData[0].title} &nbsp;&nbsp;[{chapter_i + 1} of {total_length}]</h1>
+        <div style={{ height: 5 }} />
+        <h1 style={{ color: "white" }}>Sub Title: {sortedChapterData[chapter_i].title}</h1>
+        <div style={{ height: 30 }} />
+        <h1 style={{ color: "white" }}><pre>{sortedChapterData[chapter_i].body}</pre></h1>
+
+        <div style={{ height: 30 }} />
+
+        <span
+          style={{ border: "1px white solid", padding: "2px", color: "white" }}
+          onClick={() => {
+            if ((chapter_i - 1) < 0 || (chapter_i - 1) >= total_length) alert("end of chapter");
+            else setChapter_i(chapter_i - 1)
+          }}>
+          Back
+          </span>
+
+        <span
+          style={{ border: "1px white solid", margin: "10px", padding: "2px", color: "white" }}
+          onClick={() => {
+            if ((chapter_i + 1) < 0 || (chapter_i + 1) >= total_length) alert("end of chapter");
+            else setChapter_i(chapter_i + 1)
+          }}>
+          Next
+          </span>
+
+        <div style={{ height: 10 }} />
+      </div>
+
+      {commentArea}
 
       <div style={{ height: 10, backgroundColor: "black" }} />
     </div>
