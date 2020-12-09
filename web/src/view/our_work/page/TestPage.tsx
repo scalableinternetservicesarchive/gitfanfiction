@@ -86,7 +86,7 @@ export function TestPage(props: HomePageProps) {
 
       <div style={{ height: 50, backgroundColor: "black" }} />
       <div style={{ border: "1px white solid", margin: "100px", padding: "10px", marginBottom: 30 }}>
-        <h1 style={{ fontSize: 30, color: "white" }}>Title: {sortedChapterData[0].title}</h1>
+        <h1 style={{ fontSize: 30, color: "white" }}>Title: {sortedChapterData[0].title} &nbsp;&nbsp;[{chapter_i + 1} of {total_length}]</h1>
         <div style={{ height: 5 }} />
         <h1 style={{ color: "white" }}>Sub Title: {sortedChapterData[chapter_i].title}</h1>
         <div style={{ height: 30 }} />
@@ -128,15 +128,16 @@ export function TestPage(props: HomePageProps) {
         <div style={{ height: 20 }} />
         <h1
           style={{ border: "1px white solid", padding: "2px", width: 80, color: "white", textAlign: "center" }}
-          onClick={() => make_a_comment(add_comment, chapterId, comment)}>
+          onClick={() => {
+            make_a_comment(add_comment, chapterId, comment)
+          }}>
           Submit
         </h1>
-
-
       </div>
 
       <div style={{ height: 10, backgroundColor: "black" }} />
-    </div>);
+    </div>
+    );
   }
 
 
@@ -203,8 +204,15 @@ export function TestPage(props: HomePageProps) {
 }
 
 
-const make_a_comment = (add_comment: any, chapterId: Number, body: string) => {
-
+const make_a_comment = (add_comment: any, id: number, body: string) => {
+  // alert("it worked")
+  add_comment({
+    variables: {
+      story: id,
+      body: body,
+      time: ""
+    }
+  })
 }
 
 const styles = {
