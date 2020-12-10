@@ -1,4 +1,3 @@
-import { gql, useQuery } from '@apollo/client';
 import { AppBar, IconButton, Toolbar } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
 import { RouteComponentProps } from '@reach/router';
@@ -13,27 +12,59 @@ const queryString = require('query-string');
 
 export function SearchPage(props: HomePageProps){
   const params = queryString.parse(props.location!.search);
-  const searchFandom = gql`
-    query searchFandoms($query:String!){
-      searchFandom(query: $query){
-        name
-        author
-      }
+  // const searchFandom = gql`
+  //   query searchFandoms($query:String!){
+  //     searchFandom(query: $query){
+  //       name
+  //       author
+  //     }
+  //   }
+  // `
+  // const searchPost = gql`
+  //   query searchPosts($query:String!){
+  //     searchPost(query: $query){
+  //       title
+  //       description
+  //     }
+  //   }
+  // `
+  const query = params["query"]
+  React.useEffect(() => {
+    if (params['option']=="fandom"){
+      fetch(`http://localhost:3000/fandom/${query}`, {
+        method: "GET",
+      }).then(async res => {
+        if (res.status == 200) {
+          return res.json();
+        }
+        const err = await res.json()
+        throw err;
+      }).then((res) => {
+        document.getElementById("title")!.innerText = res[0]['name']
+        document.getElementById("subtitle")!.innerText = res[0]['author']
+        console.log(res)
+      }).catch(err => {
+        console.log(err);
+      })
+    } else {
+      fetch(`http://localhost:3000/post/${query}`, {
+        method: "GET",
+      }).then(async res => {
+        if (res.status == 200) {
+          return res.json();
+        }
+        const err = await res.json()
+        throw err;
+      }).then((res) => {
+        document.getElementById("title")!.innerText = res[0]['title']
+        document.getElementById("subtitle")!.innerText = res[0]['description']
+        console.log(res)
+      }).catch(err => {
+        console.log(err);
+      })
     }
-  `
-  const searchPost = gql`
-    query searchPosts($query:String!){
-      searchPost(query: $query){
-        title
-        description
-      }
-    }
-  `
-  const search = (params['option']=="fandom") ? searchFandom : searchPost
-  const { loading, data } = useQuery(search, {
-    variables: { query: params['query'] },
   })
-  if (!loading) console.log(data)
+
   try{
     return (
       <div className="background" style={styles.root}>
@@ -52,8 +83,8 @@ export function SearchPage(props: HomePageProps){
           </Toolbar>
         </AppBar>
         <div style={styles.storybox}>
-          <h1 style={{fontSize: '20px'}}>{(params['option']=="fandom") ? (data['searchFandom'][0]['name']) : (data['searchPost'][0]['title'])}</h1>
-          <h2 style={{fontSize: '16px'}}>{(params['option']=="fandom") ? (data['searchFandom'][0]['author']) : (data['searchPost'][0]['description'])}</h2>
+          <h1 id="title" style={{fontSize: '20px'}}>Error: search returned 0 results.</h1>
+          <h2 id="subtitle" style={{fontSize: '16px'}}></h2>
         </div>
       </div>
     )

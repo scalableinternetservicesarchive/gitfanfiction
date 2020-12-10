@@ -143,6 +143,31 @@ server.express.post(
   )
 )
 
+server.express.get(
+  '/post/:query',
+  asyncRoute(async (req, res) => {
+
+    const query = req.params.query;
+    console.log(`GET /post/${query}`)
+
+    const post = await Post.find({ where: { title: query } })!
+    res.status(200).send(post)
+  }
+  )
+)
+
+server.express.get(
+  '/fandom/:query',
+  asyncRoute(async (req, res) => {
+    const query = req.params.query;
+    console.log(`GET /fandom/${query}`)
+
+    const fandom = await Fandom.find({ where: { name: query } })!
+    res.status(200).send(fandom)
+  }
+  )
+)
+
 server.express.post(
   '/request-fandom',
   asyncRoute(async (req, res) => {
